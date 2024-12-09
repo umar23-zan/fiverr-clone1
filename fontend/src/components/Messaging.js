@@ -3,20 +3,31 @@ import { io } from "socket.io-client";
 
 const socket = io("http://localhost:5000");
 
-function Messaging() {
+function Messaging({ conversationId, receiverId }) {
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
-  const [userId, setUserId] = useState(""); // Current logged-in user
-  const receiverId = "67567496dfe79e5b1bafe911"; // Replace with the receiver's user ID
-  const conversationId = "12345"; // Example conversation
+  const [userId, setUserId] = useState("");
 
   useEffect(() => {
     const loggedInUser = localStorage.getItem("userId");
     if (loggedInUser) {
       setUserId(loggedInUser);
-      socket.emit("joinRoom", loggedInUser);
+      socket.emit("joinRoom", conversationId);
     }
-  }, []);
+  }, [conversationId]);
+
+  useEffect(() => {
+    fetch(`http://localhost:5000/api/messages/${conversationId}`)
+      .then((response) => response.json())
+      .then((data) => {
+        console.log("Fetched messages:", data); // Debug log
+        setMessages(Array.isArray(data) ? data : []);
+      })
+      .catch((error) => {
+        console.error("Error fetching messages:", error);
+        setMessages([]); // Ensure fallback to empty array
+      });
+  }, [conversationId]);
 
   useEffect(() => {
     socket.on("receiveMessage", (message) => {
@@ -28,14 +39,6 @@ function Messaging() {
     };
   }, []);
 
-
-  useEffect(() => {
-    fetch(`http://localhost:5000/api/messages/${conversationId}`)
-      .then((response) => response.json())
-      .then((data) => setMessages(data))
-      .catch((error) => console.error("Error fetching messages:", error));
-  }, [conversationId]);
-
   const handleSendMessage = () => {
     const message = {
       conversationId,
@@ -44,8 +47,8 @@ function Messaging() {
       content: newMessage,
     };
 
-    socket.emit("sendMessage", message); // Send message in real-time
-    setMessages([...messages, message]); // Optimistically update UI
+    socket.emit("sendMessage", message);
+    setMessages([...messages, message]);
     setNewMessage("");
   };
 
@@ -53,12 +56,16 @@ function Messaging() {
     <div>
       <h3>Messaging</h3>
       <ul>
-        {messages.map((msg, index) => (
-          <li key={index}>
-            <strong>{msg.senderId === userId ? "You: " : "Friend: "}</strong>
-            {msg.content}
-          </li>
-        ))}
+        {Array.isArray(messages) && messages.length > 0 ? (
+          messages.map((msg, index) => (
+            <li key={index}>
+              <strong>{msg.senderId === userId ? "You: " : "Friend: "}</strong>
+              {msg.content}
+            </li>
+          ))
+        ) : (
+          <p>No messages yet</p>
+        )}
       </ul>
       <input
         type="text"

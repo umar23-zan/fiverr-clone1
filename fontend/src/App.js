@@ -10,6 +10,7 @@ import Login from './components/Login'
 import Signup from './components/Signup'
 import ResetPassword from './components/ResetPassword'
 import ForgotPassword from './components/ForgotPassword'
+import ChatApp from "./components/ChatApp";
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
           <Route path="/" element={<Login />} />
           <Route path="dashboard" element={<Dashboard />} />
           <Route path="/messages" element={<Messaging />} />
+          <Route path="/chatapp" element={<ChatApp />} />
           <Route path="gig" element={<GigManagement />} />
           <Route path="orders" element={<Orders />} />
           <Route path="signup" element={<Signup />} />

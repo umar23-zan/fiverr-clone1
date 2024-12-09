@@ -7,6 +7,8 @@ const gigRoutes = require('./routes/gig');
 const orderRoutes = require('./routes/order');
 const messageRoutes = require('./routes/message');
 const Message = require('./models/Message');
+const conversationRoutes = require('./routes/conversation');
+const usersRoutes = require('./routes/user'); 
 
 const app = express();
 
@@ -22,6 +24,9 @@ app.use('/api/auth', userRoutes);
 app.use('/api/gigs', gigRoutes);
 app.use('/api/orders', orderRoutes);
 app.use('/api/messages', messageRoutes);
+app.use('/api/conversations', conversationRoutes);
+app.use('/api/users', usersRoutes);
+
 
 const PORT = 5000;
 // app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
