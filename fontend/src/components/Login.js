@@ -39,6 +39,8 @@ const Login = () => {
             //setAlert({ type: 'success', message: 'Login successful!' });
             console.log(res);
             localStorage.setItem('userEmail', res.email);
+            // localStorage.setItem('userId',res._id)
+            localStorage.setItem("userId", res.useId)
             navigate('/Dashboard');  // Ensure route is defined
             setFormData({ email: '', password: '' });  // Clear form after success
         } catch (err) {

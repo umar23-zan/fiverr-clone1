@@ -6,6 +6,7 @@ const userRoutes = require('./routes/auth');
 const gigRoutes = require('./routes/gig');
 const orderRoutes = require('./routes/order');
 const messageRoutes = require('./routes/message');
+const Message = require('./models/Message');
 
 const app = express();
 
@@ -35,8 +36,23 @@ const io = new Server(server, { cors: { origin: '*' } });
 io.on('connection', (socket) => {
   console.log('User connected:', socket.id);
 
-  socket.on('sendMessage', (data) => {
-    io.to(data.receiverId).emit('receiveMessage', data);
+  // User joins a room
+  socket.on('joinRoom', (userId) => {
+    socket.join(userId);
+    console.log(`User ${userId} joined their room`);
+  });
+  socket.on('sendMessage', async (data) => {
+    try {
+      // Emit the message to the receiver's room
+      io.to(data.receiverId).emit('receiveMessage', data);
+
+      // Save the message to the database
+      const message = new Message(data);
+      await message.save();
+      console.log('Message saved:', data);
+    } catch (error) {
+      console.error('Error saving message:', error.message);
+    }
   });
 
   socket.on('disconnect', () => {

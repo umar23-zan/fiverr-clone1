@@ -64,7 +64,7 @@ const Signup = () => {
 
           setTimeout(() => {
             setAlert(null); // Hide the alert
-            navigate('/login');
+            navigate('/');
           }, 1500);
             
         } catch (err) {
@@ -192,7 +192,7 @@ const Signup = () => {
               <Link
                 component="button"
                 variant="body2"
-                onClick={() => navigate('/login')}
+                onClick={() => navigate('/')}
                 sx={{
                   color: '#00A86B',
                   '&:hover': {

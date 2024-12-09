@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import GigManagement from "./GigManagement";
 import Orders from "./Orders";
 // import Favorites from "./Favorites";
+import Header from './Header';
 
 function Dashboard() {
   const [user, setUser] = useState(null);
@@ -21,6 +22,7 @@ function Dashboard() {
 
   return (
     <div>
+      <Header />
       <h1>Welcome, {user?.name}</h1>
       {isSeller && (
         <div>

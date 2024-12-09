@@ -5,7 +5,14 @@ const router = express.Router();
 // Send Message
 router.post('/', async (req, res) => {
   try {
-    const message = new Message(req.body);
+    const { conversationId, senderId, receiverId, content } = req.body;
+
+    const message = new Message({
+      conversationId,
+      senderId: mongoose.Types.ObjectId(senderId),
+      receiverId: mongoose.Types.ObjectId(receiverId),
+      content,
+    });
     const savedMessage = await message.save();
     res.status(201).json(savedMessage);
   } catch (error) {

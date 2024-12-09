@@ -6,7 +6,9 @@ const messageSchema = new mongoose.Schema({
   receiverId: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
   message: String,
   attachment: String,
+  content: { type: String, required: true },
   createdAt: { type: Date, default: Date.now },
+
 });
 
 module.exports = mongoose.model('Message', messageSchema);
