@@ -42,26 +42,27 @@ io.on('connection', (socket) => {
   console.log('User connected:', socket.id);
 
   // User joins a room
-  socket.on('joinRoom', (userId) => {
-    socket.join(userId);
-    console.log(`User ${userId} joined their room`);
-  });
-  socket.on('sendMessage', async (data) => {
-    try {
-      // Emit the message to the receiver's room
-      io.to(data.receiverId).emit('receiveMessage', data);
-
-      // Save the message to the database
-      const message = new Message(data);
+  // Handle message sending
+  socket.on("sendMessage", async(messages) => {
+    try{
+      io.to(messages.conversationId).emit("receiveMessage", messages);
+      const message = new Message(messages);
       await message.save();
-      console.log('Message saved:', data);
-    } catch (error) {
+      console.log('Message saved:', messages);
+    }catch (error) {
       console.error('Error saving message:', error.message);
     }
+   
   });
 
-  socket.on('disconnect', () => {
-    console.log('User disconnected:', socket.id);
+  // Join a conversation room
+  socket.on("joinConversation", (conversationId) => {
+    socket.join(conversationId);
+    console.log(`User joined conversation room: ${conversationId}`);
+  });
+
+  socket.on("disconnect", () => {
+    console.log("A user disconnected:", socket.id);
   });
 });
 

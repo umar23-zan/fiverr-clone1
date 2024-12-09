@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Messaging from "./Messaging";
+import { io } from "socket.io-client";
+
+const socket = io("http://localhost:5000");
 
 function ChatApp() {
   const [users, setUsers] = useState([]); // To store the list of users
@@ -38,6 +41,7 @@ function ChatApp() {
       .then((res) => {
         if (res.data) {
           setSelectedConversation(res.data);
+          socket.emit("joinConversation", res.data._id);
         }
       })
       .catch((err) => {
@@ -51,6 +55,7 @@ function ChatApp() {
         .then((newConversation) => {
           console.log("New conversation created:", newConversation.data);
           setSelectedConversation(newConversation.data);
+          socket.emit("joinConversation", newConversation.data._id);
         })
         .catch((err) => {
           console.error("Error creating new conversation:", err);
@@ -86,6 +91,7 @@ function ChatApp() {
             receiverId={selectedConversation.participants.find(
               (id) => id !== userId
             )}
+            socket={socket}
           />
         ) : (
           <p>Select a user to start a conversation</p>

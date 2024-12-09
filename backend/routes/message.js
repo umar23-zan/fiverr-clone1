@@ -25,11 +25,10 @@ router.post('/', async (req, res) => {
 });
 
 // Get all messages for a conversation
-router.get('/:conversationId', async (req, res) => {
+router.get("/:conversationId", async (req, res) => {
   try {
-    const messages = await Message.find({
-      conversationId: mongoose.Types.ObjectId(req.params.conversationId),
-    });
+    const { conversationId } = req.params;
+    const messages = await Message.find({ conversationId });
     res.json(messages);
   } catch (error) {
     res.status(500).json({ error: error.message });
