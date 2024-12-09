@@ -36,4 +36,28 @@ router.get('/:conversationId', async (req, res) => {
   }
 });
 
+router.post('/:conversationId', async (req, res) => {
+  try {
+    const { conversationId } = req.params;
+    const { senderId, receiverId, content } = req.body;
+
+    const message = { senderId, receiverId, content, timestamp: new Date() };
+
+    // Add the new message to the conversation
+    const conversation = await Conversation.findById(conversationId);
+    if (!conversation) {
+      return res.status(404).json({ message: 'Conversation not found' });
+    }
+
+    conversation.messages.push(message);
+    await conversation.save();
+
+    // Return the new message
+    res.json(message);
+  } catch (error) {
+    console.error('Error sending message:', error);
+    res.status(500).json({ error: error.message });
+  }
+});
+
 module.exports = router;

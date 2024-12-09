@@ -1,81 +1,61 @@
-import React, { useState, useEffect } from "react";
-import { io } from "socket.io-client";
+// Inside Messaging component
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 
-const socket = io("http://localhost:5000");
-
-function Messaging({ conversationId, receiverId }) {
+const Messaging = ({ conversationId, receiverId, userId }) => {
   const [messages, setMessages] = useState([]);
-  const [newMessage, setNewMessage] = useState("");
-  const [userId, setUserId] = useState("");
+  const [newMessage, setNewMessage] = useState('');
 
   useEffect(() => {
-    const loggedInUser = localStorage.getItem("userId");
-    if (loggedInUser) {
-      setUserId(loggedInUser);
-      socket.emit("joinRoom", conversationId);
-    }
-  }, [conversationId]);
-
-  useEffect(() => {
-    fetch(`http://localhost:5000/api/messages/${conversationId}`)
-      .then((response) => response.json())
-      .then((data) => {
-        console.log("Fetched messages:", data); // Debug log
-        setMessages(Array.isArray(data) ? data : []);
+    // Fetch messages for the selected conversation
+    axios
+      .get(`http://localhost:5000/api/messages/${conversationId}`)
+      .then((response) => {
+        setMessages(response.data.messages);
       })
-      .catch((error) => {
-        console.error("Error fetching messages:", error);
-        setMessages([]); // Ensure fallback to empty array
+      .catch((err) => {
+        console.error('Error fetching messages:', err);
       });
   }, [conversationId]);
 
-  useEffect(() => {
-    socket.on("receiveMessage", (message) => {
-      setMessages((prev) => [...prev, message]);
-    });
-
-    return () => {
-      socket.off("receiveMessage");
-    };
-  }, []);
-
-  const handleSendMessage = () => {
-    const message = {
-      conversationId,
+  const sendMessage = () => {
+    const messageData = {
       senderId: userId,
-      receiverId,
+      receiverId: receiverId,
       content: newMessage,
     };
 
-    socket.emit("sendMessage", message);
-    setMessages([...messages, message]);
-    setNewMessage("");
+    axios
+      .post(`http://localhost:5000/api/messages/${conversationId}`, messageData)
+      .then((response) => {
+        setMessages((prevMessages) => [...prevMessages, response.data]);
+        setNewMessage('');
+      })
+      .catch((err) => {
+        console.error('Error sending message:', err);
+      });
   };
 
   return (
     <div>
-      <h3>Messaging</h3>
-      <ul>
-        {Array.isArray(messages) && messages.length > 0 ? (
-          messages.map((msg, index) => (
-            <li key={index}>
-              <strong>{msg.senderId === userId ? "You: " : "Friend: "}</strong>
-              {msg.content}
-            </li>
-          ))
-        ) : (
-          <p>No messages yet</p>
-        )}
-      </ul>
+      <div>
+        {/* Display messages */}
+        {messages.map((msg, index) => (
+          <div key={index}>
+            <p><strong>{msg.senderId === userId ? 'You' : 'User'}:</strong> {msg.content}</p>
+          </div>
+        ))}
+      </div>
+
       <input
         type="text"
         value={newMessage}
         onChange={(e) => setNewMessage(e.target.value)}
-        placeholder="Type a message..."
+        placeholder="Type your message"
       />
-      <button onClick={handleSendMessage}>Send</button>
+      <button onClick={sendMessage}>Send</button>
     </div>
   );
-}
+};
 
 export default Messaging;
