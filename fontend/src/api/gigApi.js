@@ -7,6 +7,13 @@ export const getAllGigs = async () => {
   return response.data;
 };
 
+// Get gigs by user ID
+export const getUserGigs = async (freelancerId) => {
+  const response = await axios.get(`/api/gigs/user/${freelancerId}`);
+  return response.data;
+};
+
+
 export const createGig = async (gigData) => {
   const response = await axios.post(API_URL, gigData);
   return response.data;

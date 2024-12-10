@@ -1,13 +1,16 @@
 import React, { useState, useEffect } from 'react';
-import { getAllGigs, createGig } from '../api/gigApi';
+import { getUserGigs, createGig } from '../api/gigApi';
 import GigCard from './GigCard';
+import axios from 'axios';
 
 const Gigs = () => {
   const [gigs, setGigs] = useState([]);
   const [showForm, setShowForm] = useState(false);
-  const userId = localStorage.getItem('userId');
+  const userid = localStorage.getItem('userId');
+  const [imageFile, setImageFile] = useState(null);
+
   const [newGig, setNewGig] = useState({
-    freelancerId: userId, 
+    freelancerId: userid, 
     title: '',
     description: '',
     price: 0,
@@ -17,11 +20,16 @@ const Gigs = () => {
   });
 
   useEffect(() => {
-    fetchGigs();
+    fetchUserGigs();
   }, []);
 
-  const fetchGigs = async () => {
-    const gigs = await getAllGigs();
+  // const fetchGigs = async () => {
+  //   const gigs = await getAllGigs();
+  //   setGigs(gigs);
+  // };
+  const fetchUserGigs = async () => {
+    const userId = userid; // Replace 'USER_ID' with the logged-in user's ID
+    const gigs = await getUserGigs(userId);
     setGigs(gigs);
   };
 
@@ -30,10 +38,40 @@ const Gigs = () => {
     setNewGig({ ...newGig, [name]: value });
   };
 
+  const handleFileChange = (e) => {
+    setImageFile(e.target.files[0]);
+  };
+
+  const uploadImage = async () => {
+    const formData = new FormData();
+    formData.append('image', imageFile);
+
+    try {
+      const response = await axios.post('/api/gigs/upload', formData, {
+        headers: { 'Content-Type': 'multipart/form-data' },
+      });
+      return response.data.filePath; // Returns the uploaded image path
+    } catch (error) {
+      console.error('Image upload failed', error);
+      return null;
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-    await createGig(newGig);
-    fetchGigs();
+
+    let uploadedImagePath = '';
+    if (imageFile) {
+      uploadedImagePath = await uploadImage();
+    }
+
+    const gigData = {
+      ...newGig,
+      images: uploadedImagePath ? [uploadedImagePath] : [],
+    };
+
+    await createGig(gigData);
+    fetchUserGigs();
     setShowForm(false);
   };
 
@@ -51,7 +89,7 @@ const Gigs = () => {
           <input type="number" name="price" placeholder="Price" onChange={handleInputChange} />
           <input type="number" name="deliveryTime" placeholder="Delivery Time (in days)" onChange={handleInputChange} />
           <input type="text" name="category" placeholder="Category" onChange={handleInputChange} />
-          <input type="text" name="images" placeholder="Image URL" onChange={(e) => handleInputChange(e)} />
+          <input type="file" accept="image/*" onChange={handleFileChange} />
           <button type="submit">Create Gig</button>
         </form>
       )}
