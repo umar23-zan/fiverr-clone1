@@ -36,9 +36,11 @@ function Messaging({ socket, conversationId, receiverId, userId }) {
       receiverId,
       content: newMessage,
       fileUrl: null,
+      originalFileName: null,
+      fileSize: null,
       timestamp: new Date(),
     };
-
+    
     if (file) {
       const formData = new FormData();
       formData.append("file", file);
@@ -51,7 +53,9 @@ function Messaging({ socket, conversationId, receiverId, userId }) {
           headers: { "Content-Type": "multipart/form-data" },
         })
         .then((res) => {
-          message.fileUrl = res.data.fileUrl; // Set file URL from server response
+          message.fileUrl = res.data.fileUrl;
+          message.originalFileName = res.data.originalName;
+          message.fileSize = res.data.size;
           sendSocketMessage(message);
         })
         .catch((err) => console.error("Error uploading file:", err));
@@ -75,6 +79,91 @@ function Messaging({ socket, conversationId, receiverId, userId }) {
       .catch((err) => console.error("Error sending message:", err));
   };
 
+  // Function to render file preview or download link
+  const renderFilePreview = (message) => {
+    if (!message.fileUrl) return null;
+  
+    // Add null check for originalFileName
+    const fileExtension = message.originalFileName
+      ? message.originalFileName.split('.').pop().toLowerCase()
+      : '';
+    
+    const fileUrl = `http://localhost:5000${message.fileUrl}`;
+  
+    // Image preview for common image types
+    const imageExtensions = ['jpg', 'jpeg', 'png', 'gif', 'bmp', 'webp'];
+    if (imageExtensions.includes(fileExtension)) {
+      return (
+        <div>
+          <img 
+            src={fileUrl} 
+            alt={message.originalFileName || 'File'}
+            style={{ 
+              maxWidth: '200px', 
+              maxHeight: '200px', 
+              objectFit: 'contain' 
+            }} 
+          />
+          <a 
+            href={fileUrl} 
+            target="_blank" 
+            rel="noopener noreferrer"
+            style={{ display: 'block', fontSize: '0.8em' }}
+          >
+            Download {message.originalFileName || 'File'} ({formatFileSize(message.fileSize)})
+          </a>
+        </div>
+      );
+    }
+  
+    // PDF preview
+    if (fileExtension === 'pdf') {
+      return (
+        <div>
+          <embed 
+            src={fileUrl} 
+            type="application/pdf" 
+            width="200" 
+            height="200"
+          />
+          <a 
+            href={fileUrl} 
+            target="_blank" 
+            rel="noopener noreferrer"
+            style={{ display: 'block', fontSize: '0.8em' }}
+          >
+            Download PDF {message.originalFileName || 'File'} ({formatFileSize(message.fileSize)})
+          </a>
+        </div>
+      );
+    }
+  
+    // Generic file download for other types
+    return (
+      <a 
+        href={fileUrl} 
+        target="_blank" 
+        rel="noopener noreferrer"
+        style={{ 
+          display: 'block', 
+          color: 'blue', 
+          marginTop: '5px' 
+        }}
+      >
+        Download {message.originalFileName || 'File'} ({formatFileSize(message.fileSize)})
+      </a>
+    );
+  };
+
+  // Helper function to format file size
+  const formatFileSize = (bytes) => {
+    if (!bytes) return '0 Bytes';
+    const k = 1024;
+    const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+  };
+
   return (
     <div>
       <div style={{ maxHeight: "300px", overflowY: "scroll" }}>
@@ -82,16 +171,7 @@ function Messaging({ socket, conversationId, receiverId, userId }) {
           <div key={idx} style={{ margin: "10px 0" }}>
             <strong>{msg.senderId === userId ? "You" : "Other"}:</strong>{" "}
             {msg.content && <span>{msg.content}</span>}
-            {msg.fileUrl && (
-              <a
-                href={msg.fileUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                style={{ display: "block", color: "blue", marginTop: "5px" }}
-              >
-                Download File
-              </a>
-            )}
+            {renderFilePreview(msg)}
           </div>
         ))}
       </div>
