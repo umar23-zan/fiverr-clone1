@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Messaging from "./Messaging";
 import { io } from "socket.io-client";
+// import './chatapp.css'
 
 const socket = io("http://localhost:5000");
 
@@ -67,7 +68,7 @@ function ChatApp() {
     <div style={{ display: "flex" }}>
       {/* User List */}
       <div style={{ flex: 1, borderRight: "1px solid #ddd", padding: "10px" }}>
-        <h3>Select a User to Chat</h3>
+        <h3>Users</h3>
         <ul>
           {users
             .filter((user) => user._id !== userId) // Exclude the logged-in user
