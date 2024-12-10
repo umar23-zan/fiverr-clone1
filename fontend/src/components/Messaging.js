@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 
-function Messaging({ socket, conversationId, receiverId, userId }) {
+function Messaging({ socket, conversationId, receiverId }) {
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
   const [file, setFile] = useState(null);
+  const userId = localStorage.getItem('userId');
+
 
   useEffect(() => {
     // Fetch existing messages for the conversation
@@ -169,7 +171,7 @@ function Messaging({ socket, conversationId, receiverId, userId }) {
       <div style={{ maxHeight: "300px", overflowY: "scroll" }}>
         {messages.map((msg, idx) => (
           <div key={idx} style={{ margin: "10px 0" }}>
-            <strong>{msg.senderId === userId ? "You" : "Other"}:</strong>{" "}
+            <strong>{console.log('msg.senderId:', msg.senderId, 'userId:', userId)}{msg.senderId === userId ? "You" : "Other"}:</strong>{" "}
             {msg.content && <span>{msg.content}</span>}
             {renderFilePreview(msg)}
           </div>

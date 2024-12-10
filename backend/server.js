@@ -66,16 +66,41 @@ io.on('connection', (socket) => {
   console.log('User connected:', socket.id);
 
   // Handle message sending
-  socket.on('sendMessage', async (message) => {
-    try {
-      io.to(message.conversationId).emit('receiveMessage', message);
-      const newMessage = new Message(message);
-      await newMessage.save();
-      console.log('Message saved:', message);
-    } catch (error) {
-      console.error('Error saving message:', error.message);
-    }
-  });
+  // socket.on('sendMessage', async (message) => {
+  //   try {
+  //     io.to(message.conversationId).emit('receiveMessage', message);
+  //     const newMessage = new Message(message);
+  //     await newMessage.save();
+  //     console.log('Message saved:', message);
+  //   } catch (error) {
+  //     console.error('Error saving message:', error.message);
+  //   }
+  // });
+
+  // Handle message sending
+socket.on("sendMessage", async (message) => {
+  try {
+    // Ensure sender and receiver IDs are correctly assigned
+    const { conversationId, senderId, receiverId, content } = message;
+
+    // Create and save the message
+    const newMessage = new Message({
+      conversationId,
+      senderId: new mongoose.Types.ObjectId(senderId),
+      receiverId: new mongoose.Types.ObjectId(receiverId),
+      content,
+    });
+
+    const savedMessage = await newMessage.save();
+
+    // Emit message to the conversation room
+    io.to(conversationId).emit("receiveMessage", savedMessage);
+    console.log("Message sent:", savedMessage);
+  } catch (error) {
+    console.error("Error sending message:", error.message);
+  }
+});
+
 
   // Join a conversation room
   socket.on('joinConversation', (conversationId) => {
