@@ -11,6 +11,7 @@ import Signup from './components/Signup'
 import ResetPassword from './components/ResetPassword'
 import ForgotPassword from './components/ForgotPassword'
 import ChatApp from "./components/ChatApp";
+import Gigs from './components/Gigs'
 
 function App() {
   return (
@@ -23,6 +24,7 @@ function App() {
           <Route path="/messages" element={<Messaging />} />
           <Route path="/chatapp" element={<ChatApp />} />
           <Route path="gig" element={<GigManagement />} />
+          <Route path="gigs" element={<Gigs />} />
           <Route path="orders" element={<Orders />} />
           <Route path="signup" element={<Signup />} />
           <Route path="forgetpassword" element={<ForgotPassword />} />

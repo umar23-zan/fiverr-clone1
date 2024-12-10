@@ -32,13 +32,18 @@ const navigate = useNavigate();
       <svg onClick={() => {navigate('/chatapp')}} cursor={'pointer'} width="16" height="16" viewBox="0 0 18 16" xmlns="http://www.w3.org/2000/svg" fill="currentFill"><path fill-rule="evenodd" clip-rule="evenodd" d="M.838 4.647a.75.75 0 0 1 1.015-.309L9 8.15l7.147-3.812a.75.75 0 0 1 .706 1.324l-7.5 4a.75.75 0 0 1-.706 0l-7.5-4a.75.75 0 0 1-.309-1.015Z"></path><path fill-rule="evenodd" clip-rule="evenodd" d="M2.5 2.25a.25.25 0 0 0-.25.25v11c0 .138.112.25.25.25h13a.25.25 0 0 0 .25-.25v-11a.25.25 0 0 0-.25-.25h-13ZM.75 2.5c0-.966.784-1.75 1.75-1.75h13c.966 0 1.75.784 1.75 1.75v11a1.75 1.75 0 0 1-1.75 1.75h-13A1.75 1.75 0 0 1 .75 13.5v-11Z"></path></svg>
       <svg  width="16" height="16" cursor={'pointer'} viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg"><path d="M14.325 2.00937C12.5188 0.490623 9.72813 0.718748 8 2.47812C6.27188 0.718748 3.48125 0.487498 1.675 2.00937C-0.674996 3.9875 -0.331246 7.2125 1.34375 8.92187L6.825 14.5062C7.1375 14.825 7.55625 15.0031 8 15.0031C8.44688 15.0031 8.8625 14.8281 9.175 14.5094L14.6563 8.925C16.3281 7.21562 16.6781 3.99062 14.325 2.00937ZM13.5875 7.86875L8.10625 13.4531C8.03125 13.5281 7.96875 13.5281 7.89375 13.4531L2.4125 7.86875C1.27188 6.70625 1.04063 4.50625 2.64063 3.15937C3.85625 2.1375 5.73125 2.29062 6.90625 3.4875L8 4.60312L9.09375 3.4875C10.275 2.28437 12.15 2.1375 13.3594 3.15625C14.9563 4.50312 14.7188 6.71562 13.5875 7.86875Z"></path></svg>
       Orders
-      <img src={account} alt="account" width="30" height="30" onClick={toggleDropdown}/>
+      <div><img src={account} alt="account" width="30" height="30" onClick={toggleDropdown}/></div>
       </div>
       {isDropdownOpen && (
         <div className="profile-dropdown">
-          <div className='logout-section'>
-          <button className="logout-btn" onClick={handleLogout}>Logout</button>
-          </div>
+          <ul>
+            <li>
+              <p style={{color: 'Black'}} onClick={() =>{
+                navigate('/gigs')
+              }}>Gigs</p>
+              <p style={{color: 'Black'}}  className="logout-btn" onClick={handleLogout}>Logout</p>
+            </li>
+          </ul>
         </div>
       )}
     </div>

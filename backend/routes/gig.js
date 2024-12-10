@@ -1,35 +1,27 @@
 const express = require('express');
-const Gig = require('../models/Gig');
 const router = express.Router();
+const Gig = require('../models/Gig');
 
-// Add Gig
+// Get all gigs
+router.get('/', async (req, res) => {
+  try {
+    const gigs = await Gig.find().populate('freelancerId', 'name email'); // Assuming User model has name and email
+    res.status(200).json(gigs);
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to fetch gigs' });
+  }
+});
+
+// Create a new gig
 router.post('/', async (req, res) => {
-  try {
-    const gig = new Gig(req.body);
-    const savedGig = await gig.save();
-    res.status(201).json(savedGig);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-});
+  const { freelancerId, title, description, price, deliveryTime, category, images } = req.body;
 
-// Get Gigs for a Freelancer
-router.get('/freelancer/:freelancerId', async (req, res) => {
   try {
-    const gigs = await Gig.find({ freelancerId: req.params.freelancerId });
-    res.json(gigs);
+    const newGig = new Gig({ freelancerId, title, description, price, deliveryTime, category, images });
+    await newGig.save();
+    res.status(201).json(newGig);
   } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-});
-
-// Delete Gig
-router.delete('/:id', async (req, res) => {
-  try {
-    await Gig.findByIdAndDelete(req.params.id);
-    res.json({ message: 'Gig deleted' });
-  } catch (error) {
-    res.status(500).json({ error: error.message });
+    res.status(400).json({ error: 'Failed to create gig' });
   }
 });
 

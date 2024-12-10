@@ -1,0 +1,21 @@
+.gig-card {
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 16px;
+  margin: 16px;
+  text-align: center;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.gig-image {
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+}
+
+.gig-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 16px;
+}
