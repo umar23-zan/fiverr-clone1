@@ -4,10 +4,18 @@ const Message = require('../models/Message');
 const Conversation = require('../models/Conversation');
 const router = express.Router();
 
-// Send a message
+// Send a message (updated to include file details)
 router.post('/', async (req, res) => {
   try {
-    const { conversationId, senderId, receiverId, content } = req.body;
+    const { 
+      conversationId, 
+      senderId, 
+      receiverId, 
+      content, 
+      fileUrl, 
+      originalFileName,
+      fileSize 
+    } = req.body;
 
     // Create and save the message
     const message = new Message({
@@ -15,6 +23,9 @@ router.post('/', async (req, res) => {
       senderId: mongoose.Types.ObjectId(senderId),
       receiverId: mongoose.Types.ObjectId(receiverId),
       content,
+      fileUrl,
+      originalFileName,
+      fileSize
     });
     const savedMessage = await message.save();
 
@@ -31,30 +42,6 @@ router.get("/:conversationId", async (req, res) => {
     const messages = await Message.find({ conversationId });
     res.json(messages);
   } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-});
-
-router.post('/:conversationId', async (req, res) => {
-  try {
-    const { conversationId } = req.params;
-    const { senderId, receiverId, content } = req.body;
-
-    const message = { senderId, receiverId, content, timestamp: new Date() };
-
-    // Add the new message to the conversation
-    const conversation = await Conversation.findById(conversationId);
-    if (!conversation) {
-      return res.status(404).json({ message: 'Conversation not found' });
-    }
-
-    conversation.messages.push(message);
-    await conversation.save();
-
-    // Return the new message
-    res.json(message);
-  } catch (error) {
-    console.error('Error sending message:', error);
     res.status(500).json({ error: error.message });
   }
 });
