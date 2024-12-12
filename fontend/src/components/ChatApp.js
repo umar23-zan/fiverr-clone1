@@ -22,7 +22,10 @@ function ChatApp() {
       // Fetch all users
       axios
         .get("http://localhost:5000/api/users")
-        .then((res) => setUsers(res.data))
+        .then((res) => {setUsers(res.data)
+        }
+        )
+        
         .catch((err) => console.error("Error fetching users:", err));
 
       // Fetch conversations for the logged-in user
@@ -38,6 +41,7 @@ function ChatApp() {
     console.log(`Making GET request to: http://localhost:5000/api/conversations/${userId}/${receiverId}`);
     const userName = users.find((user) => user._id === receiverId)?.name || "Unknown User";
     setSelectedUser(userName); // Set the selected user's name
+    console.log(userName)
   
     axios
       .get(`http://localhost:5000/api/conversations/${userId}/${receiverId}`)
@@ -97,7 +101,7 @@ function ChatApp() {
           borderBottom: "1px solid",
           height: "70px"
         }}
-        >userName</div>
+        >{selectedUser}</div>
         {selectedConversation ? (
           <Messaging
             conversationId={selectedConversation._id}

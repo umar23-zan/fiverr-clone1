@@ -8,7 +8,7 @@ function Messaging({ socket, conversationId, receiverId }) {
   const [file, setFile] = useState(null);
   const userId = localStorage.getItem('userId');
   
-  const MAX_FILE_SIZE = 10 * 1024 * 1024;
+  // const MAX_FILE_SIZE = 10 * 1024 * 1024;
 
   useEffect(() => {
     // Fetch existing messages for the conversation
@@ -51,7 +51,7 @@ function Messaging({ socket, conversationId, receiverId }) {
       formData.append("conversationId", conversationId);
       formData.append("senderId", userId);
       formData.append("receiverId", receiverId);
-
+      console.log(formData)
       axios
         .post("http://localhost:5000/api/messages/upload", formData, {
           headers: { "Content-Type": "multipart/form-data" },
@@ -89,14 +89,14 @@ function Messaging({ socket, conversationId, receiverId }) {
   // Function to render file preview or download link
   const renderFilePreview = (message) => {
     if (!message.fileUrl) return null;
-  
+  console.log(message.fileUrl)
     // Add null check for originalFileName
     const fileExtension = message.originalFileName
       ? message.originalFileName.split('.').pop().toLowerCase()
       : '';
-    
+      
     const fileUrl = `http://localhost:5000${message.fileUrl}`;
-  
+    console.log('Rendering file:', { fileUrl, fileExtension });
     // Image preview for common image types
     const imageExtensions = ['jpg', 'jpeg', 'png', 'gif', 'bmp', 'webp'];
     if (imageExtensions.includes(fileExtension)) {

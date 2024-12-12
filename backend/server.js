@@ -39,7 +39,7 @@ const storage = multer.diskStorage({
 
 const upload = multer({ 
   storage: storage,
-  limits: { fileSize: 50 * 1024 * 1024 } // 50MB file size limit
+  limits: { fileSize: 10 * 1024 * 1024 } // 50MB file size limit
 });
 
 // Connect to MongoDB
@@ -89,6 +89,10 @@ socket.on("sendMessage", async (message) => {
       senderId: new mongoose.Types.ObjectId(senderId),
       receiverId: new mongoose.Types.ObjectId(receiverId),
       content,
+      fileUrl: message.fileUrl, // Include file URL
+      originalFileName: message.originalFileName, // Include original file name
+      fileSize: message.fileSize, // Include file size
+      timestamp: message.timestamp,
     });
 
     const savedMessage = await newMessage.save();

@@ -6,6 +6,7 @@ const router = express.Router();
 
 // Send a message (updated to include file details)
 router.post('/', async (req, res) => {
+  console.log("Incoming request body:", req.body); 
   try {
     const { 
       conversationId, 
@@ -31,6 +32,7 @@ router.post('/', async (req, res) => {
 
     res.status(201).json(savedMessage);
   } catch (error) {
+    console.error("Error details:", error);
     res.status(500).json({ error: error.message });
   }
 });
