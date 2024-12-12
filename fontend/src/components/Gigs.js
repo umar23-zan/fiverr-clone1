@@ -86,7 +86,25 @@ const Gigs = () => {
           <div className='gigform-sections'>
             <div className='gigform-label'><p><strong>Category</strong></p></div>
             
-            <input type="text" name="category" placeholder="Category" onChange={handleInputChange} />
+            {/* <input type="text" name="category" placeholder="Category" onChange={handleInputChange} /> */}
+            <select
+                name="category"
+                onChange={handleInputChange}
+                value={newGig.category} // To bind the selected value
+                required
+                style={{padding: "5px", borderRadius: "4px", border: "1px solid #ccc" }}
+              >
+                <option value="" disabled>Select a category</option>
+                <option value="Graphics & Design">Graphics & Design</option>
+                <option value="Programming & Tech">Programming & Tech</option>
+                <option value="Digital Marketing">Digital Marketing</option>
+                <option value="Video & Animation">Video & Animation</option>
+                <option value="Writing & Translation">Writing & Translation</option>
+                <option value="Music & Audio">Music & Audio</option>
+                <option value="Business">Business</option>
+                <option value="Finance">Finance</option>
+                <option value="AI Services">AI Services</option>
+              </select>
           </div>
           <div className='gigform-sections'>
             <div className='gigform-label'><p><strong>Description</strong></p></div>

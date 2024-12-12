@@ -67,6 +67,8 @@ function Messaging({ socket, conversationId, receiverId }) {
     } else {
       sendSocketMessage(message);
     }
+    setNewMessage("");
+  setFile(null);
   };
 
   const sendSocketMessage = (message) => {
