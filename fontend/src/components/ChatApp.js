@@ -36,6 +36,8 @@ function ChatApp() {
   // Handle user selection to start a conversation
   const handleUserSelect = (receiverId) => {
     console.log(`Making GET request to: http://localhost:5000/api/conversations/${userId}/${receiverId}`);
+    const userName = users.find((user) => user._id === receiverId)?.name || "Unknown User";
+    setSelectedUser(userName); // Set the selected user's name
   
     axios
       .get(`http://localhost:5000/api/conversations/${userId}/${receiverId}`)
@@ -85,7 +87,17 @@ function ChatApp() {
       </div>
 
       {/* Messaging Area */}
-      <div style={{ flex: 2, padding: "10px" }}>
+      <div style={{ flex: 3, padding: "10px", height: "90vh" }}>
+        <div style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "flex-start",
+          fontWeight: "bold",
+          fontSize: "20px",
+          borderBottom: "1px solid",
+          height: "70px"
+        }}
+        >userName</div>
         {selectedConversation ? (
           <Messaging
             conversationId={selectedConversation._id}

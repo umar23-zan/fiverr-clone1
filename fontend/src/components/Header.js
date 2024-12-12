@@ -38,6 +38,9 @@ const navigate = useNavigate();
         <div className="profile-dropdown">
           <ul>
             <li>
+            <p style={{color: 'Black'}} onClick={() =>{
+                navigate('/profile')
+              }}>Profile</p>
               <p style={{color: 'Black'}} onClick={() =>{
                 navigate('/gigs')
               }}>Gigs</p>

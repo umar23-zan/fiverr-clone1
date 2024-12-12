@@ -7,7 +7,8 @@ function Messaging({ socket, conversationId, receiverId }) {
   const [newMessage, setNewMessage] = useState("");
   const [file, setFile] = useState(null);
   const userId = localStorage.getItem('userId');
-
+  
+  const MAX_FILE_SIZE = 10 * 1024 * 1024;
 
   useEffect(() => {
     // Fetch existing messages for the conversation
@@ -78,9 +79,12 @@ function Messaging({ socket, conversationId, receiverId }) {
         setMessages((prevMessages) => [...prevMessages, message]);
         setNewMessage(""); // Clear input field
         setFile(null); // Clear file input
+        
       })
       .catch((err) => console.error("Error sending message:", err));
   };
+
+  
 
   // Function to render file preview or download link
   const renderFilePreview = (message) => {
@@ -169,29 +173,58 @@ function Messaging({ socket, conversationId, receiverId }) {
 
   return (
     <div>
-      <div style={{ maxHeight: "300px", overflowY: "scroll" }}>
+      <div style={{ maxHeight: "80vh", overflowY: "scroll" }}>
         {messages.map((msg, idx) => (
-          <div key={idx} style={{ margin: "10px 0" }}>
-            <strong>{console.log('msg.senderId:', msg.senderId, 'userId:', userId)}{msg.senderId === userId ? "You" : "Other"}:</strong>{" "}
+          <div key={idx} style={{
+            display: "flex",
+            justifyContent: msg.senderId === userId ? "flex-end" : "flex-start",
+            margin: "10px 0",
+          }}>
+            {/* <strong>{console.log('msg.senderId:', msg.senderId, 'userId:', userId)}{msg.senderId === userId ? "You" : "Other"}:</strong>{" "}
             {msg.content && <span>{msg.content}</span>}
-            {renderFilePreview(msg)}
+            {renderFilePreview(msg)} */}
+            <div
+              style={{
+                backgroundColor: msg.senderId === userId ? "#DCF8C6" : "#c2c2c2",
+                padding: "10px",
+                borderRadius: "10px",
+                maxWidth: "60%",
+              }}
+            >
+              {/* <strong>{msg.senderId === userId ? "You" : "Other"}:</strong>{" "} */}
+              {msg.content && <span>{msg.content}</span>}
+              {renderFilePreview(msg)}
+            </div>
           </div>
         ))}
       </div>
-      <div>
+      <div style={{
+        display: "flex", flexDirection: "row", alignItems: "center", justifyContent: "space-around", height: "50px"
+      }}>
+        <div>
         <input
           type="text"
           value={newMessage}
           onChange={(e) => setNewMessage(e.target.value)}
           placeholder="Type your message..."
+          style={{
+            width: "300px", height: "30px", borderStyle: "solid", borderRadius: "25px"
+          }}
         />
         <input
           type="file"
           onChange={(e) => setFile(e.target.files[0])}
           style={{ marginLeft: "10px" }}
         />
-        <button onClick={sendMessage}>Send</button>
+        </div>
+        
+        <button onClick={sendMessage}
+        style={{
+          border: "none", borderRadius: "25px", width: "70px", height: "30px", backgroundColor: "#1dbf73", cursor: "pointer"
+        }}
+        >Send</button>
       </div>
+      
     </div>
   );
 }

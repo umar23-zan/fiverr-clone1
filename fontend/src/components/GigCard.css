@@ -1,20 +1,34 @@
 .gig-card {
-  border: 1px solid #ddd;
+ margin-top: 20px;
   border-radius: 8px;
-  padding: 16px;
-  margin: 16px;
-  text-align: center;
+  width: 250px;
+}
+.gig-card:hover{
+  border: 1px solid #ddd;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  
+}
+.gig-card h3{
+  text-align: left;
+  padding: 5px 5px;
+}
+.gig-card p{
+  text-align: left;
+  font-size: medium;
+  padding: 5px 5px;
 }
 
 .gig-image {
   width: 100%;
   height: auto;
   border-radius: 8px;
+  border: 1px solid #ddd;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 .gig-container {
   display: flex;
+  flex-direction: row;
   flex-wrap: wrap;
   justify-content: center;
   gap: 16px;

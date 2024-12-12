@@ -7,8 +7,7 @@ const GigCard = ({ gig }) => {
       <img src={gig.images[0]} alt={gig.title} className="gig-image" />
       <h3>{gig.title}</h3>
       <p>{gig.description}</p>
-      <span>${gig.price}</span>
-      <span>{gig.deliveryTime} days</span>
+      <h3>From ₹{gig.price}</h3>
     </div>
   );
 };

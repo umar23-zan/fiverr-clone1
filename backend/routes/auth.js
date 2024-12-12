@@ -5,8 +5,8 @@ const crypto = require('crypto');
 const nodemailer = require('nodemailer');
 const User = require('../models/User');
 const router = express.Router();
-// const multer = require('multer');
-// const path = require('path');
+const multer = require('multer');
+const path = require('path');
 // const ContactUs = require('../models/contactusdetails');
 // const sendEmail = require('./emailservice');
 
@@ -131,5 +131,80 @@ router.post('/reset-password/:token', async (req, res) => {
       res.status(500).json({ msg: 'Server error' });
   }
 });
+router.get('/user/:email', async (req, res) => {
+    const { email } = req.params;
+    try {
+        const user = await User.findOne({ email });
+        if (!user) return res.status(404).json({ msg: 'User not found' });
+        
+        // Return user data without password
+        const { password, ...userData } = user._doc; // Exclude password from response
+        res.status(200).json(userData);
+    } catch (error) {
+        res.status(500).send('Server error');
+    }
+});
+
+// Update User Data Route
+// Update User Route
+// Example of the updateUserData function
+router.put('/user/:email', async (req, res) => {
+    const email = req.params.email;
+    const { name, contactNumber,  country, language, about, profession } = req.body;
+
+    try {
+        // Update the user data
+        const user = await User.findOneAndUpdate(
+            { email },
+            { name, contactNumber,  country, language, about, profession },
+            { new: true } // Return the updated document
+        );
+
+        if (!user) return res.status(404).json({ msg: 'User not found' });
+
+        res.json({
+            msg: 'User updated successfully',
+            user: {
+                name: user.name,
+                email: user.email,
+                contactNumber: user.contactNumber,
+                country: user.country,
+                language: user.language,
+                about: user.about,
+                profession: user.profession,
+            }
+        });
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Server error');
+    }
+});
+
+// Configure multer storage
+const storage = multer.diskStorage({
+    destination: './uploads/profilePictures',  // Specify the upload directory
+    filename: (req, file, cb) => {
+        cb(null, `${Date.now()}-${file.originalname}`);
+    }
+});
+
+const upload = multer({ storage });
+// Route to upload profile picture
+router.post('/upload-profile-picture', upload.single('profilePicture'), async (req, res) => {
+    try {
+        const email = req.body.email;
+        const user = await User.findOne({ email });
+        if (!user) return res.status(404).json({ msg: 'User not found' });
+
+        user.profilePicture = req.file.path;  // Save the file path to profilePicture
+        await user.save();
+
+        res.json({ msg: 'Profile picture uploaded successfully', profilePicture: user.profilePicture });
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Server error');
+    }
+});
+
 
 module.exports = router;

@@ -3,6 +3,8 @@ import { getUserGigs, createGig } from '../api/gigApi';
 import GigCard from './GigCard';
 import axios from 'axios';
 
+import './Gigs.css'
+
 const Gigs = () => {
   const [gigs, setGigs] = useState([]);
   const [showForm, setShowForm] = useState(false);
@@ -23,10 +25,7 @@ const Gigs = () => {
     fetchUserGigs();
   }, []);
 
-  // const fetchGigs = async () => {
-  //   const gigs = await getAllGigs();
-  //   setGigs(gigs);
-  // };
+
   const fetchUserGigs = async () => {
     const userId = userid; // Replace 'USER_ID' with the logged-in user's ID
     const gigs = await getUserGigs(userId);
@@ -76,29 +75,62 @@ const Gigs = () => {
   };
 
   return (
-    <div>
-      <h1>Gigs</h1>
-      <button onClick={() => setShowForm(!showForm)}>
-        {showForm ? 'Cancel' : 'Create Gig'}
-      </button>
-      
-      {showForm && (
-        <form onSubmit={handleSubmit}>
-          <input type="text" name="title" placeholder="Title" onChange={handleInputChange} />
-          <textarea name="description" placeholder="Description" onChange={handleInputChange}></textarea>
-          <input type="number" name="price" placeholder="Price" onChange={handleInputChange} />
-          <input type="number" name="deliveryTime" placeholder="Delivery Time (in days)" onChange={handleInputChange} />
-          <input type="text" name="category" placeholder="Category" onChange={handleInputChange} />
-          <input type="file" accept="image/*" onChange={handleFileChange} />
-          <button type="submit">Create Gig</button>
+    <div className='main-division1'>
+      {showForm ? (
+        <form className='create-gig-form' onSubmit={handleSubmit}>
+          <h1>Create Gigs</h1> 
+          <div className='gigform-sections'>
+            <div className='gigform-label'><p> <strong>Gig Title</strong></p></div>
+            <input type="text" name="title" placeholder="Title" onChange={handleInputChange} />
+          </div>
+          <div className='gigform-sections'>
+            <div className='gigform-label'><p><strong>Category</strong></p></div>
+            
+            <input type="text" name="category" placeholder="Category" onChange={handleInputChange} />
+          </div>
+          <div className='gigform-sections'>
+            <div className='gigform-label'><p><strong>Description</strong></p></div>
+            
+            <textarea name="description" placeholder="Description" onChange={handleInputChange}></textarea>
+          </div>
+          <div className='gigform-sections'>
+            <div className='gigform-label'><p><strong>Price</strong></p></div>
+            
+            <input type="number" name="price" placeholder="Price" onChange={handleInputChange} />
+          </div>
+          <div className='gigform-sections'>
+            <div className='gigform-label'><p><strong>Delivery Time</strong></p></div>
+            
+            <input type="number" name="deliveryTime" placeholder="Delivery Time (in days)" onChange={handleInputChange} />
+          </div>
+          <div className='gigform-sections'>
+            <div className='gigform-label'><p><strong>Upload Image</strong></p></div>
+            
+            <input type="file" accept="image/*" onChange={handleFileChange} />
+          </div>
+          <div className='gigform-actions'>
+          <button onClick={() => setShowForm(!showForm)}>Cancel</button>
+          <button type="submit">Publish Gig</button>
+          </div>
         </form>
-      )}
-
-      <div className="gig-container">
-        {gigs.map((gig) => (
-          <GigCard key={gig._id} gig={gig} />
-        ))}
+        
+      ) : (
+        <div>
+          <div className='CreateGig-section'>
+        <h1>Freelance services at your fingertips</h1>
+        <button onClick={() => setShowForm(!showForm)}>Create Gig</button>
       </div>
+          <h1>Gigs</h1> 
+          <div className="gig-container">
+            {gigs.map((gig) => (
+              <GigCard key={gig._id} gig={gig} />
+            ))}
+          </div>
+        </div>
+        
+      )}
+      
+     
     </div>
   );
 };

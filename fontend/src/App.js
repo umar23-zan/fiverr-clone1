@@ -12,6 +12,8 @@ import ResetPassword from './components/ResetPassword'
 import ForgotPassword from './components/ForgotPassword'
 import ChatApp from "./components/ChatApp";
 import Gigs from './components/Gigs'
+import Profile from "./components/Profile";
+import GidDetail from "./components/GidDetail";
 
 function App() {
   return (
@@ -25,7 +27,9 @@ function App() {
           <Route path="/chatapp" element={<ChatApp />} />
           <Route path="gig" element={<GigManagement />} />
           <Route path="gigs" element={<Gigs />} />
+          <Route path='gigdetail' element={<GidDetail />}/>
           <Route path="orders" element={<Orders />} />
+          <Route path="profile" element={<Profile />} />
           <Route path="signup" element={<Signup />} />
           <Route path="forgetpassword" element={<ForgotPassword />} />
           <Route path="resetPassword" element={<ResetPassword />} />
