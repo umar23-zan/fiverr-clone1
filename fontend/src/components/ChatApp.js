@@ -3,6 +3,7 @@ import axios from "axios";
 import Messaging from "./Messaging";
 import { io } from "socket.io-client";
 // import './chatapp.css'
+import account from '../images/account-icon.svg'
 
 const socket = io("http://localhost:5000");
 
@@ -74,8 +75,8 @@ function ChatApp() {
     <div style={{ display: "flex" }}>
       {/* User List */}
       <div style={{ flex: 1, borderRight: "1px solid #ddd", padding: "10px" }}>
-        <h3>Users</h3>
-        <ul>
+        <h3>Contacts</h3>
+        {/* <ul>
           {users
             .filter((user) => user._id !== userId) // Exclude the logged-in user
             .map((user) => (
@@ -87,7 +88,41 @@ function ChatApp() {
                 {user.name}
               </li>
             ))}
-        </ul>
+        </ul> */}
+        <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
+            {users
+              .filter((user) => user._id !== userId) // Exclude the logged-in user
+              .map((user) => (
+                <div
+                  key={user._id}
+                  onClick={() => handleUserSelect(user._id)} // Start a conversation with selected user
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    padding: "10px",
+                    border: "1px solid #ddd",
+                    borderRadius: "8px",
+                    cursor: "pointer",
+                    backgroundColor: "#f9f9f9",
+                    transition: "background-color 0.3s ease",
+                  }}
+                  onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "#eaeaea")}
+                  onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "#f9f9f9")}
+                >
+                  <img
+                    src={account} 
+                    alt={`${user.name}'s profile`}
+                    style={{
+                      width: "40px",
+                      height: "40px",
+                      borderRadius: "50%",
+                      marginRight: "10px",
+                    }}
+                  />
+                  <p>{user.name}</p>
+                </div>
+              ))}
+          </div>
       </div>
 
       {/* Messaging Area */}

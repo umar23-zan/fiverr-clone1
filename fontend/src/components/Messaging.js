@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 // import './chatapp.css'
+import attachment from "../images/attachment.png"
 
 function Messaging({ socket, conversationId, receiverId }) {
   const [messages, setMessages] = useState([]);
@@ -201,7 +202,7 @@ function Messaging({ socket, conversationId, receiverId }) {
       <div style={{
         display: "flex", flexDirection: "row", alignItems: "center", justifyContent: "space-around", height: "50px"
       }}>
-        <div>
+        <div style={{display: "flex", alignItems: "center", gap: "10px"}}>
         <input
           type="text"
           value={newMessage}
@@ -211,11 +212,32 @@ function Messaging({ socket, conversationId, receiverId }) {
             width: "300px", height: "30px", borderStyle: "solid", borderRadius: "25px"
           }}
         />
-        <input
+        {/* <input
           type="file"
           onChange={(e) => setFile(e.target.files[0])}
           style={{ marginLeft: "10px" }}
-        />
+        /> */}
+        <div style={{ position: "relative", display: "inline-block", backgroundColor: "#1dbf73", height: "35px", width: "35px", borderRadius: "50px", cursor: "pointer"}}>
+          <label htmlFor="file-upload" style={{ cursor: "pointer" }}>
+            {/* <FaPaperclip size={20} color="#555" /> */}
+            <img src={attachment} alt="attachment" width={"20px"} height={"20px"} style={{marginTop: "8px", cursor: "pointer"}}/>
+          </label>
+          <input
+            id="file-upload"
+            type="file"
+            onChange={(e) => setFile(e.target.files[0])}
+            style={{
+              position: "absolute",
+              top: 0,
+              left: 0,
+              width: "100%",
+              height: "100%",
+              opacity: 0,
+              cursor: "pointer",
+            }}
+          />
+        </div>
+
         </div>
         
         <button onClick={sendMessage}
