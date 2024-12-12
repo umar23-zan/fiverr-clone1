@@ -27,7 +27,7 @@ function App() {
           <Route path="/chatapp" element={<ChatApp />} />
           <Route path="gig" element={<GigManagement />} />
           <Route path="gigs" element={<Gigs />} />
-          <Route path='gigdetail' element={<GidDetail />}/>
+          <Route path='gigdetail/:id' element={<GidDetail />}/>
           <Route path="orders" element={<Orders />} />
           <Route path="profile" element={<Profile />} />
           <Route path="signup" element={<Signup />} />

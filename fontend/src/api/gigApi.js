@@ -33,7 +33,28 @@ export const getGigs = async () => {
 //   return res.json();
 // };
 
-export const deleteGig = async (id) => {
-  await fetch(`/api/gigs/${id}`, { method: "DELETE" });
+// Get gig details by ID
+export const getGigDetails = async (id) => {
+  try {
+    const response = await axios.get(`/api/gigs/${id}`);
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching gig details:', error);
+    throw new Error('Failed to fetch gig details');
+  }
 };
+
+// Delete a gig by ID
+export const deleteGig = async (id) => {
+  try {
+    await axios.delete(`/api/gigs/${id}`);
+  } catch (error) {
+    console.error('Error deleting gig:', error);
+    throw new Error('Failed to delete gig');
+  }
+};
+
+// export const deleteGig = async (id) => {
+//   await fetch(`/api/gigs/${id}`, { method: "DELETE" });
+// };
 

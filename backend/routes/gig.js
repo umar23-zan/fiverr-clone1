@@ -66,4 +66,17 @@ router.post('/upload', upload.single('image'), (req, res) => {
   res.status(200).json({ filePath });
 });
 
+router.get('/:id', async (req, res) => {
+  const { id } = req.params;
+  try {
+    const gig = await Gig.findById(id).populate('freelancerId', 'name email'); // Populate freelancerId with name and email
+    if (!gig) {
+      return res.status(404).json({ error: 'Gig not found' });
+    }
+    res.status(200).json(gig);
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to fetch gig details' });
+  }
+});
+
 module.exports = router;
