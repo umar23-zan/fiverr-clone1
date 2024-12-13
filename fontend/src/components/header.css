@@ -74,3 +74,25 @@
   border-bottom-style: solid;
   border-bottom-color: #00A86B;
 }
+
+.suggestions-dropdown {
+  position: absolute;
+  top: 65px;
+  width: 49%;
+  background: white;
+  border: 1px solid #ccc;
+  max-height: 200px;
+  color: black;
+  /* overflow-y: auto; */
+  z-index: 100;
+  text-align: left;
+}
+
+.suggestion-item {
+  padding: 10px;
+  cursor: pointer;
+}
+
+.suggestion-item:hover {
+  background: #f0f0f0;
+}

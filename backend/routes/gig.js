@@ -25,6 +25,16 @@ router.get('/user/:freelancerId', async (req, res) => {
   }
 });
 
+router.get('/', async (req, res) => {
+  const { category } = req.query;
+  try {
+    const gigs = await Gig.find({ category });
+    res.status(200).json(gigs);
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to fetch gigs by category' });
+  }
+});
+
 
 // Create a new gig
 router.post('/', async (req, res) => {

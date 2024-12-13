@@ -14,6 +14,7 @@ import ChatApp from "./components/ChatApp";
 import Gigs from './components/Gigs'
 import Profile from "./components/Profile";
 import GidDetail from "./components/GidDetail";
+import SearchResults from "./components/SearchResults";
 
 function App() {
   return (
@@ -30,6 +31,7 @@ function App() {
           <Route path='gigdetail/:id' element={<GidDetail />}/>
           <Route path="orders" element={<Orders />} />
           <Route path="profile" element={<Profile />} />
+          <Route path="searchResults" element={<SearchResults />} />
           <Route path="signup" element={<Signup />} />
           <Route path="forgetpassword" element={<ForgotPassword />} />
           <Route path="resetPassword" element={<ResetPassword />} />

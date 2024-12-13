@@ -4,9 +4,24 @@ import account from '../images/account-icon.svg'
 import './header.css'
 import { useNavigate } from 'react-router-dom';
 
+const categories = [
+  'Graphics & Design',
+  'Programming & Tech',
+  'Digital Marketing',
+  'Video & Animation',
+  'Writing & Translation',
+  'Music & Audio',
+  'Business',
+  'Finance',
+  'AI Services',
+];
+
 const Header = () => {
   const [isDropdownOpen, setDropdownOpen] = useState(false); 
-const navigate = useNavigate();
+  const navigate = useNavigate();
+  const [searchTerm, setSearchTerm] = useState('');
+  const [filteredSuggestions, setFilteredSuggestions] = useState([]);
+
   const toggleDropdown = () => {
     setDropdownOpen((prev) => !prev);
   };
@@ -16,16 +31,60 @@ const navigate = useNavigate();
     localStorage.removeItem('userEmail', 'useId');
     navigate('/');
   };
+
+  const handleInputChange = (e) => {
+    const input = e.target.value;
+    setSearchTerm(input);
+
+    // Filter categories for suggestions
+    if (input) {
+      const suggestions = categories.filter((category) =>
+        category.toLowerCase().includes(input.toLowerCase())
+      );
+      setFilteredSuggestions(suggestions);
+    } else {
+      setFilteredSuggestions([]);
+    }
+  };
+
+  const handleSuggestionClick = (suggestion) => {
+    setSearchTerm(suggestion);
+    setFilteredSuggestions([]);
+  };
+
+  const handleSearch = () => {
+    if (searchTerm) {
+      navigate(`/searchResults?category=${searchTerm}`);
+    }
+  };
+
   return (
     <div className='header-section-main'>
     <div className='header-section'>
       <img src={logo} alt="Fiverr" style={{width: '100px', height: '50px'}}/>
       <div className='input-section'>
-        <input type="text" placeholder='What Services are you looking today' />
-        <div className='search-icon'>
+        <input 
+        type="text" 
+        placeholder='What Services are you looking today' 
+        value={searchTerm}
+        onChange={handleInputChange}
+        />
+        <div className='search-icon' onClick={handleSearch}>
         <svg width="16" height="16" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" fill="white"><path d="m15.89 14.653-3.793-3.794a.37.37 0 0 0-.266-.109h-.412A6.499 6.499 0 0 0 6.5 0C2.91 0 0 2.91 0 6.5a6.499 6.499 0 0 0 10.75 4.919v.412c0 .1.04.194.11.266l3.793 3.794a.375.375 0 0 0 .531 0l.707-.707a.375.375 0 0 0 0-.53ZM6.5 11.5c-2.763 0-5-2.238-5-5 0-2.763 2.237-5 5-5 2.762 0 5 2.237 5 5 0 2.762-2.238 5-5 5Z"></path></svg>
         </div>
-        
+        {filteredSuggestions.length > 0 && (
+            <div className="suggestions-dropdown">
+              {filteredSuggestions.map((suggestion) => (
+                <div
+                  key={suggestion}
+                  className="suggestion-item"
+                  onClick={() => handleSuggestionClick(suggestion)}
+                >
+                  {suggestion}
+                </div>
+              ))}
+            </div>
+        )}
       </div>
       <div className='action-section'>
       <svg width="16" height="16" cursor={'pointer'} viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" fill="currentFill"><path d="M3.494 6.818a6.506 6.506 0 0 1 13.012 0v2.006c0 .504.2.988.557 1.345l1.492 1.492a3.869 3.869 0 0 1 1.133 2.735 2.11 2.11 0 0 1-2.11 2.11H2.422a2.11 2.11 0 0 1-2.11-2.11c0-1.026.408-2.01 1.134-2.735l1.491-1.492c.357-.357.557-.84.557-1.345V6.818Zm-1.307 7.578c0 .13.106.235.235.235h15.156c.13 0 .235-.105.235-.235 0-.529-.21-1.036-.584-1.41l-1.492-1.491a3.778 3.778 0 0 1-1.106-2.671V6.818a4.63 4.63 0 1 0-9.262 0v2.006a3.778 3.778 0 0 1-1.106 2.671L2.77 12.987c-.373.373-.583.88-.583 1.41Zm4.49 4.354c0-.517.419-.937.937-.937h4.772a.938.938 0 0 1 0 1.875H7.614a.937.937 0 0 1-.938-.938Z"></path></svg>
@@ -50,16 +109,10 @@ const navigate = useNavigate();
         </div>
       )}
     </div>
-    <div className='categories'>
-        <p>Graphics & Design</p>
-        <p>Programming & Tech</p>
-        <p>Digital Marketting</p>
-        <p>Video & Animation</p>
-        <p>Writing & Translation</p>
-        <p>Music & Audio</p>
-        <p>Business</p>
-        <p>Finance</p>
-        <p>AI Services</p>
+    <div className="categories">
+        {categories.map((category) => (
+          <p key={category}>{category}</p>
+        ))}
       </div>
     </div>
   )
