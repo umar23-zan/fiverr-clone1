@@ -6,7 +6,8 @@ const GigCard = ({ gig }) => {
   const navigate = useNavigate();
 
   const handleCardClick = () => {
-    navigate(`/gigdetail/${gig._id}`);
+    // navigate(`/gigdetail/${gig._id}`);
+    navigate(`/gigdetail/${gig._id}?freelancerId=${gig.freelancerId._id}`);
   };
 
   return (

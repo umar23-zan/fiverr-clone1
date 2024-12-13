@@ -1,0 +1,71 @@
+.gigDetail-container{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  height: 500px;
+}
+.gigOwner-container{
+  display: flex;
+  flex-direction: column;
+}
+.gigOwner-container h1{
+  text-align: left;
+}
+.gigOwner-details{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  width: 80%;
+  align-items: center;
+  font-size: large;
+
+}
+.gigOwner-details p{
+  text-align: left;
+}
+.gigOwner-native{
+  display: flex;
+  justify-content: space-between;
+  width: 300px;
+  color: grey;
+}
+.gigOwner-about p{
+  text-align: left;
+  max-width: 600px;
+}
+
+.payment-container{
+  display: flex;
+  flex-direction: column;
+  border: 1px solid;
+  width: 300px;
+  height: 300px;
+  padding: 10px 15px;
+  margin-top: 50px;
+}
+.payment-category{
+  border-bottom: 1px solid;
+}
+.payment-details-container{
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 15px 0px;
+}
+.payment-details-container button{
+  height: 50px;
+  color: white;
+  background-color: black;
+  border: none;
+  cursor: pointer;
+}
+.payment-details-container p{
+  text-align: left;
+}
+.payment-price{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  margin-bottom: 30px;
+}
+
