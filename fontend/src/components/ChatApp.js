@@ -22,7 +22,7 @@ function ChatApp() {
 
       // Fetch all users
       axios
-        .get("http://localhost:5000/api/users")
+        .get("/api/users")
         .then((res) => {setUsers(res.data)
         }
         )
@@ -31,7 +31,7 @@ function ChatApp() {
 
       // Fetch conversations for the logged-in user
       axios
-        .get(`http://localhost:5000/api/conversations/${loggedInUser}`)
+        .get(`/api/conversations/${loggedInUser}`)
         .then((res) => setConversations(res.data))
         .catch((err) => console.error("Error fetching conversations:", err));
     }
@@ -45,7 +45,7 @@ function ChatApp() {
     console.log(userName)
   
     axios
-      .get(`http://localhost:5000/api/conversations/${userId}/${receiverId}`)
+      .get(`/api/conversations/${userId}/${receiverId}`)
       .then((res) => {
         if (res.data) {
           setSelectedConversation(res.data);
@@ -56,7 +56,7 @@ function ChatApp() {
         console.error("Error checking conversation:", err.response ? err.response.data : err.message);
         
         // Create new conversation if not found
-        axios.post('http://localhost:5000/api/conversations', {
+        axios.post('/api/conversations', {
           participants: [userId, receiverId],
           messages: []
         })

@@ -14,7 +14,7 @@ function Messaging({ socket, conversationId, receiverId }) {
   useEffect(() => {
     // Fetch existing messages for the conversation
     axios
-      .get(`http://localhost:5000/api/messages/${conversationId}`)
+      .get(`/api/messages/${conversationId}`)
       .then((res) => {
         setMessages(res.data); // Load previous messages
       })
@@ -54,7 +54,7 @@ function Messaging({ socket, conversationId, receiverId }) {
       formData.append("receiverId", receiverId);
       console.log(formData)
       axios
-        .post("http://localhost:5000/api/messages/upload", formData, {
+        .post("/api/messages/upload", formData, {
           headers: { "Content-Type": "multipart/form-data" },
         })
         .then((res) => {
@@ -77,7 +77,7 @@ function Messaging({ socket, conversationId, receiverId }) {
 
     // Save the message to the database
     axios
-      .post("http://localhost:5000/api/messages", message)
+      .post("/api/messages", message)
       .then(() => {
         setMessages((prevMessages) => [...prevMessages, message]);
         setNewMessage(""); // Clear input field
