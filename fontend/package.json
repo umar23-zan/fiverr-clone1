@@ -44,5 +44,5 @@
     ]
   },
   
-  "proxy": "http://52.66.14.233:5000"
+  "proxy": "http://localhost:5000"
 }

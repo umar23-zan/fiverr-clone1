@@ -5,8 +5,8 @@ import { io } from "socket.io-client";
 // import './chatapp.css'
 import account from '../images/account-icon.svg'
 
-// const socket = io("http://localhost:5000");
-const socket = io("http://52.66.14.233:5000");
+const socket = io("http://localhost:5000");
+// const socket = io("http://52.66.14.233:5000");
 
 function ChatApp() {
   const [users, setUsers] = useState([]); // To store the list of users

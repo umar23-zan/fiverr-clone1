@@ -8,11 +8,14 @@ import Gigs from "./Gigs";
 
 function Profile(){
   const [user, setUser] = useState(null);
-  const id =localStorage.getItem('userEmail')
   const [editForm, setEditForm] = useState(false)
   const [profilePicture, setProfilePicture] = useState(null);
   const [profilePreview, setProfilePreview] = useState(null);
   const [errors, setErrors] = useState({});
+  const [loading, setLoading] = useState(true);
+  const [formSubmitting, setFormSubmitting] = useState(false);
+
+  const id =localStorage.getItem('userEmail')
 
   const [formData, setFormData] = useState({
     name: '',
@@ -23,45 +26,51 @@ function Profile(){
     profession: '',
 });
 
-  useEffect(() =>{
-    fetch(`/api/auth/user/${id}`)
-    .then((res) => res.json())
-    .then((data) => {
-      console.log("Fetch result:", data); 
+useEffect(() => {
+  const fetchUser = async () => {
+    try {
+      const data = await getUserData(id);
       setUser(data);
       setFormData({
-        name: data.name || '',
-        contactNumber: data.contactNumber || '',
-        country: data.country || '',
-        language: data.language || '',
-        about: data.about || '',
-        profession: data.profession || '',
-      })
-      setProfilePicture(data.profilePicture || '');
+        name: data.name || "",
+        contactNumber: data.contactNumber || "",
+        country: data.country || "",
+        language: data.language || "",
+        about: data.about || "",
+        profession: data.profession || "",
+      });
+      setProfilePicture(data.profilePicture || "");
       setProfilePreview(data.profilePicture ? `${data.profilePicture}` : account);
-  })
-  fetch(`/api/auth/user/${id}`)
-}, []);
+    } catch (error) {
+      console.error("Failed to fetch user data:", error.message);
+      setErrors((prev) => ({ ...prev, global: "Failed to load profile data." }));
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  fetchUser();
+}, [id]);
 
 const validateField = (name, value) => {
   switch (name) {
-      case 'name':
-          if (!/^[A-Za-z\s]+$/.test(value)) return 'Name must only contain letters and spaces.';
-          if (value.length > 15) return 'Name must not exceed 15 characters.';
-          return '';
-      case 'contactNumber':
-          if (!/^\d{10}$/.test(value)) return 'Contact number must be exactly 10 digits and contain only integers.';
-          return '';
-      case 'country':
-          return !/^[A-Za-z\s]+$/.test(value) ? 'Invalid country name' : '';
-      case 'language':
-        return !/^[A-Za-z\s]+$/.test(value) ? 'Invalid Language' : '';
-      case 'about':
-          return value.length < 50 ? 'Bio is too short' : '';
-      case 'profession':
-          return value.length < 1 ? 'Profession is required' : '';
-      default:
-          return '';
+    case "name":
+      if (!/^[A-Za-z\s]+$/.test(value)) return "Name must only contain letters and spaces.";
+      if (value.length > 15) return "Name must not exceed 15 characters.";
+      return "";
+    case "contactNumber":
+      if (!/^\d{10}$/.test(value)) return "Contact number must be exactly 10 digits.";
+      return "";
+    case "country":
+      return !/^[A-Za-z\s]+$/.test(value) ? "Invalid country name." : "";
+    case "language":
+      return !/^[A-Za-z\s]+$/.test(value) ? "Invalid language." : "";
+    case "about":
+      return value.length < 50 ? "Bio is too short." : "";
+    case "profession":
+      return value.trim() === "" ? "Profession is required." : "";
+    default:
+      return "";
   }
 };
 const handleCancelClick = () => {
@@ -111,7 +120,7 @@ const handleFileChange = (e) => {
 
       setErrors((prevState) => ({
           ...prevState,
-          profilePicture: '', // Clear previous errors
+          profilePicture: '', 
       }));
 
       setProfilePicture(file);
@@ -121,34 +130,45 @@ const handleFileChange = (e) => {
 
 
 const handleSubmit = async (e) => {
-  // e.preventDefault();
+  e.preventDefault();
+  setFormSubmitting(true);
   const newErrors = {};
   Object.keys(formData).forEach((key) => {
-      const error = validateField(key, formData[key]);
-      if (error) newErrors[key] = error;
+    const error = validateField(key, formData[key]);
+    if (error) newErrors[key] = error;
   });
 
   if (Object.keys(newErrors).length === 0) {
+    try {
       await updateUserData(id, formData);
       if (profilePicture) {
-          const data = new FormData();
-          data.append('profilePicture', profilePicture);
-          data.append('email', id);
-          await uploadProfilePicture(data);
+        const data = new FormData();
+        data.append("profilePicture", profilePicture);
+        data.append("email", id);
+        await uploadProfilePicture(data);
       }
       setEditForm(false);
       const updatedUserData = await getUserData(id);
       setUser(updatedUserData);
       setProfilePreview(updatedUserData.profilePicture ? `${updatedUserData.profilePicture}` : account);
-      alert('Profile Updated Successfully')
+      alert("Profile Updated Successfully");
+    } catch (error) {
+      console.error("Failed to update profile:", error.message);
+      alert("Profile update failed. Please try again.");
+    }
   } else {
-      setErrors(newErrors);
+    setErrors(newErrors);
   }
+  setFormSubmitting(false);
 };
+
+if (loading) return <p>Loading profile...</p>;
+
 return (
   <div>
     {/* <Header /> */}
     {/* <h1>Profile</h1> */}
+    {errors.global && <p className="error">{errors.global}</p>}
     {user ? (
       !editForm ? (
         <div className="parent-profile-section">
@@ -257,7 +277,7 @@ return (
         </form>
       )
     ) : (
-      <p>Loading...</p> // Display a loading message while fetching user data
+      <p>No user data available.</p>
     )}
   </div>
 );

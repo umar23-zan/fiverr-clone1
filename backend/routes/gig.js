@@ -41,11 +41,15 @@ router.post('/', async (req, res) => {
   const { freelancerId, title, description, price, deliveryTime, category, images } = req.body;
 
   try {
+    if (!title || !price || !category || !freelancerId) {
+      return res.status(400).json({ message: 'Missing required fields.' });
+    }
     const newGig = new Gig({ freelancerId, title, description, price, deliveryTime, category, images });
     await newGig.save();
-    res.status(201).json(newGig);
+    res.status(201).json({ message: 'Gig created successfully', gig: newGig });
   } catch (error) {
-    res.status(400).json({ error: 'Failed to create gig' });
+    console.error(error);
+    res.status(400).json({ message: 'Failed to create gig. Internal server error. Please try again.' });
   }
 });
 // Configure Multer

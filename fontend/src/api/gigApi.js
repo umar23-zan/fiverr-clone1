@@ -2,10 +2,23 @@ import axios from 'axios';
 
 const API_URL = '/api/gigs';
 
+// export const getAllGigs = async () => {
+//   const response = await axios.get(API_URL);
+//   return response.data;
+// };
 export const getAllGigs = async () => {
-  const response = await axios.get(API_URL);
-  return response.data;
+  try {
+    const response = await axios.get('/api/gigs');
+    if (response.status !== 200) {
+      throw new Error('Failed to fetch gigs');
+    }
+    return response.data;
+  } catch (error) {
+    console.error(error);
+    throw new Error(error.response?.data?.message || 'An unexpected error occurred');
+  }
 };
+
 
 // Get gigs by user ID
 export const getUserGigs = async (freelancerId) => {
