@@ -136,6 +136,11 @@ app.post('/api/messages/upload', upload.single('file'), (req, res) => {
   }
 });
 
+
+app.use(express.static(path.join(__dirname, '../fontend/build')));
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, '../fontend/build', 'index.html'));
+});
 // Start the server
 const PORT = 5000;
 server.listen(PORT, () => console.log(`Server running on port ${PORT}`));
