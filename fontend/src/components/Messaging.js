@@ -239,7 +239,9 @@ function Messaging({ socket, conversationId, receiverId }) {
             }}
           />
         </div>
-
+        <div style={{ marginTop: "10px", fontSize: "0.9em", color:    file ? "green" : "red" }}>
+          {file ? `Selected file: ${file.name}` : "No file selected"}
+        </div>
         </div>
         
         <button onClick={sendMessage}

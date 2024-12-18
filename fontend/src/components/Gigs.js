@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { getUserGigs, createGig } from '../api/gigApi';
 import GigCard from './GigCard';
 import axios from 'axios';
-
 import './Gigs.css';
 
 const Gigs = () => {
@@ -42,6 +41,16 @@ const Gigs = () => {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
+    if (name === "description") {
+      const wordCount = value.trim().split(/\s+/).length;
+      if (wordCount > 25) {
+        setError("Description cannot exceed 25 words.");
+        return;
+      } else {
+        setError(null);
+      }
+    }
+  
     setNewGig({ ...newGig, [name]: value });
   };
 
@@ -102,7 +111,69 @@ const Gigs = () => {
       {showForm ? (
         <form className='create-gig-form' onSubmit={handleSubmit}>
           <h1>Create Gig</h1>
-          {/* Form Fields */}
+          <div className='gigform-sections'>
+            <div className='gigform-label'><p> <strong>Gig Title</strong></p></div>
+            <input type="text" name="title" placeholder="Title" onChange={handleInputChange} />
+          </div>
+          <div className='gigform-sections'>
+            <div className='gigform-label'><p><strong>Category</strong></p></div>
+            
+            {/* <input type="text" name="category" placeholder="Category" onChange={handleInputChange} /> */}
+            <select
+                name="category"
+                onChange={handleInputChange}
+                value={newGig.category} // To bind the selected value
+                required
+                style={{padding: "5px", borderRadius: "4px", border: "1px solid #ccc" }}
+              >
+                <option value="" disabled>Select a category</option>
+                <option value="Graphics & Design">Graphics & Design</option>
+                <option value="Programming & Tech">Programming & Tech</option>
+                <option value="Digital Marketing">Digital Marketing</option>
+                <option value="Video & Animation">Video & Animation</option>
+                <option value="Writing & Translation">Writing & Translation</option>
+                <option value="Music & Audio">Music & Audio</option>
+                <option value="Business">Business</option>
+                <option value="Finance">Finance</option>
+                <option value="AI Services">AI Services</option>
+              </select>
+          </div>
+          {/* <div className='gigform-sections'>
+            <div className='gigform-label'><p><strong>Description</strong></p></div>
+            
+            <textarea name="description" placeholder="Description" onChange={handleInputChange}></textarea>
+          </div> */}
+          <div className='gigform-sections'>
+            <div className='gigform-label'><p><strong>Description</strong></p></div>
+            <div>
+              <textarea
+                name="description"
+                placeholder="Description (Max 25 words)"
+                onChange={handleInputChange}
+                value={newGig.description}
+              ></textarea>
+              <p style={{ fontSize: "12px", color: "gray", textAlign:"right", margin: "0px"}}>
+                {newGig.description.trim().split(/\s+/).length} / 25 words
+              </p>
+            </div>
+            
+          </div>
+
+          <div className='gigform-sections'>
+            <div className='gigform-label'><p><strong>Price</strong></p></div>
+            
+            <input type="number" name="price" placeholder="Price" onChange={handleInputChange} />
+          </div>
+          <div className='gigform-sections'>
+            <div className='gigform-label'><p><strong>Delivery Time</strong></p></div>
+            
+            <input type="number" name="deliveryTime" placeholder="Delivery Time (in days)" onChange={handleInputChange} />
+          </div>
+          <div className='gigform-sections'>
+            <div className='gigform-label'><p><strong>Upload Image</strong></p></div>
+            
+            <input type="file" accept="image/*" onChange={handleFileChange} />
+          </div>
           <div className='gigform-actions'>
             <button type="button" onClick={() => setShowForm(false)}>Cancel</button>
             <button type="submit" disabled={loading}>Publish Gig</button>

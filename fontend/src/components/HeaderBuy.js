@@ -16,7 +16,7 @@ const categories = [
   'AI Services',
 ];
 
-const Header = () => {
+const HeaderBuy = () => {
   const [isDropdownOpen, setDropdownOpen] = useState(false); 
   const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState('');
@@ -97,13 +97,13 @@ const Header = () => {
         <div className="profile-dropdown">
           <ul>
             <li>
-            <p style={{color: 'Black', textAlign: "left"}} onClick={() =>{
+            <p style={{color: 'Black'}} onClick={() =>{
                 navigate('/profile')
               }}>Profile</p>
-              <p style={{color: 'Black', textAlign: "left"}} onClick={() =>{
+              {/* <p style={{color: 'Black'}} onClick={() =>{
                 navigate('/gigs')
-              }}>Gigs</p>
-              <p style={{color: 'Black', textAlign: "left"}}  className="logout-btn" onClick={handleLogout}>Logout</p>
+              }}>Gigs</p> */}
+              <p style={{color: 'Black'}}  className="logout-btn" onClick={handleLogout}>Logout</p>
             </li>
           </ul>
         </div>
@@ -118,4 +118,4 @@ const Header = () => {
   )
 }
 
-export default Header
+export default HeaderBuy

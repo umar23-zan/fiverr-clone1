@@ -183,7 +183,7 @@ return (
               <p>{user.profession || ''}</p>
               <p>{user.country || ''}</p>
             </div>
-            <div className="profile-edit-btn-section"><button className="profile-edit-btn" onClick={() => setEditForm(true)}>Edit</button></div>
+            <div className="profile-edit-btn-section"><button className="profile-edit-btn" onClick={() => setEditForm(true)} style={{cursor: "pointer"}}>Edit</button></div>
             
           </div>
           <div className="bio-container">
@@ -191,7 +191,7 @@ return (
               <label><strong>Contact</strong></label>
               <p><strong>Contact Number:</strong> {user.contactNumber || ''}</p>
               <p><strong>Email:</strong> {user.email || ''}</p>
-              <button>Chat Now</button>
+              {/* <button>Chat Now</button> */}
             </div>
             <div className="bio-section">
               <h1>Bio</h1>
@@ -245,11 +245,11 @@ return (
             {errors.profession && <p className="error">{errors.profession}</p>}
             </div>
 
-            <div className="info">
+            {/* <div className="info">
             <label>Profession</label>
             <input type="text" name="profession" value={formData.profession} onChange={handleChange} />
             {errors.profession && <p className="error">{errors.profession}</p>}
-            </div>
+            </div> */}
             
             <div className="info">
             <label>Language</label>

@@ -160,7 +160,7 @@ const Signup = () => {
               autoComplete="new-password"
             />
             <FormControl fullWidth margin="normal">
-            <InputLabel id="role-select-label">Role</InputLabel>
+            <InputLabel id="role-select-label"></InputLabel>
             <Select
               labelId="role-select-label"
               name="role"

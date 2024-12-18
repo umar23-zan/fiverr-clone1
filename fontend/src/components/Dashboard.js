@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Profile from "./Profile";
 import Header from './Header';
+import HeaderBuy from "./HeaderBuy";
 import GigManagement from "./GigManagement";
 import account from '../images/account-icon.svg';
 
@@ -51,7 +52,8 @@ function Dashboard() {
 
   return (
     <div>
-      <Header />
+      {isSeller && <Header />}
+      {isBuyer && <HeaderBuy />}
       <h1>Welcome, {user?.name || "Guest"}</h1>
       {isSeller && <Profile />}
       {isBuyer && <GigManagement />}
