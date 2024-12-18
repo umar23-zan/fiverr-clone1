@@ -9,6 +9,7 @@ const Gigs = () => {
   const [showForm, setShowForm] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [formErrors, setFormErrors] = useState({});
   const userid = localStorage.getItem('userId');
   const [imageFile, setImageFile] = useState(null);
 
@@ -16,8 +17,8 @@ const Gigs = () => {
     freelancerId: userid,
     title: '',
     description: '',
-    price: 0,
-    deliveryTime: 0,
+    price: '',
+    deliveryTime: '',
     category: '',
     images: [],
   });
@@ -41,21 +42,35 @@ const Gigs = () => {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    if (name === "description") {
-      const wordCount = value.trim().split(/\s+/).length;
-      if (wordCount > 25) {
-        setError("Description cannot exceed 25 words.");
-        return;
-      } else {
-        setError(null);
-      }
-    }
-  
     setNewGig({ ...newGig, [name]: value });
+
+    // Remove error for the current field when the user starts typing
+    setFormErrors({ ...formErrors, [name]: '' });
   };
 
   const handleFileChange = (e) => {
-    setImageFile(e.target.files[0]);
+    const file = e.target.files[0];
+    if (file && !file.type.startsWith('image/')) {
+      setFormErrors({ ...formErrors, imageFile: 'Invalid file type. Please upload an image.' });
+      return;
+    }
+    setImageFile(file);
+    setFormErrors({ ...formErrors, imageFile: '' });
+  };
+
+  const validateForm = () => {
+    const errors = {};
+    if (!newGig.title.trim()) errors.title = 'Title is required.';
+    if (!newGig.category.trim()) errors.category = 'Category is required.';
+    if (!newGig.description.trim()) errors.description = 'Description is required.';
+    if (newGig.description.trim().split(/\s+/).length > 25)
+      errors.description = 'Description cannot exceed 25 words.';
+    if (!newGig.price || isNaN(newGig.price) || newGig.price <= 0)
+      errors.price = 'Price must be a positive number.';
+    if (!newGig.deliveryTime || isNaN(newGig.deliveryTime) || newGig.deliveryTime <= 0)
+      errors.deliveryTime = 'Delivery time must be a positive number.';
+    if (!imageFile) errors.imageFile = 'Please upload an image for the gig.';
+    return errors;
   };
 
   const uploadImage = async () => {
@@ -68,35 +83,46 @@ const Gigs = () => {
       const response = await axios.post('/api/gigs/upload', formData, {
         headers: { 'Content-Type': 'multipart/form-data' },
       });
-      return response.data.filePath; // Returns the uploaded image path
+      return response.data.filePath;
     } catch (error) {
-      setError('Image upload failed. Please check the file and try again.');
-      console.error(error);
+      setError('Image upload failed. Please try again.');
       return null;
     }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    const errors = validateForm();
+    if (Object.keys(errors).length > 0) {
+      setFormErrors(errors);
+      return;
+    }
+
     setError(null);
     setLoading(true);
 
     try {
-      let uploadedImagePath = '';
-      if (imageFile) {
-        uploadedImagePath = await uploadImage();
-        if (!uploadedImagePath) throw new Error('Image upload failed.');
-      }
+      const uploadedImagePath = await uploadImage();
+      if (!uploadedImagePath) throw new Error('Image upload failed.');
 
       const gigData = {
         ...newGig,
-        images: uploadedImagePath ? [uploadedImagePath] : [],
+        images: [uploadedImagePath],
       };
 
       await createGig(gigData);
-      setError(null);
       fetchUserGigs();
       setShowForm(false);
+      setNewGig({
+        freelancerId: userid,
+        title: '',
+        description: '',
+        price: '',
+        deliveryTime: '',
+        category: '',
+        images: [],
+      });
+      setImageFile(null);
     } catch (err) {
       setError(err.response?.data?.message || 'Failed to create gig. Please try again.');
     } finally {
@@ -112,67 +138,69 @@ const Gigs = () => {
         <form className='create-gig-form' onSubmit={handleSubmit}>
           <h1>Create Gig</h1>
           <div className='gigform-sections'>
-            <div className='gigform-label'><p> <strong>Gig Title</strong></p></div>
-            <input type="text" name="title" placeholder="Title" onChange={handleInputChange} />
+            <label>Gig Title</label>
+            <input
+              type="text"
+              name="title"
+              placeholder="Title"
+              onChange={handleInputChange}
+              value={newGig.title}
+            />
+            {formErrors.title && <div className="form-error">{formErrors.title}</div>}
           </div>
           <div className='gigform-sections'>
-            <div className='gigform-label'><p><strong>Category</strong></p></div>
-            
-            {/* <input type="text" name="category" placeholder="Category" onChange={handleInputChange} /> */}
-            <select
-                name="category"
-                onChange={handleInputChange}
-                value={newGig.category} // To bind the selected value
-                required
-                style={{padding: "5px", borderRadius: "4px", border: "1px solid #ccc" }}
-              >
-                <option value="" disabled>Select a category</option>
-                <option value="Graphics & Design">Graphics & Design</option>
-                <option value="Programming & Tech">Programming & Tech</option>
-                <option value="Digital Marketing">Digital Marketing</option>
-                <option value="Video & Animation">Video & Animation</option>
-                <option value="Writing & Translation">Writing & Translation</option>
-                <option value="Music & Audio">Music & Audio</option>
-                <option value="Business">Business</option>
-                <option value="Finance">Finance</option>
-                <option value="AI Services">AI Services</option>
-              </select>
-          </div>
-          {/* <div className='gigform-sections'>
-            <div className='gigform-label'><p><strong>Description</strong></p></div>
-            
-            <textarea name="description" placeholder="Description" onChange={handleInputChange}></textarea>
-          </div> */}
-          <div className='gigform-sections'>
-            <div className='gigform-label'><p><strong>Description</strong></p></div>
-            <div>
-              <textarea
-                name="description"
-                placeholder="Description (Max 25 words)"
-                onChange={handleInputChange}
-                value={newGig.description}
-              ></textarea>
-              <p style={{ fontSize: "12px", color: "gray", textAlign:"right", margin: "0px"}}>
-                {newGig.description.trim().split(/\s+/).length} / 25 words
-              </p>
-            </div>
-            
-          </div>
-
-          <div className='gigform-sections'>
-            <div className='gigform-label'><p><strong>Price</strong></p></div>
-            
-            <input type="number" name="price" placeholder="Price" onChange={handleInputChange} />
+            <label>Category</label>
+            <select name="category" onChange={handleInputChange} value={newGig.category}>
+              <option value="" disabled>Select a category</option>
+              <option value="Graphics & Design">Graphics & Design</option>
+              <option value="Programming & Tech">Programming & Tech</option>
+              <option value="Digital Marketing">Digital Marketing</option>
+              <option value="Video & Animation">Video & Animation</option>
+              <option value="Writing & Translation">Writing & Translation</option>
+              <option value="Music & Audio">Music & Audio</option>
+              <option value="Business">Business</option>
+              <option value="Finance">Finance</option>
+              <option value="AI Services">AI Services</option>
+            </select>
+            {formErrors.category && <div className="form-error">{formErrors.category}</div>}
           </div>
           <div className='gigform-sections'>
-            <div className='gigform-label'><p><strong>Delivery Time</strong></p></div>
-            
-            <input type="number" name="deliveryTime" placeholder="Delivery Time (in days)" onChange={handleInputChange} />
+            <label>Description</label>
+            <textarea
+              name="description"
+              placeholder="Description (Max 25 words)"
+              onChange={handleInputChange}
+              value={newGig.description}
+            ></textarea>
+            <p>{newGig.description.trim().split(/\s+/).length} / 25 words</p>
+            {formErrors.description && <div className="form-error">{formErrors.description}</div>}
           </div>
           <div className='gigform-sections'>
-            <div className='gigform-label'><p><strong>Upload Image</strong></p></div>
-            
+            <label>Price</label>
+            <input
+              type="number"
+              name="price"
+              placeholder="Price"
+              onChange={handleInputChange}
+              value={newGig.price}
+            />
+            {formErrors.price && <div className="form-error">{formErrors.price}</div>}
+          </div>
+          <div className='gigform-sections'>
+            <label>Delivery Time</label>
+            <input
+              type="number"
+              name="deliveryTime"
+              placeholder="Delivery Time (in days)"
+              onChange={handleInputChange}
+              value={newGig.deliveryTime}
+            />
+            {formErrors.deliveryTime && <div className="form-error">{formErrors.deliveryTime}</div>}
+          </div>
+          <div className='gigform-sections'>
+            <label>Upload Image</label>
             <input type="file" accept="image/*" onChange={handleFileChange} />
+            {formErrors.imageFile && <div className="form-error">{formErrors.imageFile}</div>}
           </div>
           <div className='gigform-actions'>
             <button type="button" onClick={() => setShowForm(false)}>Cancel</button>
