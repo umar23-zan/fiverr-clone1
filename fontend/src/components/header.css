@@ -1,65 +1,101 @@
-.header-section-main{
+/* General Styling */
+.header-section-main {
   display: flex;
   flex-direction: column;
+  width: 100%;
 }
 
-.header-section{
+/* Header Section */
+.header-section {
   display: flex;
   flex-direction: row;
-  justify-content: space-around;
+  /* justify-content: space-around; */
   align-items: center;
-  padding: 15px 10px;
+  padding: 10px 15px;
   box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
   height: 70px;
+  /* width: 100%; */
 }
-  
+.fiverr-logo{
+  width: 100px;
+  height: 50px;
+  cursor: pointer;
+  }
 
-.input-section{
+/* Input Section */
+.input-section {
   display: flex;
   flex-direction: row;
   align-items: center;
   justify-content: center;
   flex-grow: 1;
+  margin: 0 15px;
+  position: relative;
 }
 
-.input-section input{
-  width: 700px;
-  height: 20px;
+.input-section input {
+  width: 100%;
+  max-width: 700px;
   font-size: medium;
-  padding: 5px;
-}
-.search-icon{
-  padding:10px;
-  background-color: black;
-  height: 13px;
-  border: none;
+  padding: 5px 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  height: 40px;
+  box-sizing: border-box;
 }
 
-.action-section{
+.search-icon {
+  padding: 10px;
+  background-color: black;
+  /* height: 40px; */
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.action-section {
   display: flex;
   flex-direction: row;
   align-items: center;
   justify-content: space-around;
+  color: black;
   flex-grow: 1;
+  /* gap: 15px; */
 }
-.profile-dropdown{
+.action-section img{
+  width: 30px;
+  height: 30px;
+}
+.action-section svg{
+  width: 16px;
+  height: 16px;
+}
+/* Profile Dropdown */
+.profile-dropdown {
   position: absolute;
-  top: 90px;
+  top: 70px;
   background-color: white;
   display: flex;
-  right: 0;
-  align-items: left;
-  width: 100px;
+  right: 10px;
+  flex-direction: column;
+  width: 150px;
   box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
-}
-.profile-dropdown ul{
-  margin: 0;
-  padding: 0 10px;
-  cursor: pointer;
-  gap: 10px;
+  z-index: 200;
 }
 
-.categories{
+.profile-dropdown ul {
+  margin: 0;
+  padding: 10px;
+  list-style-type: none;
+}
+
+.profile-dropdown ul li {
+  margin: 5px 0;
+  cursor: pointer;
+}
+.categories {
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -67,23 +103,45 @@
   font-size: medium;
   box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
   height: 50px;
+  overflow-x: hidden; /* Hides overflow by default */
 }
 
-.categories p:hover{
+.categories-slider {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  overflow-x: auto; /* Allows horizontal scrolling */
+  white-space: nowrap; /* Prevents wrapping of items */
+  padding: 0 10px; /* Adds padding to the scrolling container */
+  scroll-behavior: smooth; /* Smooth scrolling effect */
+}
+
+.categories-slider::-webkit-scrollbar {
+  display: none; /* Hides the scrollbar */
+}
+
+.categories p {
+  cursor: pointer;
+  padding: 5px 10px;
+  border-radius: 5px;
+}
+
+.categories p:hover {
   border-bottom: 3px;
   border-bottom-style: solid;
   border-bottom-color: #00A86B;
 }
 
+/* Suggestions Dropdown */
 .suggestions-dropdown {
   position: absolute;
   top: 65px;
-  width: 49%;
+  width: 100%;
+  max-width: 700px;
   background: white;
   border: 1px solid #ccc;
   max-height: 200px;
-  color: black;
-  /* overflow-y: auto; */
+  overflow-y: auto;
   z-index: 100;
   text-align: left;
 }
@@ -95,4 +153,280 @@
 
 .suggestion-item:hover {
   background: #f0f0f0;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+ /* General Styling */
+.header-section-main {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+/* Header Section */
+.header-section {
+  display: flex;
+  flex-direction: row;
+  /* justify-content: space-around; */
+  align-items: center;
+  padding: 10px 5px;
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+  height: 70px;
+  /* width: 100%; */
+}
+
+/* Input Section */
+.input-section {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  flex-grow: 1;
+  margin: 0 15px;
+  position: relative;
+}
+
+.input-section input {
+  width: 100%;
+  max-width: 300px;
+  font-size: medium;
+  padding: 5px 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  height: 40px;
+  box-sizing: border-box;
+}
+
+.search-icon {
+  padding: 10px;
+  background-color: black;
+  /* height: 40px; */
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.action-section {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-around;
+  color: black;
+  flex-grow: 1;
+  /* gap: 15px; */
+}
+.action-section img{
+  width: 20px;
+  height: 20px;
+}
+.action-section svg{
+  width: 12px;
+  height: 12px;
+}
+
+/* Profile Dropdown */
+.profile-dropdown {
+  position: absolute;
+  top: 70px;
+  background-color: white;
+  display: flex;
+  right: 10px;
+  flex-direction: column;
+  width: 150px;
+  box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
+  z-index: 200;
+}
+
+.profile-dropdown ul {
+  margin: 0;
+  padding: 10px;
+  list-style-type: none;
+}
+
+.profile-dropdown ul li {
+  margin: 5px 0;
+  cursor: pointer;
+}
+.categories {
+  overflow-x: auto; /* Enables horizontal scrolling for smaller screens */
+  font-size: small;
+}
+
+.categories-slider {
+  gap: 15px; /* Increases spacing for better touch interaction */
+}
+
+/* Suggestions Dropdown */
+.suggestions-dropdown {
+  position: absolute;
+  top: 65px;
+  width: 100%;
+  max-width: 700px;
+  background: white;
+  color: black;
+  border: 1px solid #ccc;
+  max-height: 200px;
+  overflow-y: auto;
+  z-index: 100;
+  text-align: left;
+}
+
+.suggestion-item {
+  padding: 10px;
+  cursor: pointer;
+}
+
+.suggestion-item:hover {
+  background: #f0f0f0;
+}
+}
+
+@media (max-width: 480px) {
+  /* General Styling */
+.header-section-main {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+/* Header Section */
+.header-section {
+  display: flex;
+  flex-direction: row;
+  /* justify-content: space-around; */
+  align-items: center;
+  padding: 10px 5px;
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+  height: 70px;
+  /* width: 100%; */
+}
+.fiverr-logo{
+  width: 50px;
+  height: 25px;
+  cursor: pointer;
+  }
+
+/* Input Section */
+.input-section {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: left;
+  max-width: 160px;
+  /* margin: 0 15px; */
+  position: relative;
+}
+
+.input-section input {
+  width: 100%;
+  max-width: 150px;
+  font-size: medium;
+  padding: 5px 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  height:20px;
+  box-sizing: border-box;
+}
+.input-section input::placeholder{
+  font-size: x-small;
+}
+
+.search-icon {
+  padding: 4px;
+  background-color: black;
+  /* height: 40px; */
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+
+}
+.search-icon svg{
+  width: 10px;
+  height: 10px;
+}
+
+.action-section {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  /* justify-content: space-around; */
+  color: black;
+  flex-grow: 1;
+  /* gap: 15px; */
+}
+.action-section img{
+  --svg-width: 15px;
+  --svg-height: 15px;
+}
+.action-section svg{
+  width: 10px;
+  height: 10px;
+}
+.action-section p{
+ font-size: small;
+}
+
+/* Profile Dropdown */
+.profile-dropdown {
+  position: absolute;
+  top: 70px;
+  background-color: white;
+  display: flex;
+  right: 10px;
+  flex-direction: column;
+  width: 150px;
+  box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
+  z-index: 200;
+}
+
+.profile-dropdown ul {
+  margin: 0;
+  padding: 10px;
+  list-style-type: none;
+}
+
+.profile-dropdown ul li {
+  margin: 5px 0;
+  cursor: pointer;
+}
+.categories {
+  overflow-x: auto; /* Enables horizontal scrolling for smaller screens */
+  font-size: x-small;
+}
+
+.categories-slider {
+  gap: 15px; /* Increases spacing for better touch interaction */
+}
+.categories-slider::-webkit-scrollbar {
+  display: none; /* Hides the scrollbar */
+}
+
+/* Suggestions Dropdown */
+.suggestions-dropdown {
+  position: absolute;
+  top: 45px;
+  width: 100%;
+  max-width: 700px;
+  background: white;
+  color: black;
+  border: 1px solid #ccc;
+  max-height: 200px;
+  overflow-y: auto;
+  z-index: 100;
+  text-align: left;
+}
+
+.suggestion-item {
+  padding: 10px;
+  cursor: pointer;
+}
+
+.suggestion-item:hover {
+  background: #f0f0f0;
+}
 }

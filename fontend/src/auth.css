@@ -1,20 +1,4 @@
-.header-section{
-  
-  /* background-color: #002d62; */
-  padding: 10px 20px;
-  color: white;
-  display: flex;
-/* justify-content: center; */
-align-items: center;
-}
 
-.header-section img{
-  margin: 0;
-  top: 0;
-  padding: 0;
-  /* width: 250px;
-  height: 100px; */
-}
 
 .auth-container {
   max-width: 400px;
@@ -85,10 +69,3 @@ p {
 
 /* media query */
 
-@media (max-width:470px){
-
-.header-section img{
-  width: 200px;
-  height: 80px;
-}
-}

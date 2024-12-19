@@ -42,7 +42,7 @@
   flex-direction: row;
   justify-content: center;
   gap: 70px;
-background-color: rgb(244, 243, 243);
+  background-color: rgb(244, 243, 243);
   padding: 50px 0px;
   margin-top: 20px;
 }
@@ -163,4 +163,113 @@ background-color: rgb(244, 243, 243);
   width: 70px;
   color: white;
   cursor: pointer;
+}
+
+@media (max-width: 1200px) {
+  .profile-container {
+    flex-direction: column;
+    align-items: center;
+    height: auto;
+  }
+  .profile-img {
+    justify-content: center;
+    width: 100%;
+  }
+  .profile-details {
+    width: 100%;
+    text-align: center;
+  }
+  .profile-details h1, .profile-details p {
+    margin: 10px 0;
+  }
+}
+
+@media (max-width: 992px) {
+  .bio-container {
+    flex-direction: column;
+    align-items: center;
+    gap: 30px;
+    padding: 20px 0;
+  }
+  .bio-section p {
+    width: 90%;
+  }
+}
+
+@media (max-width: 768px) {
+  .profile-edit-form {
+    width: 70%;
+    margin-left: 15%;
+  }
+  .profile-picture-section {
+    flex-direction: column;
+    gap: 15px;
+    padding: 15px 0;
+  }
+  .profile-change label {
+    padding: 10px;
+    font-size: medium;
+  }
+  .form-fields {
+    padding: 10px;
+  }
+}
+
+@media (max-width: 576px) {
+  .profile-edit-form {
+    width: 90%;
+    margin-left: 5%;
+  }
+  .info input, .info textarea {
+    font-size: small;
+  }
+  .form-actions button {
+    width: 100px;
+  }
+}
+
+@media (max-width: 480px) {
+  .profile-container {
+    padding: 10px;
+  }
+  .profile-img img {
+    width: 100px;
+    height: 100px;
+  }
+  .profile-edit-btn {
+    width: 100px;
+    height: 40px;
+    font-size: medium;
+  }
+
+  .bio-section h1 {
+    font-size: large;
+  }
+  .bio-section p {
+    width: 75%;
+    padding: 0 10px;
+    font-size: small;
+  }
+  .form-actions button {
+    height: 40px;
+    font-size: medium;
+  }
+}
+
+@media (max-width: 360px) {
+  .profile-edit-form {
+    width: 100%;
+    margin: 0;
+    padding: 10px;
+  }
+  .profile-change label {
+    font-size: small;
+    padding: 5px;
+  }
+  .info label {
+    font-size: medium;
+  }
+  .info input, .info textarea {
+    font-size: small;
+  }
 }

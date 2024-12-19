@@ -1,5 +1,5 @@
-
-.CreateGig-section{
+/* General styling for all screen sizes */
+.CreateGig-section {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -7,82 +7,151 @@
   height: 250px;
   width: 85%;
   background-color: #4d1727;
-  margin-left: 7%;
-  margin-top: 20px;
+  margin: 20px auto;
   border-radius: 10px;
-  
+  padding: 10px;
+  text-align: center;
 }
-.CreateGig-section h1{
-  color: rgb(255, 255, 255);
-  font-size: 50px;
+
+.CreateGig-section h1 {
+  color: #fff;
+  font-size: 2rem;
   font-weight: 700;
 }
-.CreateGig-section button{
+
+.CreateGig-section button {
   border: none;
   border-radius: 5px;
-  font-size: large;
-  width: 150px;
-  height: 50px;
+  font-size: 1rem;
+  width: 120px;
+  height: 40px;
   cursor: pointer;
 }
 
-.create-gig-form{
+.create-gig-form {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: space-around;
-  height: 800px;
-  /* width: 85%; */
-  /* border: 1px solid; */
+  height: auto;
+  width: 90%;
+  margin: auto;
 }
 
-.gigform-sections{
+.gigform-sections {
   display: flex;
   flex-direction: row;
-  justify-content: space-evenly;
+  justify-content: space-between;
   align-items: center;
   width: 100%;
+  margin-bottom: 15px;
 }
-.gigform-sections input{
-  width: 300px;
+
+.gigform-sections input,
+.gigform-sections select,
+.gigform-sections textarea {
+  width: 60%;
   height: 35px;
   border-radius: 5px;
   border-style: solid;
+  padding: 5px;
 }
-.gigform-sections select{
-  width: 300px;
-  height: 35px;
-  border-radius: 5px;
-  border-style: solid;
-}
-.gigform-sections textarea{
-  width: 300px;
+
+.gigform-sections textarea {
   height: 70px;
-  border-radius: 5px;
-  border-style: solid;
 }
 
-.gigform-label{
-  width: 70px;
+.gigform-label {
+  width: 30%;
+  text-align: right;
+  padding-right: 10px;
 }
 
-.gigform-actions{
+.gigform-actions {
   display: flex;
   flex-direction: row;
   align-items: center;
-  justify-content: flex-end;
+  justify-content: center;
   gap: 20px;
-  width: 50%;
-
+  width: 100%;
+  margin-top: 20px;
 }
-.gigform-actions button{
+
+.gigform-actions button {
   border: none;
   border-radius: 5px;
-  font-size: large;
-  width: 150px;
-  height: 50px;
+  font-size: 1rem;
+  width: 120px;
+  height: 40px;
   cursor: pointer;
-  
   color: black;
   background-color: rgb(21, 246, 129);
+}
+
+/* Media Queries for smaller screens */
+@media (max-width: 768px) {
+  .CreateGig-section {
+    width: 90%;
+    height: auto;
+    padding: 20px;
+  }
+
+  .CreateGig-section h1 {
+    font-size: 1.5rem;
+  }
+
+  .CreateGig-section button {
+    font-size: 0.9rem;
+    width: 100px;
+    height: 35px;
+  }
+
+  .create-gig-form {
+    width: 100%;
+  }
+
+  .gigform-sections {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .gigform-label {
+    width: 100%;
+    text-align: left;
+    margin-bottom: 5px;
+  }
+
+  .gigform-sections input,
+  .gigform-sections select,
+  .gigform-sections textarea {
+    width: 100%;
+  }
+
+  .gigform-actions {
+    flex-direction: column;
+    gap: 10px;
+    width: 100%;
+  }
+
+  .gigform-actions button {
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .CreateGig-section h1 {
+    font-size: 1.2rem;
+  }
+
+  .gigform-sections input,
+  .gigform-sections select,
+  .gigform-sections textarea {
+    width: 100%;
+  }
+
+  .gigform-actions button {
+    font-size: 0.8rem;
+    width: 100px;
+    height: 35px;
+  }
 }

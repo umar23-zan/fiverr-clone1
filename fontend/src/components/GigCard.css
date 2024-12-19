@@ -1,18 +1,21 @@
 .gig-card {
- margin-top: 20px;
+  margin-top: 20px;
   border-radius: 8px;
   width: 250px;
+  transition: box-shadow 0.3s ease-in-out, border 0.3s ease-in-out;
 }
-.gig-card:hover{
+
+.gig-card:hover {
   border: 1px solid #ddd;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  
 }
-.gig-card h3{
+
+.gig-card h3 {
   text-align: left;
   padding: 5px 5px;
 }
-.gig-card p{
+
+.gig-card p {
   text-align: left;
   font-size: medium;
   padding: 5px 5px;
@@ -32,4 +35,50 @@
   flex-wrap: wrap;
   justify-content: center;
   gap: 16px;
+}
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+  .gig-card {
+    width: 200px;
+  }
+
+  .gig-card h3 {
+    font-size: 1rem;
+  }
+
+  .gig-card p {
+    font-size: 0.9rem;
+  }
+
+  .gig-image {
+    height: 140px;
+  }
+}
+
+@media (max-width: 480px) {
+  .gig-container {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 5px;
+  }
+
+  .gig-card {
+    width: 30%; /* Full width with some margin */
+    margin: 10px 0;
+  }
+
+  .gig-card h3 {
+    font-size: 0.95rem;
+  }
+
+  .gig-card p {
+    font-size: 0.85rem;
+  }
+
+  .gig-image {
+    height: 120px;
+  }
 }

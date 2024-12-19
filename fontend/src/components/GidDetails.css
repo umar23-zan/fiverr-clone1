@@ -1,71 +1,129 @@
-.gigDetail-container{
+.gigDetail-container {
   display: flex;
   flex-direction: row;
   justify-content: space-around;
-  height: 500px;
+  height: auto; /* Adjust height dynamically */
+  flex-wrap: wrap; /* Allows wrapping on smaller screens */
+  padding: 20px;
 }
-.gigOwner-container{
+
+.gigOwner-container {
+
   display: flex;
   flex-direction: column;
+  flex: 1; /* Adjusts size dynamically */
+  min-width: 300px; /* Minimum width for smaller screens */
+
 }
-.gigOwner-container h1{
+
+.gigOwner-container h1 {
   text-align: left;
 }
-.gigOwner-details{
+
+.gigOwner-details {
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
-  width: 80%;
+  justify-content: left;
+  gap: 25px;
   align-items: center;
   font-size: large;
-
+  flex-wrap: wrap; /* Allows wrapping for smaller screens */
 }
-.gigOwner-details p{
+
+.gigOwner-details img {
+  max-width: 100px;
+  height: auto;
+  border-radius: 50%;
+}
+
+.gigOwner-details p {
   text-align: left;
 }
-.gigOwner-native{
+
+.gigOwner-native {
   display: flex;
   justify-content: space-between;
-  width: 300px;
+  flex-wrap: wrap; /* Adjust layout on smaller screens */
+  width: 100%;
   color: grey;
-}
-.gigOwner-about p{
-  text-align: left;
-  max-width: 600px;
+  gap: 10px; /* Adds spacing between items */
 }
 
-.payment-container{
+.gigOwner-about p {
+  text-align: left;
+  max-width: 80%;
+}
+
+.payment-container {
   display: flex;
   flex-direction: column;
   border: 1px solid;
-  width: 300px;
-  height: 300px;
+  width: 100%; /* Full width on smaller screens */
+  max-width: 300px; /* Limits the width */
+  height: auto;
   padding: 10px 15px;
-  margin-top: 50px;
+  margin: 20px 0;
 }
-.payment-category{
+
+.payment-category {
   border-bottom: 1px solid;
 }
-.payment-details-container{
+
+.payment-details-container {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  padding: 15px 0px;
+  padding: 15px 0;
 }
-.payment-details-container button{
+
+.payment-details-container button {
   height: 50px;
   color: white;
   background-color: black;
   border: none;
   cursor: pointer;
 }
-.payment-details-container p{
+
+.payment-details-container p {
   text-align: left;
 }
-.payment-price{
+
+.payment-price {
   display: flex;
   flex-direction: row;
   justify-content: space-around;
   margin-bottom: 30px;
 }
 
+
+
+/* Media Queries */
+@media (max-width: 768px) {
+  .gigDetail-container {
+    flex-direction: column;
+    /* align-items: center; */
+  }
+
+  .gigOwner-details {
+    flex-direction: column;
+    align-items: flex-start;
+  
+  }
+
+  .payment-container {
+    max-width: 90%;
+  }
+
+
+}
+
+@media (max-width: 480px) {
+  .gigOwner-native {
+    flex-direction: column;
+    gap: 5px;
+  }
+
+  .payment-details-container button {
+    width: 100%; /* Full-width button on smaller screens */
+  }
+}
