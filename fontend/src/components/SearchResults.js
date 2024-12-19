@@ -35,7 +35,7 @@ const SearchResults = () => {
     <div>
       <Header />
       <h1>Search Results for "{category}"</h1>
-      <div className="gigs-list" style={{display: "flex", flexDirection: "row", alignItems: "center", justifyContent: "space-evenly"}}>
+      <div className="gig-container">
         {gigs.length > 0 ? (
           gigs.map((gig) => <GigCard key={gig._id} gig={gig} />)
         ) : (

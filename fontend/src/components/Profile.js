@@ -166,7 +166,7 @@ if (loading) return <p>Loading profile...</p>;
 
 return (
   <div>
-    {/* <Header /> */}
+    {user.role ==="Buyer" || user.role === "Both" ? (<Header />):(<div></div>)}
     {/* <h1>Profile</h1> */}
     {errors.global && <p className="error">{errors.global}</p>}
     {user ? (
@@ -198,7 +198,8 @@ return (
               <p>{user.about || ''}</p>
             </div>
           </div>
-          <Gigs />
+          {user.role ==="Seller" || user.role === "Both" ? (<Gigs />):(<div></div>)}
+          
         </div>
         
       ) : (

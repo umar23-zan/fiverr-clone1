@@ -63,8 +63,8 @@ const Gigs = () => {
     if (!newGig.title.trim()) errors.title = 'Title is required.';
     if (!newGig.category.trim()) errors.category = 'Category is required.';
     if (!newGig.description.trim()) errors.description = 'Description is required.';
-    if (newGig.description.trim().split(/\s+/).length > 25)
-      errors.description = 'Description cannot exceed 25 words.';
+    if (newGig.description.trim().length > 150)
+      errors.description = 'Description cannot exceed 150 characters.';
     if (!newGig.price || isNaN(newGig.price) || newGig.price <= 0)
       errors.price = 'Price must be a positive number.';
     if (!newGig.deliveryTime || isNaN(newGig.deliveryTime) || newGig.deliveryTime <= 0)
@@ -138,19 +138,22 @@ const Gigs = () => {
         <form className='create-gig-form' onSubmit={handleSubmit}>
           <h1>Create Gig</h1>
           <div className='gigform-sections'>
-            <label>Gig Title</label>
-            <input
+          <div className='gigform-label'><p> <strong>Gig Title</strong></p></div>
+          <div>
+          <input
               type="text"
               name="title"
               placeholder="Title"
               onChange={handleInputChange}
               value={newGig.title}
             />
-            {formErrors.title && <div className="form-error">{formErrors.title}</div>}
+            {formErrors.title && <div className="form-error" style={{color: "red"}}>{formErrors.title}</div>}
+          </div>
           </div>
           <div className='gigform-sections'>
-            <label>Category</label>
-            <select name="category" onChange={handleInputChange} value={newGig.category}>
+          <div className='gigform-label'><p><strong>Category</strong></p></div>
+          <div>
+          <select name="category" onChange={handleInputChange} value={newGig.category}>
               <option value="" disabled>Select a category</option>
               <option value="Graphics & Design">Graphics & Design</option>
               <option value="Programming & Tech">Programming & Tech</option>
@@ -162,45 +165,55 @@ const Gigs = () => {
               <option value="Finance">Finance</option>
               <option value="AI Services">AI Services</option>
             </select>
-            {formErrors.category && <div className="form-error">{formErrors.category}</div>}
+            {formErrors.category && <div className="form-error" style={{color: "red"}}>{formErrors.category}</div>}
+          </div>
           </div>
           <div className='gigform-sections'>
-            <label>Description</label>
+            <div className='gigform-label'><p><strong>Description</strong></p></div>
+            <div>
             <textarea
               name="description"
-              placeholder="Description (Max 25 words)"
+              placeholder="Description (Max 150 characters)"
               onChange={handleInputChange}
               value={newGig.description}
             ></textarea>
-            <p>{newGig.description.trim().split(/\s+/).length} / 25 words</p>
-            {formErrors.description && <div className="form-error">{formErrors.description}</div>}
+            <p style={{margin: "0px",color:"gray", fontSize: "12px", textAlign: "right"}}>{newGig.description.trim().length} / 150 characters</p>
+            {formErrors.description && <div className="form-error" style={{color: "red"}}>{formErrors.description}</div>}
+            </div>
+            
           </div>
           <div className='gigform-sections'>
-            <label>Price</label>
-            <input
+          <div className='gigform-label'><p><strong>Price</strong></p></div>
+          <div>
+          <input
               type="number"
               name="price"
               placeholder="Price"
               onChange={handleInputChange}
               value={newGig.price}
             />
-            {formErrors.price && <div className="form-error">{formErrors.price}</div>}
+            {formErrors.price && <div className="form-error" style={{color: "red"}}>{formErrors.price}</div>}
+          </div>
           </div>
           <div className='gigform-sections'>
-            <label>Delivery Time</label>
-            <input
+          <div className='gigform-label'><p><strong>Delivery Time</strong></p></div>
+          <div>
+          <input
               type="number"
               name="deliveryTime"
               placeholder="Delivery Time (in days)"
               onChange={handleInputChange}
               value={newGig.deliveryTime}
             />
-            {formErrors.deliveryTime && <div className="form-error">{formErrors.deliveryTime}</div>}
+            {formErrors.deliveryTime && <div className="form-error" style={{color: "red"}}>{formErrors.deliveryTime}</div>}
+          </div>
           </div>
           <div className='gigform-sections'>
-            <label>Upload Image</label>
-            <input type="file" accept="image/*" onChange={handleFileChange} />
-            {formErrors.imageFile && <div className="form-error">{formErrors.imageFile}</div>}
+          <div className='gigform-label'><p><strong>Upload Image</strong></p></div>
+          <div>
+          <input type="file" accept="image/*" onChange={handleFileChange} />
+          {formErrors.imageFile && <div className="form-error" style={{color: "red"}}>{formErrors.imageFile}</div>}
+          </div>
           </div>
           <div className='gigform-actions'>
             <button type="button" onClick={() => setShowForm(false)}>Cancel</button>
