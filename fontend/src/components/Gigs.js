@@ -146,6 +146,7 @@ const Gigs = () => {
               placeholder="Title"
               onChange={handleInputChange}
               value={newGig.title}
+              
             />
             {formErrors.title && <div className="form-error" style={{color: "red"}}>{formErrors.title}</div>}
           </div>
@@ -176,6 +177,7 @@ const Gigs = () => {
               placeholder="Description (Max 150 characters)"
               onChange={handleInputChange}
               value={newGig.description}
+              
             ></textarea>
             <p style={{margin: "0px",color:"gray", fontSize: "12px", textAlign: "right"}}>{newGig.description.trim().length} / 150 characters</p>
             {formErrors.description && <div className="form-error" style={{color: "red"}}>{formErrors.description}</div>}

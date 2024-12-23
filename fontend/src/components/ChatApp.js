@@ -19,8 +19,9 @@ function ChatApp() {
       setUserId(loggedInUser);
       axios
         .get("/api/users")
-        .then((res) => setUsers(res.data))
+        .then((res) => {setUsers(res.data); console.log(res.data)})
         .catch((err) => console.error("Error fetching users:", err));
+       
 
       axios
         .get(`/api/conversations/${loggedInUser}`)

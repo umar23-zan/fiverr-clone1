@@ -3,6 +3,7 @@
   border-radius: 8px;
   width: 250px;
   transition: box-shadow 0.3s ease-in-out, border 0.3s ease-in-out;
+  overflow-x: hidden;
 }
 
 .gig-card:hover {
@@ -13,12 +14,14 @@
 .gig-card h3 {
   text-align: left;
   padding: 5px 5px;
+  
 }
 
 .gig-card p {
   text-align: left;
   font-size: medium;
   padding: 5px 5px;
+  
 }
 
 .gig-image {

@@ -13,8 +13,8 @@ const GigCard = ({ gig }) => {
   return (
     <div className="gig-card" onClick={handleCardClick}>
       <img src={gig.images[0]} alt={gig.title} className="gig-image" />
-      <h3>{gig.title}</h3>
-      <p>{gig.description}</p>
+      <h3 style={{maxWidth: "200px"}}>{gig.title}</h3>
+      <p style={{maxWidth: "230px"}}>{gig.description}</p>
       <h3>From ₹{gig.price}</h3>
     </div>
   );
