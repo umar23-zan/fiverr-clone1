@@ -7,7 +7,7 @@ import account from '../images/account-icon.svg';
 const socket = io("http://localhost:5000");
 
 function ChatApp() {
-  const [users, setUsers] = useState([]);
+  const [users, setUsers] = useState([]); // To store users involved in conversations
   const [selectedUser, setSelectedUser] = useState(null);
   const [conversations, setConversations] = useState([]);
   const [selectedConversation, setSelectedConversation] = useState(null);
@@ -17,15 +17,28 @@ function ChatApp() {
     const loggedInUser = localStorage.getItem("userId");
     if (loggedInUser) {
       setUserId(loggedInUser);
-      axios
-        .get("/api/users")
-        .then((res) => {setUsers(res.data); console.log(res.data)})
-        .catch((err) => console.error("Error fetching users:", err));
-       
 
+      // Fetch conversations for the logged-in user
       axios
-        .get(`/api/conversations/${loggedInUser}`)
-        .then((res) => setConversations(res.data))
+  .get(`/api/conversations/${loggedInUser}`)
+  .then((res) => {
+    setConversations(res.data);
+    // Extract participants (other users) from the conversations
+    const participantIds = res.data
+      .map(conversation => conversation.participants)
+      .flat()
+      .filter(participant => participant.toString() !== loggedInUser); // Filter out logged-in user
+    
+    console.log("Participant IDs:", participantIds);
+          
+          // Fetch user details for those participants
+          axios
+            .get(`/api/users`, { params: { userIds: participantIds } })
+            .then((userRes) => {
+              setUsers(userRes.data);
+            })
+            .catch((err) => console.error("Error fetching users:", err));
+        })
         .catch((err) => console.error("Error fetching conversations:", err));
     }
   }, []);
@@ -42,16 +55,17 @@ function ChatApp() {
           socket.emit("joinConversation", res.data._id);
         }
       })
-      .catch((err) => {
-        axios.post('/api/conversations', {
-          participants: [userId, receiverId],
-          messages: []
-        })
-        .then((newConversation) => {
-          setSelectedConversation(newConversation.data);
-          socket.emit("joinConversation", newConversation.data._id);
-        })
-        .catch((err) => console.error("Error creating new conversation:", err));
+      .catch(() => {
+        axios
+          .post('/api/conversations', {
+            participants: [userId, receiverId],
+            messages: []
+          })
+          .then((newConversation) => {
+            setSelectedConversation(newConversation.data);
+            socket.emit("joinConversation", newConversation.data._id);
+          })
+          .catch((err) => console.error("Error creating new conversation:", err));
       });
   };
 
@@ -62,24 +76,22 @@ function ChatApp() {
           <h3>Contacts</h3>
         </div>
         <div className="contacts-list">
-          {users
-            .filter((user) => user._id !== userId)
-            .map((user) => (
-              <div
-                key={user._id}
-                className={`contact-item ${selectedUser === user.name ? 'selected' : ''}`}
-                onClick={() => handleUserSelect(user._id)}
-              >
-                <img
-                  src={account}
-                  alt={`${user.name}'s profile`}
-                  className="contact-avatar"
-                />
-                <div className="contact-info">
-                  <span className="contact-name">{user.name}</span>
-                </div>
+          {users.map((user) => (
+            <div
+              key={user._id}
+              className={`contact-item ${selectedUser === user.name ? 'selected' : ''}`}
+              onClick={() => handleUserSelect(user._id)}
+            >
+              <img
+                src={account}
+                alt={`${user.name}'s profile`}
+                className="contact-avatar"
+              />
+              <div className="contact-info">
+                <span className="contact-name">{user.name}</span>
               </div>
-            ))}
+            </div>
+          ))}
         </div>
       </div>
 
@@ -108,6 +120,7 @@ function ChatApp() {
           )}
         </div>
       </div>
+    
 
       <style>{`
         .chat-container {

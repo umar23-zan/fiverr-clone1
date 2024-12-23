@@ -36,6 +36,23 @@ router.post("/", async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 });
+// routes/conversation.js
+router.get("/:userId", async (req, res) => {
+  try {
+    const { userId } = req.params;
+    const conversations = await Conversation.find({
+      participants: userId
+    });  // Ensure you populate participant details
+    //.populate('participants')
+    if (conversations) {
+      return res.json(conversations);
+    } else {
+      return res.status(404).json({ message: "No conversations found" });
+    }
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
 
 
 module.exports = router;
