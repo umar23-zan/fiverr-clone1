@@ -6,6 +6,8 @@ import Header from './Header';
 import account from '../images/account-icon.svg'
 import './GidDetails.css'
 import GigCard from './GigCard';
+import MiniMessaging from './MiniMessaging';
+import close from '../images/close.svg'
 
 const GidDetail = () => {
   const { id } = useParams();
@@ -13,10 +15,10 @@ const GidDetail = () => {
   const [gigs, setGigs] = useState([]);
   const [gig, setGig] = useState(null);
   const [owner, setOwner] = useState(null);
-
+  const senderId=localStorage.getItem('userId')
   const queryParams = new URLSearchParams(location.search);
   const freelancerId = queryParams.get('freelancerId');
-
+  const [showChat, setShowChat] = useState(false); // Toggle chat
   useEffect(() => {
     fetchGigDetails();
     fetchUserGigs();
@@ -89,6 +91,39 @@ const GidDetail = () => {
               <GigCard key={gig._id} gig={gig} />
             ))}
           </div>
+          <div className="mini-chat">
+        {!showChat ? (
+          <button
+            className="chat-toggle-button"
+            onClick={() => setShowChat(true)}
+          >
+            <img
+              src={owner.profilePicture || account}
+              alt="Freelancer"
+              style={{
+                width: "40px",
+                height: "40px",
+                borderRadius: "50%",
+                marginRight: "10px",
+              }}
+            />
+            Message {owner.name}
+            <span style={{ fontSize: "12px", color: "grey", marginLeft: "10px" }}>
+              Away · Avg. response time: 1 Hour
+            </span>
+          </button>
+        ) : (
+          <div>
+            <img src={close} alt="close-icon" onClick={() => setShowChat(false)} className='mini-chat-mode-icon'/>
+            <MiniMessaging
+            isMiniChat={true}
+            receiverId={freelancerId}
+            senderId={senderId}
+          />
+          </div>
+          
+        )}
+      </div>
     </div>
   );
 };

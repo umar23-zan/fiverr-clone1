@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { login } from '../api/auth';  
-// import logo from '../images/ShariaStocks-logo/logo.png'
+import logo from '../images/logo1.png'
 import '../auth.css';
 import {
     Container,
@@ -59,8 +59,7 @@ const Login = () => {
     return (
         <div>
             <div className='header-section'>
-                {/* <img src={logo} alt="logo" /> */}
-                logo
+                <img src={logo} alt="logo" className='fiverr-logo'/>
             </div>
             <Container component="main" maxWidth="xs">
       <Box
