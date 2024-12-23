@@ -1,4 +1,139 @@
-/* General styling for all screen sizes */
+.main-division1 {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.error-message {
+  background-color: #fee2e2;
+  color: #dc2626;
+  padding: 1rem;
+  border-radius: 0.5rem;
+  margin-bottom: 1rem;
+  border: 1px solid #fecaca;
+}
+
+.loading-message {
+  text-align: center;
+  color: #4b5563;
+  padding: 1rem;
+  font-weight: 500;
+}
+
+.create-gig-form {
+  background-color: white;
+  border-radius: 1rem;
+  padding: 2rem;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.create-gig-form h1 {
+  color: #111827;
+  font-size: 1.875rem;
+  font-weight: 600;
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+.gigform-sections {
+  display: grid;
+  grid-template-columns: 300px 1fr;
+  gap: 2rem;
+  align-items: start;
+  margin-bottom: 1.5rem;
+}
+
+.gigform-label {
+  padding-top: 0.75rem;
+}
+
+.gigform-label p {
+  color: #374151;
+  font-size: 0.875rem;
+  margin: 0;
+  text-align: left;
+}
+
+.create-gig-form input[type="text"],
+.create-gig-form input[type="number"],
+.create-gig-form select,
+.create-gig-form textarea {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid #d1d5db;
+  border-radius: 0.5rem;
+  font-size: 1rem;
+  transition: border-color 0.15s ease-in-out;
+  background-color: #f9fafb;
+}
+
+.create-gig-form textarea {
+  min-height: 120px;
+  resize: vertical;
+}
+
+.create-gig-form input[type="file"] {
+  width: 100%;
+  padding: 0.5rem 0;
+}
+
+.create-gig-form input:focus,
+.create-gig-form select:focus,
+.create-gig-form textarea:focus {
+  outline: none;
+  border-color: #60a5fa;
+  box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.2);
+}
+
+.form-error {
+  font-size: 0.875rem;
+  margin-top: 0.5rem;
+}
+
+.gigform-actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: flex-end;
+  margin-top: 2rem;
+  padding-top: 1rem;
+  border-top: 1px solid #e5e7eb;
+  grid-column: 1 / -1;
+}
+
+.gigform-actions button {
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.5rem;
+  font-weight: 500;
+  font-size: 0.875rem;
+  transition: all 0.15s ease-in-out;
+}
+
+.gigform-actions button[type="button"] {
+  background-color: #f3f4f6;
+  color: #374151;
+  border: 1px solid #d1d5db;
+}
+
+.gigform-actions button[type="button"]:hover {
+  background-color: #e5e7eb;
+}
+
+.gigform-actions button[type="submit"] {
+  background-color: #2563eb;
+  color: white;
+  border: none;
+}
+
+.gigform-actions button[type="submit"]:hover {
+  background-color: #1d4ed8;
+}
+
+.gigform-actions button[type="submit"]:disabled {
+  background-color: #93c5fd;
+  cursor: not-allowed;
+}
 .CreateGig-section {
   display: flex;
   flex-direction: column;
@@ -28,130 +163,37 @@
   cursor: pointer;
 }
 
-.create-gig-form {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: space-around;
-  height: auto;
-  width: 90%;
-  margin: auto;
-}
 
-.gigform-sections {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-  width: 100%;
-  margin-bottom: 15px;
-}
-
-.gigform-sections input,
-.gigform-sections select,
-.gigform-sections textarea {
-  width: 60%;
-  height: 35px;
-  border-radius: 5px;
-  border-style: solid;
-  padding: 5px;
-}
-
-.gigform-sections textarea {
-  height: 70px;
-}
-
-.gigform-label {
-  width: 30%;
-  text-align: right;
-  padding-right: 10px;
-}
-
-.gigform-actions {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: center;
-  gap: 20px;
-  width: 100%;
-  margin-top: 20px;
-}
-
-.gigform-actions button {
-  border: none;
-  border-radius: 5px;
-  font-size: 1rem;
-  width: 120px;
-  height: 40px;
-  cursor: pointer;
-  color: black;
-  background-color: rgb(21, 246, 129);
-}
-
-/* Media Queries for smaller screens */
 @media (max-width: 768px) {
-  .CreateGig-section {
-    width: 90%;
-    height: auto;
-    padding: 20px;
+  .main-division1 {
+    padding: 1rem;
   }
-
-  .CreateGig-section h1 {
-    font-size: 1.5rem;
-  }
-
-  .CreateGig-section button {
-    font-size: 0.9rem;
-    width: 100px;
-    height: 35px;
-  }
-
+  
   .create-gig-form {
-    width: 100%;
+    padding: 1.5rem;
   }
-
+  
   .gigform-sections {
-    flex-direction: column;
-    align-items: flex-start;
+    grid-template-columns: 1fr;
+    gap: 0.5rem;
   }
-
-  .gigform-label {
-    width: 100%;
+  
+  .gigform-label p {
     text-align: left;
-    margin-bottom: 5px;
+    padding-top: 0;
   }
-
-  .gigform-sections input,
-  .gigform-sections select,
-  .gigform-sections textarea {
-    width: 100%;
+  
+  .CreateGig-section {
+    flex-direction: column;
+    gap: 1rem;
+    text-align: center;
   }
-
+  
   .gigform-actions {
     flex-direction: column;
-    gap: 10px;
-    width: 100%;
   }
-
+  
   .gigform-actions button {
     width: 100%;
-  }
-}
-
-@media (max-width: 480px) {
-  .CreateGig-section h1 {
-    font-size: 1.2rem;
-  }
-
-  .gigform-sections input,
-  .gigform-sections select,
-  .gigform-sections textarea {
-    width: 100%;
-  }
-
-  .gigform-actions button {
-    font-size: 0.8rem;
-    width: 100px;
-    height: 35px;
   }
 }

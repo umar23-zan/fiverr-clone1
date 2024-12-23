@@ -1,8 +1,10 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect, useRef} from 'react';
 import logo from '../images/logo1.png'
 import account from '../images/account-icon.svg'
 import './header.css'
 import { useNavigate } from 'react-router-dom';
+import { getUserData} from '../api/auth';
+
 
 const categories = [
   'Graphics & Design',
@@ -17,14 +19,57 @@ const categories = [
 ];
 
 const HeaderBuy = () => {
+   const [user, setUser] = useState(null);
   const [isDropdownOpen, setDropdownOpen] = useState(false); 
   const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState('');
   const [filteredSuggestions, setFilteredSuggestions] = useState([]);
-
+  const id =localStorage.getItem('userEmail')
+  const [errors, setErrors] = useState({});
+  const [loading, setLoading] = useState(true);
+  const dropdownRef = useRef(null);
+  
   const toggleDropdown = () => {
     setDropdownOpen((prev) => !prev);
   };
+
+  const handleOutsideClick = (event) => {
+    if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+      setDropdownOpen(false);
+    }
+  };
+
+  useEffect(() => {
+    if (isDropdownOpen) {
+      document.addEventListener('mousedown', handleOutsideClick);
+    } else {
+      document.removeEventListener('mousedown', handleOutsideClick);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleOutsideClick);
+    };
+  }, [isDropdownOpen]);
+
+  useEffect(() => {
+      const fetchUser = async () => {
+        try {
+          const data = await getUserData(id);
+          setUser(data);
+          
+        } catch (error) {
+          console.error("Failed to fetch user data:", error.message);
+          setErrors((prev) => ({ ...prev, global: "Failed to load profile data." }));
+        } finally {
+          setLoading(false);
+        }
+      };
+    
+      fetchUser();
+    }, [id]);
+    
+
+
 
   const handleLogout = () => {
     // Clear user data from localStorage
@@ -92,10 +137,18 @@ const HeaderBuy = () => {
       <svg   cursor={'pointer'} viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg"><path d="M14.325 2.00937C12.5188 0.490623 9.72813 0.718748 8 2.47812C6.27188 0.718748 3.48125 0.487498 1.675 2.00937C-0.674996 3.9875 -0.331246 7.2125 1.34375 8.92187L6.825 14.5062C7.1375 14.825 7.55625 15.0031 8 15.0031C8.44688 15.0031 8.8625 14.8281 9.175 14.5094L14.6563 8.925C16.3281 7.21562 16.6781 3.99062 14.325 2.00937ZM13.5875 7.86875L8.10625 13.4531C8.03125 13.5281 7.96875 13.5281 7.89375 13.4531L2.4125 7.86875C1.27188 6.70625 1.04063 4.50625 2.64063 3.15937C3.85625 2.1375 5.73125 2.29062 6.90625 3.4875L8 4.60312L9.09375 3.4875C10.275 2.28437 12.15 2.1375 13.3594 3.15625C14.9563 4.50312 14.7188 6.71562 13.5875 7.86875Z"></path></svg>
       <div><p style={{color: "black", cursor: "pointer", margin: "0px"}}>Orders</p></div>
       
-      <div><img src={account} alt="account" onClick={toggleDropdown}/></div>
+      <div>
+        {/* <span>{user.name}</span> */}
+        <img 
+          src={user && user.profilePicture || account} alt="account" 
+          onClick={toggleDropdown} 
+          style={{borderRadius: "50px"}}
+          ref={dropdownRef}
+          />
+      </div>
       </div>
       {isDropdownOpen && (
-        <div className="profile-dropdown">
+        <div className="profile-dropdown" ref={dropdownRef}>
           <ul>
             <li>
             <p style={{color: 'Black'}} onClick={() =>{

@@ -141,7 +141,7 @@ const handleSubmit = async (e) => {
   if (Object.keys(newErrors).length === 0) {
     try {
       await updateUserData(id, formData);
-      if (profilePicture) {
+      if (profilePicture && profilePicture instanceof File) {
         const data = new FormData();
         data.append("profilePicture", profilePicture);
         data.append("email", id);
@@ -149,12 +149,12 @@ const handleSubmit = async (e) => {
       }
       setEditForm(false);
       const updatedUserData = await getUserData(id);
-      setUser(updatedUserData);
+      setUser(updatedUserData); 
       setProfilePreview(updatedUserData.profilePicture ? `${updatedUserData.profilePicture}` : account);
       alert("Profile Updated Successfully");
     } catch (error) {
       console.error("Failed to update profile:", error.message);
-      alert("Profile update failed. Please try again.");
+      setErrors((prev) => ({ ...prev, global: "Failed to update profile. Please try again." }));
     }
   } else {
     setErrors(newErrors);
@@ -204,6 +204,7 @@ return (
         
       ) : (
         <form className="profile-edit-form" onSubmit={handleSubmit}>
+          <h3>Edit Profile</h3>
           <div className="profile-picture-section">
             <div className='profile-preview'>
               {profilePreview && <img src={profilePreview} alt="Profile Preview" width={100} height={100} />}
