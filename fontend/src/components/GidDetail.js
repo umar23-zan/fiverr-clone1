@@ -91,39 +91,63 @@ const GidDetail = () => {
               <GigCard key={gig._id} gig={gig} />
             ))}
           </div>
-          <div className="mini-chat">
-        {!showChat ? (
-          <button
-            className="chat-toggle-button"
-            onClick={() => setShowChat(true)}
-          >
-            <img
-              src={owner.profilePicture || account}
-              alt="Freelancer"
-              style={{
-                width: "40px",
-                height: "40px",
-                borderRadius: "50%",
-                marginRight: "10px",
-              }}
-            />
-            Message {owner.name}
-            <span style={{ fontSize: "12px", color: "grey", marginLeft: "10px" }}>
-              Away · Avg. response time: 1 Hour
-            </span>
-          </button>
-        ) : (
-          <div>
-            <img src={close} alt="close-icon" onClick={() => setShowChat(false)} className='mini-chat-mode-icon'/>
-            <MiniMessaging
-            isMiniChat={true}
-            receiverId={freelancerId}
-            senderId={senderId}
-          />
+    <div className="chat-interface">
+      {!showChat ? (
+        <button
+          className="chat-button"
+          onClick={() => setShowChat(true)}
+          aria-label={`Message ${owner.name}`}
+        >
+          <div className="chat-button-content">
+            <div className="chat-avatar">
+              <img
+                src={owner.profilePicture || account}
+                alt={owner.name}
+                className="chat-avatar-image"
+              />
+              <span className="status-indicator"></span>
+            </div>
+            <div className="chat-info">
+              <span className="chat-name">Message {owner.name}</span>
+              <div className="chat-status">
+                <span className="status-dot"></span>
+                <span className="status-text">Away · Avg. response time: 1 Hour</span>
+              </div>
+            </div>
           </div>
-          
-        )}
-      </div>
+        </button>
+      ) : (
+        <div className="chat-window">
+          <div className="chat-header">
+            <div className="chat-header-info">
+              <img
+                src={owner.profilePicture || account}
+                alt={owner.name}
+                className="chat-header-avatar"
+              />
+              <div className="chat-header-text">
+                <span className="chat-header-name">{owner.name}</span>
+                <span className="chat-header-status">Away</span>
+              </div>
+            </div>
+            <button 
+              className="close-button"
+              onClick={() => setShowChat(false)}
+              aria-label="Close chat"
+            >
+              <img src={close} alt="close" className="close-icon" />
+            </button>
+          </div>
+          <div className="chat-body">
+            <MiniMessaging
+              isMiniChat={true}
+              receiverId={freelancerId}
+              senderId={senderId}
+            />
+          </div>
+        </div>
+      )}
+    </div>
     </div>
   );
 };

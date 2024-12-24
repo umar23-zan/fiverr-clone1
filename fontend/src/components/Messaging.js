@@ -1,12 +1,22 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import attachment from "../images/attachment.png";
+import { Send } from 'lucide-react';
 
 function Messaging({ socket, conversationId, receiverId }) {
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
   const [file, setFile] = useState(null);
+  const messagesEndRef = useRef(null);
   const userId = localStorage.getItem('userId');
+
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages]);
 
   useEffect(() => {
     axios
@@ -23,6 +33,7 @@ function Messaging({ socket, conversationId, receiverId }) {
     return () => socket.off("receiveMessage");
   }, [conversationId, socket]);
 
+  // Rest of the existing functions remain the same
   const sendMessage = () => {
     if (!newMessage.trim() && !file) return;
 
@@ -111,7 +122,7 @@ function Messaging({ socket, conversationId, receiverId }) {
           <embed 
             src={fileUrl} 
             type="application/pdf" 
-            width="200" 
+            width="100%" 
             height="200"
           />
           <a 
@@ -157,6 +168,7 @@ function Messaging({ socket, conversationId, receiverId }) {
             </div>
           </div>
         ))}
+        <div ref={messagesEndRef} />
       </div>
       
       <div className="message-input-container">
@@ -183,20 +195,23 @@ function Messaging({ socket, conversationId, receiverId }) {
           </div>
           
           <button onClick={sendMessage} className="send-button">
-            Send
+            <Send size={18} />
+            <span className="send-text">Send</span>
           </button>
         </div>
         
-        <div className={`file-status ${file ? 'selected' : ''}`}>
-          {file ? `Selected file: ${file.name}` : "No file selected"}
-        </div>
+        {file && (
+          <div className="file-status selected">
+            Selected file: {file.name}
+          </div>
+        )}
       </div>
 
       <style>{`
         .messaging-container {
           display: flex;
           flex-direction: column;
-          height: calc(100vh - 60px);
+          height: 100%;
           background-color: #e5ddd5;
           position: relative;
         }
@@ -207,11 +222,12 @@ function Messaging({ socket, conversationId, receiverId }) {
           padding: 20px;
           display: flex;
           flex-direction: column;
+          gap: 8px;
         }
 
         .message-wrapper {
           display: flex;
-          margin-bottom: 10px;
+          margin-bottom: 4px;
           animation: fadeIn 0.3s ease-in-out;
         }
 
@@ -248,7 +264,7 @@ function Messaging({ socket, conversationId, receiverId }) {
         }
 
         .message-input-container {
-          padding: 20px;
+          padding: 12px;
           background-color: #f0f0f0;
           border-top: 1px solid #ddd;
         }
@@ -256,10 +272,10 @@ function Messaging({ socket, conversationId, receiverId }) {
         .input-wrapper {
           display: flex;
           align-items: center;
-          gap: 10px;
+          gap: 8px;
           background-color: white;
           border-radius: 24px;
-          padding: 8px 16px;
+          padding: 6px 12px;
           box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
         }
 
@@ -268,7 +284,7 @@ function Messaging({ socket, conversationId, receiverId }) {
           border: none;
           outline: none;
           font-size: 14px;
-          padding: 8px 0;
+          padding: 8px;
           min-width: 0;
         }
 
@@ -280,21 +296,17 @@ function Messaging({ socket, conversationId, receiverId }) {
           display: flex;
           align-items: center;
           justify-content: center;
-          width: 35px;
-          height: 35px;
+          width: 32px;
+          height: 32px;
           border-radius: 50%;
           background-color: #1dbf73;
           cursor: pointer;
           transition: background-color 0.2s;
         }
 
-        .attachment-button:hover {
-          background-color: #19a463;
-        }
-
         .attachment-icon {
-          width: 20px;
-          height: 20px;
+          width: 18px;
+          height: 18px;
           opacity: 0.8;
         }
 
@@ -309,11 +321,14 @@ function Messaging({ socket, conversationId, receiverId }) {
         }
 
         .send-button {
+          display: flex;
+          align-items: center;
+          gap: 4px;
           background-color: #1dbf73;
           color: white;
           border: none;
           border-radius: 20px;
-          padding: 8px 20px;
+          padding: 8px 16px;
           font-size: 14px;
           cursor: pointer;
           transition: background-color 0.2s;
@@ -326,19 +341,17 @@ function Messaging({ socket, conversationId, receiverId }) {
         .file-status {
           margin-top: 8px;
           font-size: 12px;
-          color: #666;
-        }
-
-        .file-status.selected {
           color: #1dbf73;
+          padding: 0 12px;
         }
 
         .file-preview {
           margin-top: 8px;
+          max-width: 100%;
         }
 
         .image-preview {
-          max-width: 200px;
+          max-width: 100%;
           max-height: 200px;
           object-fit: contain;
           border-radius: 8px;
@@ -350,25 +363,75 @@ function Messaging({ socket, conversationId, receiverId }) {
           color: #2b5cd9;
           text-decoration: none;
           margin-top: 4px;
+          word-break: break-all;
         }
 
-        .file-download-link:hover {
-          text-decoration: underline;
-        }
-
-        .generic-file {
-          color: #2b5cd9;
-          font-weight: 500;
-        }
-
-        @keyframes fadeIn {
-          from {
-            opacity: 0;
-            transform: translateY(10px);
+        /* Tablet Styles */
+        @media (max-width: 1024px) {
+          .message-bubble {
+            max-width: 75%;
           }
-          to {
-            opacity: 1;
-            transform: translateY(0);
+        }
+
+        /* Mobile Styles */
+        @media (max-width: 768px) {
+          .messages-list {
+            padding: 12px;
+          }
+
+          .message-bubble {
+            max-width: 85%;
+            padding: 10px 12px;
+          }
+
+          .message-input-container {
+            padding: 8px;
+          }
+
+          .input-wrapper {
+            padding: 4px 8px;
+          }
+
+          .send-text {
+            display: none;
+          }
+
+          .send-button {
+            padding: 8px;
+          }
+
+          .attachment-button {
+            width: 28px;
+            height: 28px;
+          }
+
+          .attachment-icon {
+            width: 16px;
+            height: 16px;
+          }
+        }
+
+        /* Small Mobile Styles */
+        @media (max-width: 480px) {
+          .messages-list {
+            padding: 8px;
+          }
+
+          .message-bubble {
+            max-width: 90%;
+            padding: 8px 10px;
+          }
+
+          .message-content {
+            font-size: 13px;
+          }
+
+          .file-status {
+            font-size: 11px;
+          }
+
+          .image-preview {
+            max-height: 150px;
           }
         }
 
@@ -388,6 +451,17 @@ function Messaging({ socket, conversationId, receiverId }) {
 
         .messages-list::-webkit-scrollbar-thumb:hover {
           background: rgba(0, 0, 0, 0.3);
+        }
+
+        @keyframes fadeIn {
+          from {
+            opacity: 0;
+            transform: translateY(10px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
         }
       `}</style>
     </div>

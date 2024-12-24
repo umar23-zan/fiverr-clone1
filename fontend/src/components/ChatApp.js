@@ -3,35 +3,34 @@ import axios from "axios";
 import Messaging from "./Messaging";
 import { io } from "socket.io-client";
 import account from '../images/account-icon.svg';
+import { Menu, X } from 'lucide-react'; // Adding icons for mobile menu
 
 const socket = io("http://localhost:5000");
 
 function ChatApp() {
-  const [users, setUsers] = useState([]); // To store users involved in conversations
+  const [users, setUsers] = useState([]);
   const [selectedUser, setSelectedUser] = useState(null);
   const [conversations, setConversations] = useState([]);
   const [selectedConversation, setSelectedConversation] = useState(null);
   const [userId, setUserId] = useState("");
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   useEffect(() => {
     const loggedInUser = localStorage.getItem("userId");
     if (loggedInUser) {
       setUserId(loggedInUser);
 
-      // Fetch conversations for the logged-in user
       axios
-  .get(`/api/conversations/${loggedInUser}`)
-  .then((res) => {
-    setConversations(res.data);
-    // Extract participants (other users) from the conversations
-    const participantIds = res.data
-      .map(conversation => conversation.participants)
-      .flat()
-      .filter(participant => participant.toString() !== loggedInUser); // Filter out logged-in user
-    
-    console.log("Participant IDs:", participantIds);
+        .get(`/api/conversations/${loggedInUser}`)
+        .then((res) => {
+          setConversations(res.data);
+          const participantIds = res.data
+            .map(conversation => conversation.participants)
+            .flat()
+            .filter(participant => participant.toString() !== loggedInUser);
           
-          // Fetch user details for those participants
+          console.log("Participant IDs:", participantIds);
+          
           axios
             .get(`/api/users`, { params: { userIds: participantIds } })
             .then((userRes) => {
@@ -46,6 +45,7 @@ function ChatApp() {
   const handleUserSelect = (receiverId) => {
     const userName = users.find((user) => user._id === receiverId)?.name || "Unknown User";
     setSelectedUser(userName);
+    setIsSidebarOpen(false); // Close sidebar on mobile after selection
 
     axios
       .get(`/api/conversations/${userId}/${receiverId}`)
@@ -71,7 +71,24 @@ function ChatApp() {
 
   return (
     <div className="chat-container">
-      <div className="sidebar">
+      {/* Mobile Header */}
+      <div className="mobile-header">
+        <button 
+          className="menu-button"
+          onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+        >
+          {isSidebarOpen ? <X size={24} /> : <Menu size={24} />}
+        </button>
+        {selectedUser && (
+          <div className="selected-user mobile-user">
+            <img src={account} alt="Profile" className="selected-user-avatar" />
+            <span className="selected-user-name">{selectedUser}</span>
+          </div>
+        )}
+      </div>
+
+      {/* Sidebar */}
+      <div className={`sidebar ${isSidebarOpen ? 'sidebar-open' : ''}`}>
         <div className="sidebar-header">
           <h3>Contacts</h3>
         </div>
@@ -95,8 +112,9 @@ function ChatApp() {
         </div>
       </div>
 
+      {/* Chat Area */}
       <div className="chat-area">
-        <div className="chat-header">
+        <div className="chat-header desktop-header">
           {selectedUser && (
             <div className="selected-user">
               <img src={account} alt="Profile" className="selected-user-avatar" />
@@ -120,7 +138,6 @@ function ChatApp() {
           )}
         </div>
       </div>
-    
 
       <style>{`
         .chat-container {
@@ -128,6 +145,33 @@ function ChatApp() {
           height: 100vh;
           background-color: #f5f5f5;
           font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+          position: relative;
+        }
+
+        .mobile-header {
+          display: none;
+          position: fixed;
+          top: 0;
+          left: 0;
+          right: 0;
+          height: 60px;
+          background-color: white;
+          border-bottom: 1px solid #e0e0e0;
+          padding: 0 16px;
+          align-items: center;
+          z-index: 1000;
+        }
+
+        .menu-button {
+          background: none;
+          border: none;
+          padding: 8px;
+          cursor: pointer;
+          color: #1a1a1a;
+        }
+
+        .mobile-user {
+          margin-left: 16px;
         }
 
         .sidebar {
@@ -136,6 +180,7 @@ function ChatApp() {
           border-right: 1px solid #e0e0e0;
           display: flex;
           flex-direction: column;
+          height: 100%;
         }
 
         .sidebar-header {
@@ -251,6 +296,73 @@ function ChatApp() {
 
         ::-webkit-scrollbar-thumb:hover {
           background: #a8a8a8;
+        }
+
+        /* Tablet Styles */
+        @media (max-width: 1024px) {
+          .sidebar {
+            width: 250px;
+          }
+        }
+
+        /* Mobile Styles */
+        @media (max-width: 768px) {
+          .chat-container {
+            flex-direction: column;
+          }
+
+          .mobile-header {
+            display: flex;
+          }
+
+          .desktop-header {
+            display: none;
+          }
+
+          .sidebar {
+            position: fixed;
+            left: -100%;
+            top: 60px;
+            bottom: 0;
+            width: 80%;
+            max-width: 300px;
+            z-index: 1000;
+            transition: left 0.3s ease;
+          }
+
+          .sidebar-open {
+            left: 0;
+          }
+
+          .chat-area {
+            margin-top: 60px;
+            height: calc(100vh - 60px);
+          }
+
+          .contact-item {
+            padding: 16px;
+          }
+
+          .contact-avatar {
+            width: 32px;
+            height: 32px;
+          }
+        }
+
+        /* Small Mobile Styles */
+        @media (max-width: 480px) {
+          .sidebar {
+            width: 100%;
+            max-width: none;
+          }
+
+          .selected-user-name {
+            font-size: 14px;
+          }
+
+          .contact-name {
+            font-size: 14px;
+          }
         }
       `}</style>
     </div>
