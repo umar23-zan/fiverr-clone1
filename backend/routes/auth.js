@@ -7,6 +7,7 @@ const User = require('../models/User');
 const router = express.Router();
 const multer = require('multer');
 const path = require('path');
+const fs = require('fs');
 // const ContactUs = require('../models/contactusdetails');
 // const sendEmail = require('./emailservice');
 
@@ -182,29 +183,40 @@ router.put('/user/:email', async (req, res) => {
 
 // Configure multer storage
 const storage = multer.diskStorage({
-    destination: './uploads/profilePictures',  // Specify the upload directory
+    destination: (req, file, cb) => {
+        const uploadDir = path.join(__dirname, '../uploads/profilePictures'); // Absolute path to uploads directory
+        if (!fs.existsSync(uploadDir)) {
+            fs.mkdirSync(uploadDir, { recursive: true }); // Ensure the directory exists
+        }
+        cb(null, uploadDir);
+    },
     filename: (req, file, cb) => {
         cb(null, `${Date.now()}-${file.originalname}`);
     }
 });
-
 const upload = multer({ storage });
 // Route to upload profile picture
 router.post('/upload-profile-picture', upload.single('profilePicture'), async (req, res) => {
     try {
-        console.log('File recieved: ', req.file);
         if (!req.file) {
             return res.status(400).json({ msg: 'No file uploaded' });
         }
+
         const email = req.body.email;
         const user = await User.findOne({ email });
         if (!user) return res.status(404).json({ msg: 'User not found' });
-        console.log('upload path:', req.file.path)
-        user.profilePicture = req.file.path;  // Save the file path to profilePicture
+
+        // Construct the relative URL for the uploaded file
+        const relativeFilePath = `/uploads/profilePictures/${req.file.filename}`;
+
+        // Save the relative URL to the database
+        user.profilePicture = relativeFilePath;
         await user.save();
 
-        res.json({ msg: 'Profile picture uploaded successfully', profilePicture: user.profilePicture });
-        // console.log('File saved at: ', finalPath)
+        res.json({ 
+            msg: 'Profile picture uploaded successfully', 
+            profilePicture: relativeFilePath 
+        });
     } catch (error) {
         console.error(error);
         res.status(500).send('Server error');

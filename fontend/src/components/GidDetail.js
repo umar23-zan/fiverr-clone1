@@ -13,6 +13,7 @@ import { MessageCircle, ThumbsUp } from 'lucide-react';
 const GidDetail = () => {
   const { id } = useParams();
   const location = useLocation();
+  const [loading, setLoading] = useState(true);
   const [gigs, setGigs] = useState([]);
   const [gig, setGig] = useState(null);
   const [owner, setOwner] = useState(null);
@@ -44,6 +45,7 @@ const GidDetail = () => {
       
       const ownerResponse = await axios.get(`/api/auth/user/${gigData.data.freelancerId.email}`);
       setOwner(ownerResponse.data);
+      console.log(ownerResponse.data)
     } catch (error) {
       console.error('Error fetching gig details:', error);
     }

@@ -139,12 +139,14 @@ const HeaderBuy = () => {
       
       <div>
         {/* <span>{user.name}</span> */}
-        <img 
-          src={user && user.profilePicture || account} alt="account" 
-          onClick={toggleDropdown} 
-          style={{borderRadius: "50px"}}
-          ref={dropdownRef}
-          />
+        {!loading && (<img 
+                // src={user && user.profilePicture || account} 
+                src={`${process.env.REACT_APP_BASE_URL || "http://localhost:3000"}/${user && user.profilePicture || account}`} 
+                alt="account" 
+                onClick={toggleDropdown} 
+                style={{borderRadius: "50px"}}
+                ref={dropdownRef} />)}
+                
       </div>
       </div>
       {isDropdownOpen && (

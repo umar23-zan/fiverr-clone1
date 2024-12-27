@@ -135,11 +135,14 @@ const Header = () => {
       <div><p style={{color: "black", cursor: "pointer", margin: "0px"}}>Orders</p></div>
       
       <div>
-        <img 
-        src={user && user.profilePicture || account} alt="account" 
+      {!loading && (<img 
+        // src={user && user.profilePicture || account} 
+        src={`${process.env.REACT_APP_BASE_URL || "http://localhost:3000"}/${user && user.profilePicture || account}`} 
+        alt="account" 
         onClick={toggleDropdown} 
         style={{borderRadius: "50px"}}
-        ref={dropdownRef} />
+        ref={dropdownRef} />)}
+        
         
         </div>
       </div>
