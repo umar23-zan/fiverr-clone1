@@ -192,17 +192,19 @@ const upload = multer({ storage });
 // Route to upload profile picture
 router.post('/upload-profile-picture', upload.single('profilePicture'), async (req, res) => {
     try {
+        console.log('File recieved: ', req.file);
         if (!req.file) {
             return res.status(400).json({ msg: 'No file uploaded' });
         }
         const email = req.body.email;
         const user = await User.findOne({ email });
         if (!user) return res.status(404).json({ msg: 'User not found' });
-
+        console.log('upload path:', req.file.path)
         user.profilePicture = req.file.path;  // Save the file path to profilePicture
         await user.save();
 
         res.json({ msg: 'Profile picture uploaded successfully', profilePicture: user.profilePicture });
+        // console.log('File saved at: ', finalPath)
     } catch (error) {
         console.error(error);
         res.status(500).send('Server error');

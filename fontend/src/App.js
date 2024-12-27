@@ -1,6 +1,7 @@
 import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import './App.css';
+import LandingPage from './components/LandingPage'
 import Dashboard from "./components/Dashboard";
 // import Messaging from "./components/Messaging";
 import GigManagement from "./components/GigManagement";
@@ -21,7 +22,8 @@ function App() {
     <div className="App">
       <Router>
         <Routes>
-          <Route path="/" element={<Login />} />
+          <Route path="/" element={<LandingPage />} />
+          <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
           <Route path="/forgetpassword" element={<ForgotPassword />} />
           <Route path="/resetPassword" element={<ResetPassword />} />
