@@ -1,5 +1,5 @@
 import React, {useState, useEffect, useRef} from 'react';
-import logo from '../images/logo1.png'
+import logo from '../images/Giggo-logo.svg'
 import account from '../images/account-icon.svg'
 import './header.css'
 import { useNavigate } from 'react-router-dom';
@@ -165,11 +165,11 @@ const HeaderBuy = () => {
         </div>
       )}
     </div>
-    <div className="categories">
+    {/* <div className="categories">
         {categories.map((category) => (
           <p key={category}>{category}</p>
         ))}
-      </div>
+      </div> */}
     </div>
   )
 }

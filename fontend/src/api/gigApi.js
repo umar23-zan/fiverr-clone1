@@ -18,6 +18,19 @@ export const getAllGigs = async () => {
     throw new Error(error.response?.data?.message || 'An unexpected error occurred');
   }
 };
+export const getGigsByCategory = async (category) => {
+  try {
+    const response = await axios.get(`${API_URL}?category=${encodeURIComponent(category)}`);
+    if (response.status !== 200) {
+      throw new Error('Failed to fetch gigs by category');
+    }
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching gigs by category:', error);
+    throw new Error(error.response?.data?.message || 'An unexpected error occurred');
+  }
+};
+
 
 
 // Get gigs by user ID
@@ -25,7 +38,6 @@ export const getUserGigs = async (freelancerId) => {
   const response = await axios.get(`/api/gigs/user/${freelancerId}`);
   return response.data;
 };
-
 
 export const createGig = async (gigData) => {
   const response = await axios.post(API_URL, gigData);
@@ -64,6 +76,18 @@ export const deleteGig = async (id) => {
   } catch (error) {
     console.error('Error deleting gig:', error);
     throw new Error('Failed to delete gig');
+  }
+};
+
+export const getCategoryPreviews = async () => {
+  try {
+    const response = await fetch('/api/gigs/category-preview');
+    if (!response.ok) {
+      throw new Error('Failed to fetch category previews');
+    }
+    return await response.json();
+  } catch (error) {
+    throw error;
   }
 };
 

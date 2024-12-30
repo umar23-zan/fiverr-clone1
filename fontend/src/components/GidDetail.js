@@ -9,6 +9,8 @@ import GigCard from './GigCard';
 import MiniMessaging from './MiniMessaging';
 import close from '../images/close.svg'
 import { MessageCircle, ThumbsUp } from 'lucide-react';
+import ReviewsSection from './ReviewsSection';
+import Messaging from './Messaging';
 
 const GidDetail = () => {
   const { id } = useParams();
@@ -53,6 +55,7 @@ const GidDetail = () => {
 
   if (!gig || !owner) return <p>Loading...</p>;
 
+
   const renderContent = () => {
     switch (activeTab) {
       case 'gigs':
@@ -64,7 +67,7 @@ const GidDetail = () => {
           </div>
         );
       case 'reviews':
-        return <div>Reviews Content</div>;
+        return <ReviewsSection />;
       default:
         return (
           <div className='contents'>
@@ -159,8 +162,40 @@ const GidDetail = () => {
             </div>
           </div>
         </div>
-        
-        <button className="contact-button">Contact Me</button>
+        {!showChat ? (
+          <button className="contact-button" onClick={() => setShowChat(true)}>Chat Now</button>
+        ):(
+          <div className="chat-window">
+          <div className="chat-header">
+            <div className="chat-header-info">
+              <img
+                src={owner.profilePicture || account}
+                alt={owner.name}
+                className="chat-header-avatar"
+              />
+              <div className="chat-header-text">
+                <span className="chat-header-name">{owner.name}</span>
+                <span className="chat-header-status">Away</span>
+              </div>
+            </div>
+            <button 
+              className="close-button"
+              onClick={() => setShowChat(false)}
+              aria-label="Close chat"
+            >
+              <img src={close} alt="close" className="close-icon" />
+            </button>
+          </div>
+          <div className="chat-body">
+            <MiniMessaging
+              isMiniChat={true}
+              receiverId={freelancerId}
+              senderId={senderId}
+            />
+          </div>
+        </div>
+
+        )}
       </div>
 
       <div className="stats-grid">

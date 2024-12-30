@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import {useNavigate } from 'react-router-dom';
 import { signup } from '../api/auth';
 import '../auth.css'
-import logo from '../images/logo1.png'
+import logo from '../images/Giggo-logo.svg'
 import {
     Container,
     Paper,

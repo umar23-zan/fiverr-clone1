@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { forgotPassword } from '../api/auth'; 
-import logo from '../images/logo1.png'
+import logo from '../images/Giggo-logo.svg'
 import '../auth.css'
 import {
     Container,

@@ -15,6 +15,7 @@ import ChatApp from "./components/ChatApp";
 import Profile from "./components/Profile";
 import GidDetail from "./components/GidDetail";
 import SearchResults from "./components/SearchResults";
+import LandingPageResults from './components/LandingPageResults';
 import ProtectedRoute from "./components/ProtectedRoute"; // Import ProtectedRoute
 
 function App() {
@@ -23,6 +24,7 @@ function App() {
       <Router>
         <Routes>
           <Route path="/" element={<LandingPage />} />
+          <Route path="/landingsearchResults" element={<LandingPageResults />} />
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
           <Route path="/forgetpassword" element={<ForgotPassword />} />

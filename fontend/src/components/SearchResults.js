@@ -7,6 +7,8 @@ import Header from './Header';
 const SearchResults = () => {
   const location = useLocation();
   const [gigs, setGigs] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
 
   // Extract category from query params
   const queryParams = new URLSearchParams(location.search);
@@ -19,11 +21,16 @@ const SearchResults = () => {
   }, [category]);
 
   const fetchGigsByCategory = async () => {
+    setLoading(true);
+    setError('');
     try {
-      const response = await axios.get(`/api/gigs?category=${category}`);
+      const response = await axios.get(`/api/gigs/category?category=${encodeURIComponent(category)}`);
       setGigs(response.data);
     } catch (error) {
       console.error('Error fetching gigs:', error);
+      setError('Failed to fetch gigs. Please try again later.');
+    }finally {
+      setLoading(false);
     }
   };
 

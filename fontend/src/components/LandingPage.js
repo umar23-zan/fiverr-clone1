@@ -1,5 +1,8 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import { useNavigate } from 'react-router-dom';
+import { getAllGigs } from "../api/gigApi";
+// import GigCard from "./GigCard";
+import FeaturedGigs from './FeaturedGigs'
 import logo from '../images/Giggo-logo.svg'
 import './LandingPage.css';
 
@@ -21,9 +24,38 @@ const featuredGigs = [
 ];
 
 const LandingPage = () => {
+  const [categoryGigs, setCategoryGigs] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
     const navigate = useNavigate();
     const [searchTerm, setSearchTerm] = useState('');
     const [filteredSuggestions, setFilteredSuggestions] = useState([]);
+
+    useEffect(() => {
+      fetchCategoryGigs();
+    }, []);
+  
+    const fetchCategoryGigs = async () => {
+      setLoading(true);
+      setError(null);
+      try {
+        // Update your API call to use the new endpoint
+        const response = await fetch('/api/gigs/category-preview');
+        const data = await response.json();
+        
+        if (!data || data.length === 0) {
+          setError("No gigs found. Please try again later.");
+        } else {
+          setCategoryGigs(data);
+        }
+      } catch (err) {
+        setError("Failed to fetch gigs. Please check your internet connection or try again.");
+        console.error(err);
+      } finally {
+        setLoading(false);
+      }
+    };
+  
 
     const handleInputChange = (e) => {
       const input = e.target.value;
@@ -47,7 +79,7 @@ const LandingPage = () => {
   
     const handleSearch = () => {
       if (searchTerm) {
-        navigate(`/searchResults?category=${searchTerm}`);
+        navigate(`/landingsearchResults?category=${encodeURIComponent(searchTerm)}`);
       }
     };
   return (
@@ -66,7 +98,7 @@ const LandingPage = () => {
         <section className="hero-section">
           <h1 className="hero-title">
             Find the perfect
-            <span className="highlight">freelance services</span>
+            <span className="highlight1">freelance services</span>
             for your business
           </h1>
           
@@ -94,7 +126,7 @@ const LandingPage = () => {
           </div>
         </section>
 
-        <section className="categories-section">
+        {/* <section className="categories-section">
           <h2 className="section-title">Popular Categories</h2>
           <div className="categories-grid">
             {categories.map(category => (
@@ -103,9 +135,26 @@ const LandingPage = () => {
               </div>
             ))}
           </div>
-        </section>
+        </section> */}
+        <div className="categories-grid">
+  {categories.map(category => (
+    <div
+      key={category}
+      className="category-card"
+      onClick={() => {
+        console.log(category)
+        navigate(`/landingsearchResults?category=${encodeURIComponent(category)}`)}
+      }
+      style={{ cursor: 'pointer' }}
+    >
+      <div className="category-name" style={{color: "black"}}>
+        {category}
+      </div>
+    </div>
+  ))}
+</div>
 
-        <section className="featured-section">
+        {/* <section className="featured-section">
           <h2 className="section-title">Featured Gigs</h2>
           <div className="featured-grid">
             {featuredGigs.map(gig => (
@@ -118,7 +167,8 @@ const LandingPage = () => {
               </div>
             ))}
           </div>
-        </section>
+        </section> */}
+        <FeaturedGigs categoryGigs={categoryGigs} />
 
         <section className="how-it-works">
           <h2 className="section-title">How Giggo Works</h2>
