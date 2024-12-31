@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { getUserGigs} from '../api/gigApi';
 import { useParams, useLocation } from 'react-router-dom';
 import axios from 'axios';
@@ -15,6 +16,7 @@ import Messaging from './Messaging';
 const GidDetail = () => {
   const { id } = useParams();
   const location = useLocation();
+  const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
   const [gigs, setGigs] = useState([]);
   const [gig, setGig] = useState(null);
@@ -54,7 +56,16 @@ const GidDetail = () => {
   };
 
   if (!gig || !owner) return <p>Loading...</p>;
-
+  const handleOrderNow =() => {
+    navigate('/paymentGateway', {
+      state: {
+        buyerId: senderId,
+        freelancerId: freelancerId,
+        gigId: id,
+        amount: gig.price
+      }
+    })
+  }
 
   const renderContent = () => {
     switch (activeTab) {
@@ -162,6 +173,7 @@ const GidDetail = () => {
             </div>
           </div>
         </div>
+        <button className="contact-button" onClick={handleOrderNow}>Order Now</button>
         {!showChat ? (
           <button className="contact-button" onClick={() => setShowChat(true)}>Chat Now</button>
         ):(

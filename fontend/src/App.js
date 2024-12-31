@@ -17,6 +17,7 @@ import GidDetail from "./components/GidDetail";
 import SearchResults from "./components/SearchResults";
 import LandingPageResults from './components/LandingPageResults';
 import ProtectedRoute from "./components/ProtectedRoute"; // Import ProtectedRoute
+import PaymentGateway from "./components/PaymentGateway";
 
 function App() {
   return (
@@ -80,7 +81,23 @@ function App() {
             } 
           />
           <Route 
-            path="/orders" 
+            path="/paymentGateway" 
+            element={
+              <ProtectedRoute>
+                <PaymentGateway />
+              </ProtectedRoute>
+            } 
+          />
+          <Route 
+            path="/orders"
+            element={
+              <ProtectedRoute>
+                <Orders />
+              </ProtectedRoute>
+            } 
+          />
+          <Route 
+            path="/orders/buyer/:buyerId"
             element={
               <ProtectedRoute>
                 <Orders />

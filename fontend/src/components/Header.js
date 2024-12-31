@@ -4,6 +4,7 @@ import account from '../images/account-icon.svg'
 import './header.css'
 import { useNavigate } from 'react-router-dom';
 import { getUserData} from '../api/auth';
+import {getAllTags} from '../api/gigApi'
 
 const categories = [
   'Graphics & Design',
@@ -23,10 +24,23 @@ const Header = () => {
   const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState('');
   const [filteredSuggestions, setFilteredSuggestions] = useState([]);
+  const [tags, setTags] = useState([]);
   const id =localStorage.getItem('userEmail')
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(true);
   const dropdownRef = useRef(null);
+
+  useEffect(() => {
+    const fetchTags = async () => {
+      try {
+        const fetchedTags = await getAllTags(); // Call to gigApi.js
+        setTags(fetchedTags);
+      } catch (error) {
+        console.error('Error fetching tags:', error);
+      }
+    };
+    fetchTags();
+  }, []);
 
   const toggleDropdown = () => {
     setDropdownOpen((prev) => !prev);
@@ -80,10 +94,13 @@ const Header = () => {
 
     // Filter categories for suggestions
     if (input) {
-      const suggestions = categories.filter((category) =>
+      const categorySuggestions = categories.filter((category) =>
         category.toLowerCase().includes(input.toLowerCase())
       );
-      setFilteredSuggestions(suggestions);
+      const tagSuggestions = tags.filter((tag) =>
+        tag
+      );
+      setFilteredSuggestions([...categorySuggestions, ...tagSuggestions]);
     } else {
       setFilteredSuggestions([]);
     }
@@ -96,7 +113,14 @@ const Header = () => {
 
   const handleSearch = () => {
     if (searchTerm) {
-      navigate(`/searchResults?category=${searchTerm}`);
+      // navigate(`/searchResults?category=${searchTerm}`);
+      if (categories.includes(searchTerm)) {
+        navigate(`/searchResults?category=${encodeURIComponent(searchTerm)}`);
+      } else if (tags.includes(searchTerm)) {
+        navigate(`/searchResults?tag=${encodeURIComponent(searchTerm)}`);
+      } else {
+        console.warn('Search term does not match any category or tag');
+      }
     }
   };
 

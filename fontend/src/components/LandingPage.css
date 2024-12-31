@@ -258,14 +258,27 @@
 
 /* Responsive Design */
 @media (max-width: 768px) {
-  /* .categories-grid {
-    grid-template-columns: repeat(2, 1fr);
-  } */
 
-  /* .featured-grid {
-    grid-template-columns: 1fr;
-  } */
-
+/* Header Styles */
+.header {
+  display: flex;
+  justify-content: left;
+  align-items: center;
+  padding: 0;
+  border-bottom: 1px solid #eaeaea;
+}
+.logo {
+  width: 50px;
+  height: 25px;
+  cursor: pointer;
+  object-fit: cover;
+}
+.search-container{
+  min-width: 300px;
+}
+  .search-container input{
+    min-width: 300px;
+  }
   .steps-grid {
     grid-template-columns: 1fr;
   }
@@ -275,6 +288,39 @@
   }
 
   .nav-menu {
-    display: none;
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    font-size: small;
+  }
+  
+  .nav-link {
+    background: none;
+    border: none;
+    color: #666;
+    cursor: pointer;
+   
+    font-weight: 300;
+  }
+  
+  .nav-link:hover {
+    color: #333;
+  }
+  
+  .join-button {
+    background-color: #00b300;
+    color: white;
+    border: none;
+    border-radius: 9999px;
+    
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  
+  .join-button:hover {
+    background-color: #009900;
+  }
+  .categories-grid{
+    grid-template-columns: repeat(2, 1fr);
   }
 }

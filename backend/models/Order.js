@@ -4,6 +4,7 @@ const orderSchema = new mongoose.Schema({
   buyerId: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
   freelancerId: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
   gigId: { type: mongoose.Schema.Types.ObjectId, ref: 'Gig' },
+  amount: { type: Number, required: true },
   status: { type: String, enum: ['Pending', 'Completed'], default: 'Pending' },
   amount: Number,
   createdAt: { type: Date, default: Date.now },

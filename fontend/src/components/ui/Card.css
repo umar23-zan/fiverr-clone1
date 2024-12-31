@@ -1,0 +1,113 @@
+/* Card.css */
+.card {
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+  margin: 1rem;
+  overflow: hidden;
+  transition: box-shadow 0.3s ease-in-out;
+}
+
+.card:hover {
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
+}
+
+.card-header {
+  padding: 1.5rem;
+  border-bottom: 1px solid #eee;
+}
+
+.card-title {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #333;
+  line-height: 1.2;
+}
+
+.card-description {
+  margin: 0.5rem 0 0;
+  font-size: 0.875rem;
+  color: #666;
+  line-height: 1.5;
+}
+
+.card-content {
+  padding: 1.5rem;
+}
+
+.card-footer {
+  padding: 1rem 1.5rem;
+  background-color: #fafafa;
+  border-top: 1px solid #eee;
+}
+
+/* Optional: Card variants */
+.card.compact {
+  font-size: 0.875rem;
+}
+
+.card.compact .card-header,
+.card.compact .card-content,
+.card.compact .card-footer {
+  padding: 0.75rem;
+}
+
+.card.bordered {
+  border: 1px solid #e0e0e0;
+  box-shadow: none;
+}
+
+.card.hoverable:hover {
+  transform: translateY(-2px);
+  transition: transform 0.2s ease;
+}
+
+/* Optional: Dark theme */
+.card.dark {
+  background: #1a1a1a;
+  color: #fff;
+}
+
+.card.dark .card-header {
+  border-bottom-color: #333;
+}
+
+.card.dark .card-title {
+  color: #fff;
+}
+
+.card.dark .card-description {
+  color: #aaa;
+}
+
+.card.dark .card-footer {
+  background-color: #242424;
+  border-top-color: #333;
+}
+
+/* Optional: Card sizes */
+.card.small {
+  max-width: 300px;
+}
+
+.card.medium {
+  max-width: 500px;
+}
+
+.card.large {
+  max-width: 800px;
+}
+
+/* Optional: Responsive behavior */
+@media (max-width: 640px) {
+  .card {
+    margin: 0.5rem;
+  }
+  
+  .card-header,
+  .card-content,
+  .card-footer {
+    padding: 1rem;
+  }
+}

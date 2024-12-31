@@ -270,6 +270,32 @@
     flex-direction: column;
     gap: 24px;
   }
+  
+.profile-header-left {
+  display: flex;
+  gap: 24px;
+}
+
+.profile-image-container {
+  position: relative;
+  width: 100px;
+  height: 100px;
+}
+
+.profile-image {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 1px solid #eee;
+}
+.profile-info h1 {
+  font-size: 32px;
+  font-weight: bold;
+  text-align: left;
+  color: #14161f;
+  margin-bottom: 12px;
+}
 
   .stats-grid {
     grid-template-columns: 1fr;
@@ -282,6 +308,13 @@
 
   .nav-tabs nav {
     gap: 20px;
+  }
+  .contents{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    min-width: 300px;
+    /* gap: 48px; */
   }
 }
 
@@ -403,6 +436,7 @@
   overflow-y: auto;
   /* padding: 16px; */
   background-color: #f8fafc;
+  z-index: 1000;
 }
 
 

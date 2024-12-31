@@ -35,18 +35,10 @@ router.get('/user/:freelancerId', async (req, res) => {
 });
 
 router.get('/category', async (req, res) => {
-  const { category, tags } = req.query;
+  const { category } = req.query;
   console.log('Received category:', category);
   try {
-    let query = { category };
-    
-    // Add tag filtering if tags are provided
-    if (tags) {
-      const tagArray = tags.split(',').map(tag => tag.trim());
-      query.tags = { $in: tagArray };
-    }
-
-    const gigs = await Gig.find({ query });
+    const gigs = await Gig.find({ category });
     res.status(200).json(gigs);
   } catch (error) {
     res.status(500).json({ error: 'Failed to fetch gigs by category' });
