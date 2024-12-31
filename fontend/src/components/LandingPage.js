@@ -109,7 +109,7 @@ const LandingPage = () => {
         value={searchTerm}
         onChange={handleInputChange}
         />
-                    <button className='search-button' onClick={handleSearch}>Search</button>
+        <button className='search-button' onClick={handleSearch}>Search</button>
         {filteredSuggestions.length > 0 && (
             <div className="suggestions-dropdown">
               {filteredSuggestions.map((suggestion) => (

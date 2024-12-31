@@ -7,7 +7,16 @@ const path = require('path');
 // Get all gigs
 router.get('/', async (req, res) => {
   try {
-    const gigs = await Gig.find().populate('freelancerId', 'name email'); // Assuming User model has name and email
+    const { tags } = req.query;
+    let query = {};
+    
+    // If tags are provided in the query, filter by them
+    if (tags) {
+      const tagArray = tags.split(',').map(tag => tag.trim());
+      query.tags = { $in: tagArray };
+    }
+
+    const gigs = await Gig.find(query).populate('freelancerId', 'name email'); // Assuming User model has name and email
     res.status(200).json(gigs);
   } catch (error) {
     res.status(500).json({ error: 'Failed to fetch gigs' });
@@ -26,13 +35,42 @@ router.get('/user/:freelancerId', async (req, res) => {
 });
 
 router.get('/category', async (req, res) => {
-  const { category } = req.query;
+  const { category, tags } = req.query;
   console.log('Received category:', category);
   try {
-    const gigs = await Gig.find({ category });
+    let query = { category };
+    
+    // Add tag filtering if tags are provided
+    if (tags) {
+      const tagArray = tags.split(',').map(tag => tag.trim());
+      query.tags = { $in: tagArray };
+    }
+
+    const gigs = await Gig.find({ query });
     res.status(200).json(gigs);
   } catch (error) {
     res.status(500).json({ error: 'Failed to fetch gigs by category' });
+  }
+});
+
+// Get all unique tags
+router.get('/tags', async (req, res) => {
+  try {
+    const tags = await Gig.distinct('tags');
+    res.status(200).json(tags);
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to fetch tags' });
+  }
+});
+
+// Get tags by category
+router.get('/category/:category/tags', async (req, res) => {
+  try {
+    const { category } = req.params;
+    const tags = await Gig.distinct('tags', { category });
+    res.status(200).json(tags);
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to fetch category tags' });
   }
 });
 
@@ -61,16 +99,44 @@ router.get('/category-preview', async (req, res) => {
   }
 });
 
+// Search gigs by tags
+router.get('/search/tags', async (req, res) => {
+  try {
+    const { tags } = req.query;
+    if (!tags) {
+      return res.status(400).json({ error: 'Tags parameter is required' });
+    }
+
+    const tagArray = tags.split(',').map(tag => tag.trim());
+    const gigs = await Gig.find({
+      tags: { $in: tagArray }
+    }).populate('freelancerId', 'name email');
+
+    res.status(200).json(gigs);
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to search gigs by tags' });
+  }
+});
+
+
 
 // Create a new gig
 router.post('/', async (req, res) => {
-  const { freelancerId, title, description, price, deliveryTime, category, images } = req.body;
+  const { freelancerId, title, description, price, deliveryTime, category, tags, images } = req.body;
 
   try {
     if (!title || !price || !category || !freelancerId) {
       return res.status(400).json({ message: 'Missing required fields.' });
     }
-    const newGig = new Gig({ freelancerId, title, description, price, deliveryTime, category, images });
+    // Validate tags
+    if (!Array.isArray(tags)) {
+      return res.status(400).json({ message: 'Tags must be an array.' });
+    }
+
+    if (tags.length > 5) {
+      return res.status(400).json({ message: 'Maximum 5 tags allowed.' });
+    }
+    const newGig = new Gig({ freelancerId, title, description, price, deliveryTime, category, tags: tags.map(tag => tag.trim()),images });
     await newGig.save();
     res.status(201).json({ message: 'Gig created successfully', gig: newGig });
   } catch (error) {

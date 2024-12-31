@@ -12,6 +12,7 @@ const Gigs = () => {
   const [formErrors, setFormErrors] = useState({});
   const userid = localStorage.getItem('userId');
   const [imageFile, setImageFile] = useState(null);
+  const [currentTag, setCurrentTag] = useState('');
 
   const [newGig, setNewGig] = useState({
     freelancerId: userid,
@@ -20,6 +21,7 @@ const Gigs = () => {
     price: '',
     deliveryTime: '',
     category: '',
+    tags: [],
     images: [],
   });
 
@@ -48,6 +50,29 @@ const Gigs = () => {
     setFormErrors({ ...formErrors, [name]: '' });
   };
 
+  const handleTagInputChange = (e) => {
+    setCurrentTag(e.target.value);
+  };
+
+  const addTag = (e) => {
+    e.preventDefault();
+    if (currentTag.trim() && !newGig.tags.includes(currentTag.trim())) {
+      setNewGig({
+        ...newGig,
+        tags: [...newGig.tags, currentTag.trim()]
+      });
+      setCurrentTag('');
+      setFormErrors({ ...formErrors, tags: '' });
+    }
+  };
+
+  const removeTag = (tagToRemove) => {
+    setNewGig({
+      ...newGig,
+      tags: newGig.tags.filter(tag => tag !== tagToRemove)
+    });
+  };
+
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     if (file && !file.type.startsWith('image/')) {
@@ -70,6 +95,8 @@ const Gigs = () => {
     if (!newGig.deliveryTime || isNaN(newGig.deliveryTime) || newGig.deliveryTime <= 0)
       errors.deliveryTime = 'Delivery time must be a positive number.';
     if (!imageFile) errors.imageFile = 'Please upload an image for the gig.';
+    if (newGig.tags.length === 0) errors.tags = 'Please add at least one tag.';
+    if (newGig.tags.length > 5) errors.tags = 'Maximum 5 tags allowed.';
     return errors;
   };
 
@@ -120,6 +147,7 @@ const Gigs = () => {
         price: '',
         deliveryTime: '',
         category: '',
+        tags: [],
         images: [],
       });
       setImageFile(null);
@@ -169,6 +197,53 @@ const Gigs = () => {
             {formErrors.category && <div className="form-error" style={{color: "red"}}>{formErrors.category}</div>}
           </div>
           </div>
+          <div className='gigform-sections'>
+            <div className='gigform-label'><p><strong>Tags</strong></p></div>
+            <div>
+              <div className="tags-input-container">
+                <div className="tags-display">
+                  {newGig.tags.map((tag, index) => (
+                    <span key={index} className="tag">
+                      {tag}
+                      <button 
+                        type="button" 
+                        onClick={() => removeTag(tag)}
+                        className="remove-tag"
+                      >
+                        ×
+                      </button>
+                    </span>
+                  ))}
+                </div>
+                <div className="tag-input-wrapper">
+                  <input
+                    type="text"
+                    value={currentTag}
+                    onChange={handleTagInputChange}
+                    placeholder="Add tags (press Enter)"
+                    onKeyPress={(e) => {
+                      if (e.key === 'Enter') {
+                        e.preventDefault();
+                        addTag(e);
+                      }
+                    }}
+                  />
+                  <button 
+                    type="button" 
+                    onClick={addTag}
+                    className="add-tag-btn"
+                  >
+                    Add
+                  </button>
+                </div>
+              </div>
+              {formErrors.tags && <div className="form-error" style={{color: "red"}}>{formErrors.tags}</div>}
+              <p style={{margin: "4px 0", color: "gray", fontSize: "12px"}}>
+                Add up to 5 tags to help buyers find your gig (e.g., logo design, website development)
+              </p>
+            </div>
+          </div>
+
           <div className='gigform-sections'>
             <div className='gigform-label'><p><strong>Description</strong></p></div>
             <div>

@@ -60,7 +60,7 @@ const SearchResults = () => {
       
       <div className="gigs-grid">
         {gigs.map((gig) => (
-          <div key={gig._id} className="gig-card">
+          <div key={gig._id} className="gig-card" onClick={() => {navigate('/login')}}>
             <img
               src={gig.images?.[0] || '/api/placeholder/200/150'}
               alt={gig.title}

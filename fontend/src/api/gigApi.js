@@ -6,9 +6,10 @@ const API_URL = '/api/gigs';
 //   const response = await axios.get(API_URL);
 //   return response.data;
 // };
-export const getAllGigs = async () => {
+export const getAllGigs = async (tags) => {
   try {
-    const response = await axios.get('/api/gigs');
+    const params = tags ? { params: { tags: tags.join(',') } } : {};
+    const response = await axios.get('/api/gigs', params);
     if (response.status !== 200) {
       throw new Error('Failed to fetch gigs');
     }
@@ -95,3 +96,36 @@ export const getCategoryPreviews = async () => {
 //   await fetch(`/api/gigs/${id}`, { method: "DELETE" });
 // };
 
+// Get all unique tags
+export const getAllTags = async () => {
+  try {
+    const response = await axios.get(`${API_URL}/tags`);
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching tags:', error);
+    throw new Error('Failed to fetch tags');
+  }
+};
+
+// Get tags for a specific category
+export const getCategoryTags = async (category) => {
+  try {
+    const response = await axios.get(`${API_URL}/category/${encodeURIComponent(category)}/tags`);
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching category tags:', error);
+    throw new Error('Failed to fetch category tags');
+  }
+};
+// Search gigs by tags
+export const searchGigsByTags = async (tags) => {
+  try {
+    const response = await axios.get(`${API_URL}/search/tags`, {
+      params: { tags: tags.join(',') }
+    });
+    return response.data;
+  } catch (error) {
+    console.error('Error searching gigs by tags:', error);
+    throw new Error('Failed to search gigs by tags');
+  }
+};

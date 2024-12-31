@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import './GigSlider.css';
 
 const FeaturedSection = ({ categoryGigs }) => {
+  const navigate=useNavigate();
   const [currentSlide, setCurrentSlide] = useState(0);
   const itemsPerSlide = 5;
   
@@ -36,7 +38,7 @@ const FeaturedSection = ({ categoryGigs }) => {
           }}
         >
           {allGigs.map((gig) => (
-            <div key={gig._id} className="gig-card">
+            <div key={gig._id} className="gig-card" onClick={() => {navigate('/login')}}>
               <img
                 src={gig.images?.[0] || '/api/placeholder/200/150'}
                 alt={gig.title}
