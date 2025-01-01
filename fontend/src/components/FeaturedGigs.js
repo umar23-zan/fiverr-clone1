@@ -1,19 +1,37 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './GigSlider.css';
+import { useWindowSize } from 'react-use';
 
 const FeaturedSection = ({ categoryGigs }) => {
   const navigate=useNavigate();
   const [currentSlide, setCurrentSlide] = useState(0);
-  const itemsPerSlide = 5;
+  const { width } = useWindowSize();
+  const [itemsPerSlide, setItemsPerSlide] = useState(5);
+
+  useEffect(() => {
+    if (width < 640) { // Mobile
+      setItemsPerSlide(2);
+    } else if (width < 768) { // Small tablets
+      setItemsPerSlide(3);
+    } else if (width < 1024) { // Tablets
+      setItemsPerSlide(4);
+    } else if (width < 1280) { // Small desktop
+      setItemsPerSlide(4);
+    } else { // Large desktop
+      setItemsPerSlide(5);
+    }
+    // Reset current slide when screen size changes
+    setCurrentSlide(0);
+  }, [width]);
   
-  // Flatten all gigs from different categories into a single array
+ 
   const allGigs = categoryGigs.reduce((acc, category) => {
-    // Take only first two gigs from each category
+   
     const topTwoGigs = category.gigs.slice(0, 2);
     return [...acc, ...topTwoGigs.map(gig => ({
       ...gig,
-      category: category.category // Add category information to each gig
+      category: category.category 
     }))];
   }, []);
 
@@ -34,7 +52,8 @@ const FeaturedSection = ({ categoryGigs }) => {
         <div
           className="featured-grid"
           style={{
-            transform: `translateX(-${currentSlide * (100 / itemsPerSlide)}%)`
+            transform: `translateX(-${currentSlide * (100 / itemsPerSlide)}%)`,
+            gridTemplateColumns: `repeat(${allGigs.length}, minmax(0, 1fr))`
           }}
         >
           {allGigs.map((gig) => (

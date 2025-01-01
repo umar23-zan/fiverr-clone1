@@ -1,11 +1,15 @@
 import React, { useState, useEffect } from 'react';
-// import { useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import axios from 'axios';
+import Header from './Header'
+import HeaderBuy from './HeaderBuy';
+import './Orders.css'
 
 const Orders = () => {
   const [orders, setOrders] = useState([]);
   const userId = localStorage.getItem('userId');
-  // const { buyerId } = useParams();
+  const userRole=localStorage.getItem('userRole')
+  const { freelancerId } = useParams();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
@@ -16,9 +20,17 @@ const Orders = () => {
   const fetchOrders = async () => {
     try {
       setLoading(true);
-      const response = await axios.get(`/api/orders/buyer/${userId}`);
+      if(userRole === 'Buyer'){
+        const response = await axios.get(`/api/orders/buyer/${userId}`);
       setOrders(response.data);
       console.log(response.data)
+      }else{
+        const response = await axios.get(`/api/orders/freelancer/${freelancerId}`);
+      setOrders(response.data);
+      console.log(response.data)
+      }
+      
+      
     } catch (error) {
       console.error('Error fetching orders:', error);
       setError('Failed to load orders');
@@ -29,19 +41,20 @@ const Orders = () => {
   if (loading) return <div>Loading orders...</div>;
   if (error) return <div>{error}</div>;
   console.log(orders)
-  return (
-    <div className="orders-page">
-      <div className="orders-header">
-        <h2>My Orders</h2>
-      </div>
-      {orders.length === 0 ? (
-        <div className="no-orders">
-          <h3>No Orders Yet</h3>
-          <p>When you place orders, they will appear here</p>
-        </div>
-      ) : (
-        <div className="orders-grid">
-          {orders.map(order => (
+
+  const NoOrderMessage = ({userRole}) =>(
+    <div className="no-orders">
+    <h3>No Orders Yet</h3>
+    <p>
+      {userRole === 'Buyer'
+        ? 'When you place orders, they will appear here.'
+        : 'When a Buyer places an order, it will appear here.'}
+    </p>
+  </div>
+  );
+
+  const OrderCard = ({order}) => (
+    
             <div key={order._id} className="order-card">
               <div className="order-header">
                 <span className="order-id">
@@ -65,10 +78,28 @@ const Orders = () => {
                   <span className="amount">${order.amount}</span>
                 </div>
               </div>
-            </div>
+            </div>   
+  )
+
+  return (
+    <div>
+      {userRole==="Buyer" ? (<Header/>): (<HeaderBuy />)}
+    <div className="orders-page">
+      
+      <div className="orders-header">
+        <h2>My Orders</h2>
+      </div>
+      
+      {orders.length === 0 ? (
+        <NoOrderMessage userRole={userRole} />
+      ) : (
+        <div className="orders-grid">
+          {orders.map(order => (
+            <OrderCard key={order._id} order={order} />
           ))}
         </div>
       )}
+    </div>
     </div>
   );
 };

@@ -3,6 +3,7 @@ const router = express.Router();
 const Gig = require('../models/Gig');
 const multer = require('multer');
 const path = require('path');
+const cloudinary = require('../config/cloudinaryConfig');
 
 // Get all gigs
 router.get('/', async (req, res) => {
@@ -137,31 +138,49 @@ router.post('/', async (req, res) => {
   }
 });
 // Configure Multer
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    // cb(null, 'uploads/'); // Ensure 'uploads' folder exists
-    const uploadDir = path.join(__dirname, '../uploads');
-    // Create uploads directory if it doesn't exist
-    // if (!fs.existsSync(uploadDir)) {
-    //   fs.mkdirSync(uploadDir);
-    // }
-    cb(null, uploadDir);
-  },
-  filename: (req, file, cb) => {
-    cb(null, `${Date.now()}-${file.originalname}`);
-  },
-});
-const upload = multer({ storage });
+// const storage = multer.diskStorage({
+//   destination: (req, file, cb) => {
+//     // cb(null, 'uploads/'); // Ensure 'uploads' folder exists
+//     const uploadDir = path.join(__dirname, '../uploads');
+//     // Create uploads directory if it doesn't exist
+//     // if (!fs.existsSync(uploadDir)) {
+//     //   fs.mkdirSync(uploadDir);
+//     // }
+//     cb(null, uploadDir);
+//   },
+//   filename: (req, file, cb) => {
+//     cb(null, `${Date.now()}-${file.originalname}`);
+//   },
+// });
+// const upload = multer({ storage });
 
 
 
 // Image upload route
-router.post('/upload', upload.single('image'), (req, res) => {
+// router.post('/upload', upload.single('image'), (req, res) => {
+//   if (!req.file) {
+//     return res.status(400).json({ error: 'No file uploaded' });
+//   }
+//   const filePath = `/uploads/${req.file.filename}`;
+//   res.status(200).json({ filePath });
+// });
+
+router.post('/upload', multer().single('image'), (req, res) => {
   if (!req.file) {
     return res.status(400).json({ error: 'No file uploaded' });
   }
-  const filePath = `/uploads/${req.file.filename}`;
-  res.status(200).json({ filePath });
+
+  cloudinary.uploader.upload_stream(
+    { resource_type: 'auto' },
+    (error, result) => {
+      if (error) {
+        return res.status(500).json({ error: 'Failed to upload image to Cloudinary' });
+      }
+
+      const filePath = result.secure_url;  // Cloudinary's secure URL for the uploaded image
+      res.status(200).json({ filePath });
+    }
+  ).end(req.file.buffer);  // Use buffer from multer
 });
 
 router.get('/:id', async (req, res) => {

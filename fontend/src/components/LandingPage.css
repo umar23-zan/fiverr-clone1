@@ -262,14 +262,14 @@
 /* Header Styles */
 .header {
   display: flex;
-  justify-content: left;
+  justify-content: space-between;
   align-items: center;
   padding: 0;
   border-bottom: 1px solid #eaeaea;
 }
 .logo {
-  width: 50px;
-  height: 25px;
+  width: 75px;
+  height: 38px;
   cursor: pointer;
   object-fit: cover;
 }
@@ -291,7 +291,8 @@
     display: flex;
     gap: 1rem;
     align-items: center;
-    font-size: small;
+    
+    padding: 5px;
   }
   
   .nav-link {
@@ -299,7 +300,7 @@
     border: none;
     color: #666;
     cursor: pointer;
-   
+    font-size: small;
     font-weight: 300;
   }
   
@@ -311,10 +312,10 @@
     background-color: #00b300;
     color: white;
     border: none;
-    border-radius: 9999px;
-    
+    border-radius: 500px;
     cursor: pointer;
     transition: background-color 0.3s;
+    padding: 7px 15px;
   }
   
   .join-button:hover {

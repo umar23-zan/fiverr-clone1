@@ -6,10 +6,19 @@ const nodemailer = require('nodemailer');
 const User = require('../models/User');
 const router = express.Router();
 const multer = require('multer');
+const { CloudinaryStorage } = require('multer-storage-cloudinary');
+const cloudinary = require('../config/cloudinaryConfig');
 const path = require('path');
 const fs = require('fs');
-// const ContactUs = require('../models/contactusdetails');
-// const sendEmail = require('./emailservice');
+
+// Configure multer storage with Cloudinary
+const storage = new CloudinaryStorage({
+    cloudinary: cloudinary,
+    params: {
+        folder: 'profilePictures', // Cloudinary folder for profile pictures
+        allowed_formats: ['jpg', 'jpeg', 'png'], // Allowed file types
+    },
+});
 
 // Signup Route
 router.post('/signup', async (req, res) => {
@@ -46,7 +55,7 @@ router.post('/login', async (req, res) => {
         const isMatch = await bcrypt.compare(password, user.password);
         if (!isMatch) return res.status(400).json({ msg: 'Invalid credentials' });
 
-        res.status(200).json({ msg: 'Login successful', email: user.email, useId: user._id, });
+        res.status(200).json({ msg: 'Login successful', email: user.email, useId: user._id, userRole: user.role });
     } catch (error) {
         res.status(500).send('Server error');
     }
@@ -182,18 +191,18 @@ router.put('/user/:email', async (req, res) => {
 });
 
 // Configure multer storage
-const storage = multer.diskStorage({
-    destination: (req, file, cb) => {
-        const uploadDir = path.join(__dirname, '../uploads/profilePictures'); // Absolute path to uploads directory
-        if (!fs.existsSync(uploadDir)) {
-            fs.mkdirSync(uploadDir, { recursive: true }); // Ensure the directory exists
-        }
-        cb(null, uploadDir);
-    },
-    filename: (req, file, cb) => {
-        cb(null, `${Date.now()}-${file.originalname}`);
-    }
-});
+// const storage = multer.diskStorage({
+//     destination: (req, file, cb) => {
+//         const uploadDir = path.join(__dirname, '../uploads/profilePictures'); // Absolute path to uploads directory
+//         if (!fs.existsSync(uploadDir)) {
+//             fs.mkdirSync(uploadDir, { recursive: true }); // Ensure the directory exists
+//         }
+//         cb(null, uploadDir);
+//     },
+//     filename: (req, file, cb) => {
+//         cb(null, `${Date.now()}-${file.originalname}`);
+//     }
+// });
 const upload = multer({ storage });
 // Route to upload profile picture
 router.post('/upload-profile-picture', upload.single('profilePicture'), async (req, res) => {
@@ -207,15 +216,17 @@ router.post('/upload-profile-picture', upload.single('profilePicture'), async (r
         if (!user) return res.status(404).json({ msg: 'User not found' });
 
         // Construct the relative URL for the uploaded file
-        const relativeFilePath = `/uploads/profilePictures/${req.file.filename}`;
+        // const relativeFilePath = `/uploads/profilePictures/${req.file.filename}`;
 
-        // Save the relative URL to the database
-        user.profilePicture = relativeFilePath;
+        // // Save the relative URL to the database
+        // user.profilePicture = relativeFilePath;
+        user.profilePicture = req.file.path;
         await user.save();
 
         res.json({ 
             msg: 'Profile picture uploaded successfully', 
-            profilePicture: relativeFilePath 
+            // profilePicture: relativeFilePath 
+            profilePicture: user.profilePicture 
         });
     } catch (error) {
         console.error(error);

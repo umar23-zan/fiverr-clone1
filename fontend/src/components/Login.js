@@ -41,6 +41,7 @@ const Login = () => {
             localStorage.setItem('userEmail', res.email);
             // localStorage.setItem('userId',res._id)
             localStorage.setItem("userId", res.useId)
+            localStorage.setItem('userRole', res.userRole)
             navigate('/Dashboard');  // Ensure route is defined
             setFormData({ email: '', password: '' });  // Clear form after success
         } catch (err) {

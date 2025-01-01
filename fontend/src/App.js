@@ -105,6 +105,14 @@ function App() {
             } 
           />
           <Route 
+            path="/orders/freelancer/:freelancerId"
+            element={
+              <ProtectedRoute>
+                <Orders />
+              </ProtectedRoute>
+            } 
+          />
+          <Route 
             path="/profile" 
             element={
               <ProtectedRoute>

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Header from "./Header";
+import HeaderBuy from './HeaderBuy'
 import bg from '../images/bg1.jpg';
 import account from '../images/account-icon.svg';
 import { getUserData, updateUserData, uploadProfilePicture } from '../api/auth';
@@ -17,6 +18,7 @@ function Profile() {
   const [updateSuccess, setUpdateSuccess] = useState(false);
 
   const id = localStorage.getItem('userEmail');
+  const userRole = localStorage.getItem('userRole')
 
   const [formData, setFormData] = useState({
     name: '',

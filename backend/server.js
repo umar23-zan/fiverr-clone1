@@ -5,6 +5,8 @@ const cors = require('cors');
 const path = require('path');
 const multer = require('multer');
 const fs = require('fs');
+require('dotenv').config();
+const cloudinary = require('./config/cloudinaryConfig');
 
 const userRoutes = require('./routes/auth');
 const gigRoutes = require('./routes/gig');
