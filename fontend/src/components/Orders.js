@@ -24,6 +24,7 @@ const Orders = () => {
       setError('Failed to load orders');
     }finally {
       setLoading(false);
+    }
   };
   if (loading) return <div>Loading orders...</div>;
   if (error) return <div>{error}</div>;
@@ -71,6 +72,6 @@ const Orders = () => {
     </div>
   );
 };
-}
+
 
 export default Orders;

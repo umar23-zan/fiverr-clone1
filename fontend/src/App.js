@@ -5,7 +5,6 @@ import LandingPage from './components/LandingPage'
 import Dashboard from "./components/Dashboard";
 // import Messaging from "./components/Messaging";
 import GigManagement from "./components/GigManagement";
-import Orders from "./components/Orders";
 import Login from './components/Login';
 import Signup from './components/Signup';
 import ResetPassword from './components/ResetPassword';
@@ -18,6 +17,7 @@ import SearchResults from "./components/SearchResults";
 import LandingPageResults from './components/LandingPageResults';
 import ProtectedRoute from "./components/ProtectedRoute"; // Import ProtectedRoute
 import PaymentGateway from "./components/PaymentGateway";
+import Orders from "./components/Orders";
 
 function App() {
   return (
