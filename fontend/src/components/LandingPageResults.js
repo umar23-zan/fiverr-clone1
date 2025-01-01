@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import './LandingSearch.css'
 import axios from 'axios';
+import logo from '../images/Giggo-logo.svg'
 import { getGigsByCategory } from "../api/gigApi";
 
 const SearchResults = () => {
@@ -47,7 +48,18 @@ const SearchResults = () => {
   
 
   return (
-    <div className="search-results-page">
+    <div>
+      <header className="header">
+        <img src={logo} alt="logo" className='logo'/>
+        <nav className="nav-menu">
+          {/* <button className="nav-link">Browse</button>
+          <button className="nav-link">Become a Seller</button> */}
+          <button className="nav-link" onClick={() => {navigate('/login')}}>Sign in</button>
+          <button className="join-button" onClick={() => {navigate('/signup')}}>Join</button>
+        </nav>
+      </header>
+        <div className="search-results-page">
+      
       <div className="search-header">
         <h1>Gigs in {category}</h1>
         <button onClick={() => navigate('/')} className="back-button">
@@ -74,6 +86,8 @@ const SearchResults = () => {
         ))}
       </div>
     </div>
+    </div>
+    
   );
 };
 

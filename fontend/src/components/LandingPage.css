@@ -274,10 +274,10 @@
   object-fit: cover;
 }
 .search-container{
-  min-width: 300px;
+  min-width: 500px;
 }
   .search-container input{
-    min-width: 300px;
+    min-width: 500px;
   }
   .steps-grid {
     grid-template-columns: 1fr;
@@ -324,4 +324,12 @@
   .categories-grid{
     grid-template-columns: repeat(2, 1fr);
   }
+}
+@media(max-width: 480px){
+  .search-container{
+    min-width: 300px;
+  }
+    .search-container input{
+      min-width: 300px;
+    }
 }

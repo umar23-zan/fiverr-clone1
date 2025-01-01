@@ -53,15 +53,15 @@ const FeaturedSection = ({ categoryGigs }) => {
           className="featured-grid"
           style={{
             transform: `translateX(-${currentSlide * (100 / itemsPerSlide)}%)`,
-            gridTemplateColumns: `repeat(${allGigs.length}, minmax(0, 1fr))`
+            // gridTemplateColumns: `repeat(${allGigs.length}, minmax(0, 1fr))`
           }}
         >
           {allGigs.map((gig) => (
-            <div key={gig._id} className="gig-card" onClick={() => {navigate('/login')}}>
+            <div key={gig._id} className="gig-card1" onClick={() => {navigate('/login')}}>
               <img
                 src={gig.images?.[0] || '/api/placeholder/200/150'}
                 alt={gig.title}
-                className="gig-image"
+                className="gig-image1"
               />
               <div className="gig-details">
                 <span className="gig-category">{gig.category}</span>

@@ -1,6 +1,7 @@
 .featured-section {
   padding: 2rem;
   position: relative;
+  
 }
 
 .section-title {
@@ -22,16 +23,17 @@
   padding: 0 1rem;
 }
 
-.gig-card {
+.gig-card1 {
   min-width: calc(20% - 1rem);
   border: 1px solid #e0e0e0;
   border-radius: 8px;
   overflow: hidden;
   background: white;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
 }
 
-.gig-image {
+.gig-image1 {
   width: 100%;
   height: 160px;
   object-fit: cover;
@@ -97,3 +99,79 @@
   cursor: not-allowed;
 }
 
+/* Large tablets and small desktops (1200px and below) */
+@media screen and (max-width: 1200px) {
+  .gig-card1 {
+    min-width: calc(25% - 1rem); /* 4 cards per row */
+  }
+}
+
+/* Tablets (992px and below) */
+@media screen and (max-width: 992px) {
+  .gig-card1 {
+    min-width: calc(33.333% - 1rem); /* 3 cards per row */
+  }
+  
+  .gig-image1 {
+    height: 140px;
+  }
+}
+
+/* Large phones and small tablets (768px and below) */
+@media screen and (max-width: 768px) {
+  .featured-section {
+    padding: 1.5rem;
+  }
+
+  .section-title {
+    font-size: 20px;
+    margin-bottom: 1.5rem;
+  }
+
+  .gig-card1 {
+    min-width: calc(50% - 1rem); /* 2 cards per row */
+  }
+
+  .slider-button {
+    width: 36px;
+    height: 36px;
+  }
+}
+
+/* Mobile phones (576px and below) */
+@media screen and (max-width: 576px) {
+  .featured-section {
+    padding: 1rem;
+  }
+
+  .section-title {
+    font-size: 18px;
+    margin-bottom: 1rem;
+  }
+
+  .gig-card1 {
+    min-width: calc(100% - 1rem); /* 1 card per row */
+  }
+
+  .gig-image1 {
+    height: 180px;
+  }
+
+  .gig-details {
+    padding: 0.75rem;
+  }
+
+  .slider-button {
+    width: 32px;
+    height: 32px;
+  }
+
+  .slider-container {
+    margin: 0 -0.5rem;
+  }
+
+  .featured-grid {
+    gap: 0.75rem;
+    padding: 0 0.5rem;
+  }
+}
