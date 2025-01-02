@@ -3,7 +3,6 @@
 .auth-container {
   max-width: 400px;
   margin: 50px auto;
-  /* margin:0 auto; */
   padding: 20px;
   background: white;
   border-radius: 8px;
@@ -67,5 +66,5 @@ p {
   margin-top: 15px;
 }
 
-/* media query */
+
 

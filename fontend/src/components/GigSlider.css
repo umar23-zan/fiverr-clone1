@@ -99,17 +99,17 @@
   cursor: not-allowed;
 }
 
-/* Large tablets and small desktops (1200px and below) */
+
 @media screen and (max-width: 1200px) {
   .gig-card1 {
-    min-width: calc(25% - 1rem); /* 4 cards per row */
+    min-width: calc(25% - 1rem); 
   }
 }
 
-/* Tablets (992px and below) */
+
 @media screen and (max-width: 992px) {
   .gig-card1 {
-    min-width: calc(33.333% - 1rem); /* 3 cards per row */
+    min-width: calc(33.333% - 1rem); 
   }
   
   .gig-image1 {
@@ -117,7 +117,7 @@
   }
 }
 
-/* Large phones and small tablets (768px and below) */
+
 @media screen and (max-width: 768px) {
   .featured-section {
     padding: 1.5rem;
@@ -129,7 +129,7 @@
   }
 
   .gig-card1 {
-    min-width: calc(50% - 1rem); /* 2 cards per row */
+    min-width: calc(50% - 1rem); 
   }
 
   .slider-button {
@@ -138,7 +138,7 @@
   }
 }
 
-/* Mobile phones (576px and below) */
+
 @media screen and (max-width: 576px) {
   .featured-section {
     padding: 1rem;
@@ -150,7 +150,7 @@
   }
 
   .gig-card1 {
-    min-width: calc(100% - 1rem); /* 1 card per row */
+    min-width: calc(100% - 1rem); 
   }
 
   .gig-image1 {

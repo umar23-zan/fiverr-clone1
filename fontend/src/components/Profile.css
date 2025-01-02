@@ -6,8 +6,7 @@
   display: flex;
   flex-direction: row;
   height: 150px;
-  /* align-items: center; */
-  /* justify-content: space-around; */
+
 }
 .profile-img{
   width: 30%;
@@ -47,9 +46,7 @@
   margin-top: 20px;
 }
 .profile-contact label, .profile-contact p{
-  /* display: flex;
-  flex-direction: column; */
-  /* flex-grow: 2; */
+
   text-align: left;
   width: 100%;
 }

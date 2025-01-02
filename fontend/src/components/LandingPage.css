@@ -166,46 +166,6 @@
   font-weight: 500;
 }
 
-/* Featured Gigs */
-/* .featured-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 1.5rem;
-  margin-bottom: 3rem;
-}
-
-.gig-card {
-  border: 1px solid #eaeaea;
-  border-radius: 0.5rem;
-  overflow: hidden;
-  cursor: pointer;
-  transition: box-shadow 0.3s;
-}
-
-.gig-card:hover {
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-}
-
-.gig-image {
-  width: 100%;
-  height: 200px;
-  object-fit: cover;
-}
-
-.gig-details {
-  padding: 1rem;
-}
-
-.gig-title {
-  font-weight: 500;
-  margin-bottom: 0.5rem;
-}
-
-.gig-price {
-  color: #666;
-} */
-
-/* How It Works Section */
 .steps-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
