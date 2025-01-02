@@ -17,8 +17,14 @@ router.get('/', async (req, res) => {
       query.tags = { $in: tagArray };
     }
 
-    const gigs = await Gig.find(query).populate('freelancerId', 'name email'); // Assuming User model has name and email
-    res.status(200).json(gigs);
+    const gigs = await Gig.find(query).populate('freelancerId', 'name email'); 
+    const gigsWithOptimizedImages = gigs.map((gig) => {
+      if (gig.images && gig.images.length) {
+        gig.images = gig.images.map((image) => getOptimizedImageUrl(image)); // Optimize all images
+      }
+      return gig;
+    });
+    res.status(200).json(gigsWithOptimizedImages);
   } catch (error) {
     res.status(500).json({ error: 'Failed to fetch gigs' });
   }
@@ -165,20 +171,34 @@ router.post('/', async (req, res) => {
 //   res.status(200).json({ filePath });
 // });
 
+// Optimized Image URL Generator
+const getOptimizedImageUrl = (publicId) => {
+  return cloudinary.url(publicId, {
+    transformation: [
+      { width: 500, height: 500, crop: 'limit' }, // Resize to fit within 500x500
+      { quality: 'auto', fetch_format: 'auto' },  // Automatically optimize quality and format
+    ],
+  });
+};
+
 router.post('/upload', multer().single('image'), (req, res) => {
   if (!req.file) {
     return res.status(400).json({ error: 'No file uploaded' });
   }
 
   cloudinary.uploader.upload_stream(
-    { resource_type: 'auto' },
+    { resource_type: 'image' },
     (error, result) => {
       if (error) {
         return res.status(500).json({ error: 'Failed to upload image to Cloudinary' });
       }
-
-      const filePath = result.secure_url;  // Cloudinary's secure URL for the uploaded image
-      res.status(200).json({ filePath });
+      const optimizedUrl = getOptimizedImageUrl(result.public_id);
+      // const filePath = result.secure_url;  
+      // res.status(200).json({ filePath });
+      res.status(200).json({
+        originalUrl: result.secure_url,
+        optimizedUrl, // Return optimized image URL
+      });
     }
   ).end(req.file.buffer);  // Use buffer from multer
 });
