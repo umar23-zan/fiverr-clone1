@@ -3,7 +3,7 @@ const router = express.Router();
 const Gig = require('../models/Gig');
 const multer = require('multer');
 const path = require('path');
-const cloudinary = require('../config/cloudinaryConfig');
+const { uploadGigImageToS3 } = require('../config/s3config');
 
 // Get all gigs
 router.get('/', async (req, res) => {
@@ -121,6 +121,7 @@ router.post('/', async (req, res) => {
     if (!title || !price || !category || !freelancerId) {
       return res.status(400).json({ message: 'Missing required fields.' });
     }
+
     // Validate tags
     if (!Array.isArray(tags)) {
       return res.status(400).json({ message: 'Tags must be an array.' });
@@ -129,9 +130,27 @@ router.post('/', async (req, res) => {
     if (tags.length > 5) {
       return res.status(400).json({ message: 'Maximum 5 tags allowed.' });
     }
-    const newGig = new Gig({ freelancerId, title, description, price, deliveryTime, category, tags: tags.map(tag => tag.trim()),images });
+
+    // Create gig without image URL first
+    const newGig = new Gig({ freelancerId, title, description, price, deliveryTime, category, tags: tags.map(tag => tag.trim()), images });
     await newGig.save();
-    res.status(201).json({ message: 'Gig created successfully', gig: newGig });
+
+    // Now that the gig is saved, upload the gig image(s)
+    if (req.files && req.files.length > 0) {
+      const imageUrls = [];
+      for (const file of req.files) {
+        const imageUrl = await uploadGigImageToS3(file, newGig._id); // Upload image with gigId
+        imageUrls.push(imageUrl);
+      }
+
+      // Update the gig document with the uploaded image URLs
+      newGig.images = imageUrls;
+      await newGig.save(); // Save the gig again with the images
+
+      return res.status(201).json({ message: 'Gig created successfully with images', gig: newGig });
+    }
+
+    res.status(201).json({ message: 'Gig created successfully without images', gig: newGig });
   } catch (error) {
     console.error(error);
     res.status(400).json({ message: 'Failed to create gig. Internal server error. Please try again.' });
@@ -165,22 +184,24 @@ router.post('/', async (req, res) => {
 //   res.status(200).json({ filePath });
 // });
 
-router.post('/upload', multer().single('image'), (req, res) => {
-  if (!req.file) {
-    return res.status(400).json({ error: 'No file uploaded' });
+router.post('/upload', multer().array('images', 5), async (req, res) => {  // Allow up to 5 images
+  if (!req.files || req.files.length === 0) {
+    return res.status(400).json({ error: 'No files uploaded' });
   }
 
-  cloudinary.uploader.upload_stream(
-    { resource_type: 'auto' },
-    (error, result) => {
-      if (error) {
-        return res.status(500).json({ error: 'Failed to upload image to Cloudinary' });
-      }
-
-      const filePath = result.secure_url;  // Cloudinary's secure URL for the uploaded image
-      res.status(200).json({ filePath });
+  try {
+    // Temporary upload gig images without gigId
+    const imageUrls = [];
+    for (const file of req.files) {
+      const imageUrl = await uploadGigImageToS3(file, 'temporary'); // Use a placeholder 'temporary'
+      imageUrls.push(imageUrl);
     }
-  ).end(req.file.buffer);  // Use buffer from multer
+
+    res.status(200).json({ filePaths: imageUrls }); // Return uploaded image URLs temporarily
+  } catch (error) {
+    console.error('Error uploading gig images to S3:', error);
+    res.status(500).json({ error: 'Failed to upload gig images to S3' });
+  }
 });
 
 router.get('/:id', async (req, res) => {

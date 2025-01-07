@@ -18,6 +18,10 @@ import LandingPageResults from './components/LandingPageResults';
 import ProtectedRoute from "./components/ProtectedRoute"; // Import ProtectedRoute
 import PaymentGateway from "./components/PaymentGateway";
 import Orders from "./components/Orders";
+import OrderDetails from "./components/OrderDetails"
+import OrderReview from "./components/OrderReview";
+import DeliveryPage from "./components/DeliveryPage";
+import OrderDetailsSeller from "./components/OrderDetailsSeller";
 
 function App() {
   return (
@@ -109,6 +113,38 @@ function App() {
             element={
               <ProtectedRoute>
                 <Orders />
+              </ProtectedRoute>
+            } 
+          />
+          <Route 
+            path="/ordersdetails/:orderId"
+            element={
+              <ProtectedRoute>
+                <OrderDetails />
+              </ProtectedRoute>
+            } 
+          />
+          <Route 
+            path="/ordersdetailsSeller/:orderId"
+            element={
+              <ProtectedRoute>
+                <OrderDetailsSeller />
+              </ProtectedRoute>
+            } 
+          />
+          <Route 
+            path="/orderreview"
+            element={
+              <ProtectedRoute>
+                <OrderReview />
+              </ProtectedRoute>
+            } 
+          />
+          <Route 
+            path="/deliverypage"
+            element={
+              <ProtectedRoute>
+                <DeliveryPage />
               </ProtectedRoute>
             } 
           />

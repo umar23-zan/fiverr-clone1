@@ -1,0 +1,399 @@
+/* OrderDetails.css */
+.order-container1 {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 24px;
+}
+
+.order-progress1 {
+  background: white;
+  border-radius: 8px;
+  padding: 24px;
+  /* box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); */
+  box-shadow: rgba(0, 0, 0, 0.05) 0px 6px 24px 0px, rgba(0, 0, 0, 0.08) 0px 0px 0px 1px;
+  margin-bottom: 24px;
+}
+
+.order-header1 {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.order-number1 {
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.status-badge1 {
+  background: #e6f4ea;
+  color: #1e7e34;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 14px;
+}
+
+.progress-tracker1 {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: relative;
+  padding: 0 40px;
+}
+
+.progress-line1 {
+  position: absolute;
+  top: 30%;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: #e0e0e0;
+  z-index: 0;
+}
+
+.progress-step1 {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  z-index: 1;
+}
+
+.step-circle1 {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  margin-bottom: 8px;
+}
+
+.step-active1 {
+  background: #1a237e;
+  color: white;
+}
+
+.step-inactive1 {
+  background: #e0e0e0;
+  color: #666;
+}
+
+.step-label1 {
+  font-size: 14px;
+  color: #333;
+}
+
+.main-content1 {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 24px;
+}
+
+.order-details1, .order-requirements1, .order-review1, .order-delivery1 {
+  background: white;
+  border-radius: 8px;
+  padding: 24px;
+  /* box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); */
+  box-shadow: rgba(0, 0, 0, 0.05) 0px 6px 24px 0px, rgba(0, 0, 0, 0.08) 0px 0px 0px 1px;
+  margin-bottom: 24px;
+}
+
+.section-title1 {
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 16px;
+}
+.section-details1{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 15px;
+  border-bottom: #dedede;
+  border-bottom-width: 1px;
+  border-bottom-style: solid;
+}
+
+.placeholder-image1 {
+  width: 120px;
+  height: 80px;
+  background: #f5f5f5;
+  border-radius: 8px;
+  margin-bottom: 16px;
+}
+
+.package-title1 {
+  font-weight: 500;
+  margin-bottom: 8px;
+  text-align: left;
+}
+
+.package-subtitle1 {
+  color: #666;
+  margin-bottom: 24px;
+  text-align: left;
+}
+
+.features-grid1 {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+  margin-top: 16px;
+}
+
+.feature-item1 {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.check-icon1 {
+  color: #4caf50;
+}
+
+
+
+.requirements1 {
+  background: #f8f9fa;
+  padding: 16px;
+  border-radius: 8px;
+  margin-bottom: 16px;
+}
+
+.message-header1 {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.user-info1 {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.avatar1 {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: #e0e0e0;
+}
+
+.message-time1 {
+  color: #666;
+  font-size: 14px;
+}
+
+.requirements-input1 {
+  margin-top: 16px;
+}
+
+.requirements-input1 textarea {
+  width: 100%;
+  padding: 12px 5px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  margin-bottom: 8px;
+  resize: vertical;
+}
+
+.add-button1 {
+  background: #1a237e;
+  color: white;
+  padding: 8px 16px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+}
+
+.add-button1:hover {
+  background: #0d1452;
+}
+
+.sidebar1 {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.summary-box1 {
+  background: white;
+  border-radius: 8px;
+  padding: 24px;
+  /* box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); */
+  box-shadow: rgba(0, 0, 0, 0.05) 0px 6px 24px 0px, rgba(0, 0, 0, 0.08) 0px 0px 0px 1px;
+}
+
+.summary-row1 {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.summary-total1 {
+  border-top: 1px solid #ddd;
+  padding-top: 12px;
+  margin-top: 12px;
+  font-weight: 600;
+}
+
+.timeline-item1 {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.timeline-icon1 {
+  color: #666;
+}
+
+.timeline-content1 {
+  flex: 1;
+}
+
+.timeline-label1 {
+  font-weight: 500;
+}
+
+.timeline-value1 {
+  color: #666;
+  font-size: 14px;
+}
+
+.support-button1 {
+  width: 100%;
+  padding: 8px 16px;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  color: #333;
+  cursor: pointer;
+}
+
+.support-button1:hover {
+  background: #f5f5f5;
+}
+
+/* Add these media queries at the end of OrderDetails.css */
+
+/* Tablet breakpoint */
+@media screen and (max-width: 1024px) {
+  .order-container1 {
+    padding: 16px;
+  }
+
+  .progress-tracker1 {
+    padding: 0 20px;
+  }
+
+  .main-content1 {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .features-grid1 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* Mobile breakpoint */
+@media screen and (max-width: 768px) {
+  .order-progress1 {
+    padding: 16px;
+  }
+
+  .order-header1 {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .progress-tracker1 {
+    padding: 0 10px;
+  }
+
+  .step-label1 {
+    font-size: 12px;
+  }
+
+  .step-circle1 {
+    width: 28px;
+    height: 28px;
+    font-size: 12px;
+  }
+
+  .section-details1 {
+    flex-direction: column;
+    align-items: flex-start;
+    text-align: left;
+    gap: 10px;
+  }
+
+  .placeholder-image1 {
+    width: 100%;
+    height: 160px;
+  }
+
+  .features-grid1 {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .summary-box1 {
+    padding: 16px;
+  }
+
+  .timeline-item1 {
+    gap: 8px;
+  }
+}
+
+/* Small mobile breakpoint */
+@media screen and (max-width: 480px) {
+  .order-container1 {
+    padding: 12px;
+  }
+
+  .progress-tracker1 {
+    padding: 0 5px;
+  }
+
+  .order-number1 {
+    font-size: 16px;
+  }
+
+  .status-badge1 {
+    font-size: 12px;
+    padding: 4px 8px;
+  }
+
+  .section-title1 {
+    font-size: 16px;
+  }
+
+  .package-title1 {
+    font-size: 14px;
+  }
+
+  .package-subtitle1 {
+    font-size: 12px;
+  }
+
+  .timeline-label1 {
+    font-size: 14px;
+  }
+
+  .timeline-value1 {
+    font-size: 12px;
+  }
+
+  .requirements1 {
+    padding: 12px;
+  }
+
+  .requirements-input1 textarea {
+    padding: 8px;
+  }
+}

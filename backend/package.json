@@ -10,6 +10,7 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "aws-sdk": "^2.1692.0",
     "axios": "^1.7.9",
     "bcrypt": "^5.1.1",
     "bcryptjs": "^2.4.3",
@@ -21,6 +22,7 @@
     "http": "^0.0.1-security",
     "mongoose": "^8.8.4",
     "multer": "^1.4.5-lts.1",
+    "multer-s3": "^3.0.1",
     "multer-storage-cloudinary": "^4.0.0",
     "react-router-dom": "^7.0.2",
     "router": "^1.3.8",

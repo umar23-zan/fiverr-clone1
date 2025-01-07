@@ -4,8 +4,11 @@ import Messaging from "./Messaging";
 import { io } from "socket.io-client";
 import account from '../images/account-icon.svg';
 import { Menu, X } from 'lucide-react'; // Adding icons for mobile menu
+// require('dotenv').config();
 
-const socket = io("http://localhost:5000");
+
+const socket = io(process.env.REACT_APP_SOCKET_URL);
+
 
 function ChatApp() {
   const [users, setUsers] = useState([]);

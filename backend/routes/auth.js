@@ -6,19 +6,11 @@ const nodemailer = require('nodemailer');
 const User = require('../models/User');
 const router = express.Router();
 const multer = require('multer');
-const { CloudinaryStorage } = require('multer-storage-cloudinary');
-const cloudinary = require('../config/cloudinaryConfig');
+const { uploadToS3, deleteFromS3 } = require('../config/s3config');
 const path = require('path');
 const fs = require('fs');
 
-// Configure multer storage with Cloudinary
-const storage = new CloudinaryStorage({
-    cloudinary: cloudinary,
-    params: {
-        folder: 'profilePictures', // Cloudinary folder for profile pictures
-        allowed_formats: ['jpg', 'jpeg', 'png'], // Allowed file types
-    },
-});
+
 
 // Signup Route
 router.post('/signup', async (req, res) => {
@@ -190,21 +182,23 @@ router.put('/user/:email', async (req, res) => {
     }
 });
 
-// Configure multer storage
-// const storage = multer.diskStorage({
-//     destination: (req, file, cb) => {
-//         const uploadDir = path.join(__dirname, '../uploads/profilePictures'); // Absolute path to uploads directory
-//         if (!fs.existsSync(uploadDir)) {
-//             fs.mkdirSync(uploadDir, { recursive: true }); // Ensure the directory exists
-//         }
-//         cb(null, uploadDir);
-//     },
-//     filename: (req, file, cb) => {
-//         cb(null, `${Date.now()}-${file.originalname}`);
-//     }
-// });
-const upload = multer({ storage });
-// Route to upload profile picture
+// Configure multer for memory storage
+const storage = multer.memoryStorage();
+const upload = multer({
+    storage: storage,
+    limits: {
+        fileSize: 5 * 1024 * 1024, // 5MB limit
+    },
+    fileFilter: (req, file, cb) => {
+        const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png'];
+        if (!allowedTypes.includes(file.mimetype)) {
+            const error = new Error('Invalid file type. Only JPG and PNG allowed.');
+            error.code = 'INVALID_FILE_TYPE';
+            return cb(error, false);
+        }
+        cb(null, true);
+    }
+});
 router.post('/upload-profile-picture', upload.single('profilePicture'), async (req, res) => {
     try {
         if (!req.file) {
@@ -215,12 +209,17 @@ router.post('/upload-profile-picture', upload.single('profilePicture'), async (r
         const user = await User.findOne({ email });
         if (!user) return res.status(404).json({ msg: 'User not found' });
 
-        // Construct the relative URL for the uploaded file
-        // const relativeFilePath = `/uploads/profilePictures/${req.file.filename}`;
+        const fileUrl = await uploadToS3(req.file, email);
 
-        // // Save the relative URL to the database
-        // user.profilePicture = relativeFilePath;
-        user.profilePicture = req.file.path;
+        if (user.profilePicture) {
+            try {
+                await deleteFromS3(user.profilePicture);
+            } catch (error) {
+                console.error('Error deleting old profile picture:', error);
+                // Continue with the update even if delete fails
+            }
+        }
+        user.profilePicture = fileUrl;
         await user.save();
 
         res.json({ 
@@ -230,6 +229,9 @@ router.post('/upload-profile-picture', upload.single('profilePicture'), async (r
         });
     } catch (error) {
         console.error(error);
+        if (error.code === 'INVALID_FILE_TYPE') {
+            return res.status(400).json({ msg: error.message });
+        }
         res.status(500).send('Server error');
     }
 });

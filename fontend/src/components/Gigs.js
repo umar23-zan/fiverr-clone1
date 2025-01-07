@@ -74,14 +74,15 @@ const Gigs = () => {
   };
 
   const handleFileChange = (e) => {
-    const file = e.target.files[0];
-    if (file && !file.type.startsWith('image/')) {
+    const files = Array.from(e.target.files); // Handle multiple files
+    if (files.some(file => !file.type.startsWith('image/'))) {
       setFormErrors({ ...formErrors, imageFile: 'Invalid file type. Please upload an image.' });
       return;
     }
-    setImageFile(file);
+    setImageFile(files);  // Store files as an array
     setFormErrors({ ...formErrors, imageFile: '' });
   };
+  
 
   const validateForm = () => {
     const errors = {};
@@ -101,16 +102,20 @@ const Gigs = () => {
   };
 
   const uploadImage = async () => {
-    if (!imageFile) return null;
+    if (!imageFile || imageFile.length ===0) return null;
 
     const formData = new FormData();
-    formData.append('image', imageFile);
+    imageFile.forEach((file, index) => {
+      formData.append('images', file);  // Ensure this matches the backend field name
+    });
+   
 
     try {
       const response = await axios.post('/api/gigs/upload', formData, {
         headers: { 'Content-Type': 'multipart/form-data' },
       });
-      return response.data.filePath;
+      console.log('Image upload response:', response);
+      return response.data.filePaths;
     } catch (error) {
       setError('Image upload failed. Please try again.');
       return null;
@@ -130,11 +135,12 @@ const Gigs = () => {
 
     try {
       const uploadedImagePath = await uploadImage();
-      if (!uploadedImagePath) throw new Error('Image upload failed.');
+      console.log(uploadedImagePath)
+      if (!uploadedImagePath || uploadedImagePath.length === 0) throw new Error('Image upload failed.');
 
       const gigData = {
         ...newGig,
-        images: [uploadedImagePath],
+        images: uploadedImagePath,
       };
 
       await createGig(gigData);
@@ -288,7 +294,7 @@ const Gigs = () => {
           <div className='gigform-sections'>
           <div className='gigform-label'><p><strong>Upload Image</strong></p></div>
           <div>
-          <input type="file" accept="image/*" onChange={handleFileChange} />
+          <input type="file" accept="image/*" onChange={handleFileChange} name="image" multiple/>
           {formErrors.imageFile && <div className="form-error" style={{color: "red"}}>{formErrors.imageFile}</div>}
           </div>
           </div>

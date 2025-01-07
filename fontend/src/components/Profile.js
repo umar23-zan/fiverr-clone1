@@ -16,6 +16,8 @@ function Profile() {
   const [loading, setLoading] = useState(true);
   const [formSubmitting, setFormSubmitting] = useState(false);
   const [updateSuccess, setUpdateSuccess] = useState(false);
+  const [imageLoading, setImageLoading] = useState(true);
+
 
   const id = localStorage.getItem('userEmail');
   const userRole = localStorage.getItem('userRole')
@@ -44,13 +46,24 @@ function Profile() {
         });
 
         // Handle profile picture URL
-        const profilePicUrl = data.profilePicture || account;
-        setProfilePicture(profilePicUrl);
-        setProfilePreview(profilePicUrl);
+        // const profilePicUrl = data.profilePicture || account;
+        // setProfilePicture(profilePicUrl);
+        // setProfilePreview(profilePicUrl);
+        if (data.profilePicture) {
+          // Validate the S3 URL
+          const imageUrl = new URL(data.profilePicture);
+          setProfilePicture(data.profilePicture);
+          setProfilePreview(data.profilePicture);
+        } else {
+          setProfilePicture(account);
+          setProfilePreview(account);
+        }
 
       } catch (error) {
         console.error("Failed to fetch user data:", error.message);
         setErrors((prev) => ({ ...prev, global: "Failed to load profile data." }));
+        setProfilePicture(account);
+        setProfilePreview(account);
       } finally {
         setLoading(false);
       }
@@ -90,7 +103,13 @@ function Profile() {
 
   const handleImageError = (e) => {
     console.error("Failed to load profile image");
+    e.target.src = account; // Set default image
     setProfilePreview(account);
+    setImageLoading(false);
+  };
+
+  const handleImageLoad = () => {
+    setImageLoading(false);
   };
 
   const handleCancelClick = () => {
@@ -159,6 +178,57 @@ function Profile() {
     }
   };
 
+  // const handleSubmit = async (e) => {
+  //   e.preventDefault();
+  //   setFormSubmitting(true);
+  //   const newErrors = {};
+  //   Object.keys(formData).forEach((key) => {
+  //     const error = validateField(key, formData[key]);
+  //     if (error) newErrors[key] = error;
+  //   });
+
+  //   if (Object.keys(newErrors).length === 0) {
+  //     try {
+  //       // First update user data
+  //       await updateUserData(id, formData);
+
+  //       // Handle profile picture upload if there's a new file
+  //       if (profilePicture instanceof File) {
+  //         const data = new FormData();
+  //         data.append("profilePicture", profilePicture);
+  //         data.append("email", id);
+  //         await uploadProfilePicture(data);
+  //       }
+
+  //       // Fetch updated user data
+  //       const updatedUserData = await getUserData(id);
+  //       setUser(updatedUserData);
+
+  //       // Update profile picture state with the new URL from server
+  //       const updatedProfilePicture = updatedUserData.profilePicture || account;
+  //       setProfilePicture(updatedProfilePicture);
+  //       setProfilePreview(updatedProfilePicture);
+
+  //       setEditForm(false);
+  //       setUpdateSuccess(true);
+
+  //       // Show success message
+  //       const confirmed = window.confirm("Profile Updated Successfully");
+  //       if (confirmed) {
+  //         // Refresh the profile data
+  //         const refreshedData = await getUserData(id);
+  //         setUser(refreshedData);
+  //         setProfilePreview(refreshedData.profilePicture || account);
+  //       }
+  //     } catch (error) {
+  //       console.error("Failed to update profile:", error.message);
+  //       setErrors(prev => ({ ...prev, global: "Failed to update profile. Please try again." }));
+  //     }
+  //   } else {
+  //     setErrors(newErrors);
+  //   }
+  //   setFormSubmitting(false);
+  // };
   const handleSubmit = async (e) => {
     e.preventDefault();
     setFormSubmitting(true);
@@ -175,34 +245,49 @@ function Profile() {
 
         // Handle profile picture upload if there's a new file
         if (profilePicture instanceof File) {
-          const data = new FormData();
-          data.append("profilePicture", profilePicture);
-          data.append("email", id);
-          await uploadProfilePicture(data);
+          const formData = new FormData();
+          formData.append("profilePicture", profilePicture);
+          formData.append("email", id);
+          
+          const uploadResponse = await uploadProfilePicture(formData);
+          
+          // Verify the response contains the new profile picture URL
+          if (uploadResponse && uploadResponse.profilePicture) {
+            // Validate the S3 URL
+            const imageUrl = new URL(uploadResponse.profilePicture);
+            setProfilePicture(uploadResponse.profilePicture);
+            setProfilePreview(uploadResponse.profilePicture);
+          }
         }
 
         // Fetch updated user data
         const updatedUserData = await getUserData(id);
         setUser(updatedUserData);
 
-        // Update profile picture state with the new URL from server
-        const updatedProfilePicture = updatedUserData.profilePicture || account;
-        setProfilePicture(updatedProfilePicture);
-        setProfilePreview(updatedProfilePicture);
-
         setEditForm(false);
         setUpdateSuccess(true);
 
-        // Show success message
         const confirmed = window.confirm("Profile Updated Successfully");
         if (confirmed) {
           // Refresh the profile data
           const refreshedData = await getUserData(id);
           setUser(refreshedData);
-          setProfilePreview(refreshedData.profilePicture || account);
+          
+          // Validate and set the new profile picture URL
+          if (refreshedData.profilePicture) {
+            try {
+              const imageUrl = new URL(refreshedData.profilePicture);
+              setProfilePreview(refreshedData.profilePicture);
+            } catch (error) {
+              console.error("Invalid profile picture URL:", error);
+              setProfilePreview(account);
+            }
+          } else {
+            setProfilePreview(account);
+          }
         }
       } catch (error) {
-        console.error("Failed to update profile:", error.message);
+        console.error("Failed to update profile:", error);
         setErrors(prev => ({ ...prev, global: "Failed to update profile. Please try again." }));
       }
     } else {
@@ -236,6 +321,8 @@ function Profile() {
                   width={150}
                   height={150}
                   onError={handleImageError}
+                  onLoad={handleImageLoad}
+                  style={{ display: imageLoading ? 'none' : 'block' }}
                 />
               </div>
               

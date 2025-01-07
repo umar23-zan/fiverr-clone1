@@ -49,6 +49,7 @@ function Messaging({ socket, conversationId, receiverId }) {
     };
     
     if (file) {
+      console.log(file)
       const formData = new FormData();
       formData.append("file", file);
       formData.append("conversationId", conversationId);
@@ -60,6 +61,7 @@ function Messaging({ socket, conversationId, receiverId }) {
           headers: { "Content-Type": "multipart/form-data" },
         })
         .then((res) => {
+          console.log(res)
           message.fileUrl = res.data.fileUrl;
           message.originalFileName = res.data.originalName;
           message.fileSize = res.data.size;
@@ -93,7 +95,7 @@ function Messaging({ socket, conversationId, receiverId }) {
       ? message.originalFileName.split('.').pop().toLowerCase()
       : '';
       
-    const fileUrl = `http://localhost:5000${message.fileUrl}`;
+    const fileUrl = `${message.fileUrl}`;
     const imageExtensions = ['jpg', 'jpeg', 'png', 'gif', 'bmp', 'webp'];
 
     if (imageExtensions.includes(fileExtension)) {

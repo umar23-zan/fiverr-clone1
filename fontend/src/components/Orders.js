@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import Header from './Header'
 import HeaderBuy from './HeaderBuy';
 import './Orders.css'
 
 const Orders = () => {
+  const navigate = useNavigate();
   const [orders, setOrders] = useState([]);
   const userId = localStorage.getItem('userId');
   const userRole=localStorage.getItem('userRole')
@@ -55,7 +56,15 @@ const Orders = () => {
 
   const OrderCard = ({order}) => (
     
-            <div key={order._id} className="order-card">
+            <div key={order._id} className="order-card" 
+            onClick={() =>{
+              if(userRole==="Buyer"){
+                navigate(`/ordersdetails/${order._id}`)
+              }else{
+                navigate(`/ordersdetailsSeller/${order._id}`)
+              }
+              }}
+            >
               <div className="order-header">
                 <span className="order-id">
                   Order #{order._id.slice(-6)}

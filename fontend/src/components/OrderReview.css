@@ -1,0 +1,299 @@
+/* OrderReview.css */
+.review-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 24px;
+}
+
+.review-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 32px;
+}
+
+.review-title {
+  font-size: 24px;
+  font-weight: 600;
+}
+
+.status-badge-review {
+  background: #fff3cd;
+  color: #856404;
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-size: 14px;
+}
+
+.review-content {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 48px;
+}
+
+.delivery-section {
+  background: white;
+  border-radius: 8px;
+  padding: 24px;
+  box-shadow: rgba(0, 0, 0, 0.05) 0px 6px 24px 0px, rgba(0, 0, 0, 0.08) 0px 0px 0px 1px;
+}
+
+.section-title {
+  font-size: 20px;
+  font-weight: 600;
+  margin-bottom: 24px;
+  text-align: left;
+}
+.preview-image{
+  width: 600px;
+  height: 400px;
+  background-color: #e0e0e0;
+  border-radius: 20px;
+}
+
+.delivered-files {
+  margin-top: 24px;
+}
+
+.file-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+  color: #333;
+}
+
+.file-icon {
+  color: #666;
+}
+
+.rating-section {
+  background: white;
+  border-radius: 8px;
+  padding: 24px;
+  box-shadow: rgba(0, 0, 0, 0.05) 0px 6px 24px 0px, rgba(0, 0, 0, 0.08) 0px 0px 0px 1px;
+}
+
+.star-rating {
+  margin-bottom: 32px;
+  text-align: left;
+}
+
+.rating-category {
+  margin-bottom: 24px;
+}
+
+.rating-label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 500;
+}
+
+.stars {
+  color: #ffc107;
+  font-size: 24px;
+}
+
+.review-textarea {
+  width: 100%;
+  min-height: 120px;
+  padding: 12px 5px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  margin: 24px 0;
+  font-family: inherit;
+  resize: vertical;
+}
+
+.review-actions {
+  display: flex;
+  gap: 16px;
+  margin-top: 24px;
+}
+
+.submit-review {
+  padding: 12px 24px;
+  background: #1a237e;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.submit-review:hover {
+  background: #0d1452;
+}
+
+.request-revision {
+  padding: 12px 24px;
+  background: white;
+  color: #333;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.request-revision:hover {
+  background: #f5f5f5;
+}
+
+.order-stats {
+  display: flex;
+  justify-content: space-between;
+  padding: 24px 0;
+  border-top: 1px solid #eee;
+  margin-top: 32px;
+}
+
+.stat-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.stat-icon {
+  margin-bottom: 8px;
+  color: #666;
+}
+
+.stat-value {
+  font-weight: 500;
+  margin-bottom: 4px;
+}
+
+.stat-label {
+  color: #666;
+  font-size: 14px;
+}
+
+/* Add these media queries at the end of OrderReview.css */
+
+/* Large Tablet breakpoint */
+@media screen and (max-width: 1200px) {
+  .review-container {
+    padding: 16px;
+  }
+
+  .preview-image {
+    width: 100%;
+    height: 300px;
+  }
+}
+
+/* Tablet breakpoint */
+@media screen and (max-width: 992px) {
+  .review-content {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+
+  .preview-image {
+    height: 400px;
+  }
+
+  .order-stats {
+    flex-wrap: wrap;
+    gap: 24px;
+  }
+
+  .stat-item {
+    width: calc(50% - 12px);
+  }
+}
+
+/* Mobile breakpoint */
+@media screen and (max-width: 768px) {
+  .review-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .review-title {
+    font-size: 20px;
+  }
+
+  .section-title {
+    font-size: 18px;
+    margin-bottom: 16px;
+  }
+
+  .delivery-section, 
+  .rating-section {
+    padding: 16px;
+  }
+
+  .preview-image {
+    height: 250px;
+  }
+
+  .stars {
+    font-size: 20px;
+  }
+
+  .review-actions {
+    flex-direction: column;
+  }
+
+  .submit-review,
+  .request-revision {
+    width: 100%;
+  }
+}
+
+/* Small mobile breakpoint */
+@media screen and (max-width: 480px) {
+  .review-container {
+    padding: 12px;
+  }
+
+  .status-badge-review {
+    padding: 6px 12px;
+    font-size: 12px;
+  }
+
+  .preview-image {
+    height: 200px;
+  }
+
+  .order-stats {
+    gap: 16px;
+  }
+
+  .stat-item {
+    width: 100%;
+  }
+
+  .stat-icon {
+    width: 20px;
+    height: 20px;
+  }
+
+  .stat-value {
+    font-size: 14px;
+  }
+
+  .stat-label {
+    font-size: 12px;
+  }
+
+  .file-item {
+    font-size: 14px;
+  }
+
+  .rating-label {
+    font-size: 14px;
+  }
+
+  .stars {
+    font-size: 18px;
+  }
+
+  .review-textarea {
+    min-height: 100px;
+    padding: 8px;
+  }
+}

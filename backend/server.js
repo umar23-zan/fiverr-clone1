@@ -6,7 +6,7 @@ const path = require('path');
 const multer = require('multer');
 const fs = require('fs');
 require('dotenv').config();
-const cloudinary = require('./config/cloudinaryConfig');
+const { uploadMessageFileToS3 } = require('./config/s3config');
 
 const userRoutes = require('./routes/auth');
 const gigRoutes = require('./routes/gig');
@@ -21,24 +21,24 @@ const app = express();
 // Middleware
 app.use(cors());
 app.use(bodyParser.json());
-app.use('/uploads', express.static(path.join(__dirname, 'uploads'))); // Serve uploaded files statically
+// app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
-// Configure multer for file upload
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    const uploadDir = path.join(__dirname, 'uploads');
-    // Create uploads directory if it doesn't exist
-    if (!fs.existsSync(uploadDir)) {
-      fs.mkdirSync(uploadDir);
-    }
-    cb(null, uploadDir);
-  },
-  filename: (req, file, cb) => {
-    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
-    cb(null, file.fieldname + '-' + uniqueSuffix + path.extname(file.originalname));
-  }
-});
 
+// const storage = multer.diskStorage({
+//   destination: (req, file, cb) => {
+//     const uploadDir = path.join(__dirname, 'uploads');
+//     // Create uploads directory if it doesn't exist
+//     if (!fs.existsSync(uploadDir)) {
+//       fs.mkdirSync(uploadDir);
+//     }
+//     cb(null, uploadDir);
+//   },
+//   filename: (req, file, cb) => {
+//     const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+//     cb(null, file.fieldname + '-' + uniqueSuffix + path.extname(file.originalname));
+//   }
+// });
+const storage = multer.memoryStorage();
 const upload = multer({ 
   storage: storage,
   limits: { fileSize: 10 * 1024 * 1024 } // 50MB file size limit
@@ -46,7 +46,7 @@ const upload = multer({
 
 // Connect to MongoDB
 mongoose
-  .connect('mongodb+srv://umar:umar444@authentication-app.ted5m.mongodb.net/authdb?retryWrites=true&w=majority', { useNewUrlParser: true, useUnifiedTopology: true })
+  .connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true })
   .then(() => console.log('MongoDB Connected'))
   .catch((err) => console.error(err));
 
@@ -120,13 +120,15 @@ socket.on("sendMessage", async (message) => {
 });
 
 // File upload route
-app.post('/api/messages/upload', upload.single('file'), (req, res) => {
+app.post('/api/messages/upload', upload.single('file'), async(req, res) => {
   try {
     if (!req.file) {
       return res.status(400).json({ error: 'No file uploaded' });
     }
 
-    const fileUrl = `/uploads/${req.file.filename}`;
+    // const fileUrl = `/uploads/${req.file.filename}`;
+    const fileUrl = await uploadMessageFileToS3(req.file, req.body.conversationId);
+    console.log(fileUrl)
     res.json({ 
       fileUrl: fileUrl,
       originalName: req.file.originalname,

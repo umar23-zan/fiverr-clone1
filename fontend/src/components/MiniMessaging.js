@@ -5,7 +5,7 @@ import { io } from "socket.io-client";
 import account from '../images/account-icon.svg';
 import { Loader } from 'lucide-react';
 
-const socket = io("http://localhost:5000");
+const socket = io(process.env.REACT_APP_SOCKET_URL);
 
 function MiniMessaging({ isMiniChat = false, receiverId, senderId }) {
   const [selectedConversation, setSelectedConversation] = useState(null);
