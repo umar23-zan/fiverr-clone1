@@ -75,6 +75,13 @@ const Orders = () => {
               </div>
 
               <div className="order-details">
+              <div className="detail-row">
+                  <span className="detail-label">Gig Title</span>
+                  <span className={`amount`}>
+                    {order.gigTitle}
+                  </span>
+                </div>
+
                 <div className="detail-row">
                   <span className="detail-label">Status</span>
                   <span className={`order-status status-${order.status.toLowerCase()}`}>
@@ -84,7 +91,7 @@ const Orders = () => {
 
                 <div className="detail-row">
                   <span className="detail-label">Amount</span>
-                  <span className="amount">${order.amount}</span>
+                  <span className="amount">₹{order.amount}</span>
                 </div>
               </div>
             </div>   

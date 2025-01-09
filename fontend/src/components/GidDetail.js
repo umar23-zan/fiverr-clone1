@@ -62,7 +62,9 @@ const GidDetail = () => {
         buyerId: senderId,
         freelancerId: freelancerId,
         gigId: id,
-        amount: gig.price
+        gigTitle: gig.title,
+        amount: gig.price,
+        deliveryTime: gig.deliveryTime
       }
     })
   }

@@ -2,12 +2,30 @@
 import React, {useState, useEffect} from 'react';
 import { Clock, MessageSquare, Calendar } from 'lucide-react';
 import './OrderDetails.css';
+import account from '../images/account-icon.svg'
+import close from '../images/close.svg'
 import HeaderBuy from './HeaderBuy';
-import { useNavigate } from 'react-router-dom';
+import MiniMessaging from './MiniMessaging';
+import { useNavigate, useParams } from 'react-router-dom';
+import axios from 'axios';
 
 const OrderDetails = () => {
+  const {orderId} = useParams();
+  console.log(orderId)
+  const [orderDetails, setOrderDetails]=useState([])
   const navigate= useNavigate();
   const [isRequirements, setIsRequirements] = useState(false)
+  const [description, setDescription] = useState('');
+  const [showChat, setShowChat] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
+
+  const addDays = (date, days) => {
+    const parsedDate = new Date(date);
+    parsedDate.setDate(parsedDate.getDate() + days);
+    return parsedDate;
+  };
+  
   const formatDate = (date) => {
     return new Date(date).toLocaleDateString('en-US', {
       month: 'short',
@@ -18,6 +36,45 @@ const OrderDetails = () => {
 
   const steps = ['Order Placed', 'In Progress', 'Review', 'Complete'];
 
+ useEffect(() => {
+    if (orderId) {
+      fetchOrderDetails();
+    }
+  }, [orderId]);
+
+  const fetchOrderDetails = async () => {
+    try {
+      setLoading(true);
+      setError(null); // Clear any previous errors
+      const response = await axios.get(`/api/orders/${orderId}`);
+      setOrderDetails(response.data);
+      console.log('Order Details:', response.data);
+    } catch (error) {
+      console.error('Error fetching order details:', error);
+      setError('Failed to load order details');
+    } finally {
+      setLoading(false);
+    }
+  };
+  const handleAddRequirement = async () => {
+    try {
+      if (!description.trim()) {
+        setError('Description is required');
+        return;
+      }
+
+      const response = await axios.post(`/api/orders/${orderId}/requirements`, { description });
+      setIsRequirements(false)
+      setDescription(''); 
+      fetchOrderDetails();
+      setError(null);
+      
+    } catch (err) {
+      console.error('Error adding requirement:', err);
+      setError('Failed to add requirement');
+    }
+  };
+
 
   return (
     <div>
@@ -25,8 +82,8 @@ const OrderDetails = () => {
       <div className="order-container1">
       <div className="order-progress1">
         <div className="order-header1">
-          <span className="order-number1">Order #GIG84752</span>
-          <span className="status-badge1">Active</span>
+          <span className="order-number1">Order {orderDetails._id}</span>
+          <span className="status-badge1">{orderDetails.status}</span>
         </div>
         
         <div className="progress-tracker1">
@@ -47,9 +104,15 @@ const OrderDetails = () => {
           <div className="order-details1">
             <h3 className="section-title1">Order Details</h3>
             <div className='section-details1'>
-              <div className="placeholder-image1"></div>
+            <div className="placeholder-image1">
+        {orderDetails?.gigId?.images ? (
+          <img src={orderDetails.gigId.images} alt="gig-image" />
+        ) : (
+          <p>Loading image...</p>
+        )}
+      </div>
               <div>
-              <h4 className="package-title1">I will design modern UI/UX for your application</h4>
+              <h4 className="package-title1">{orderDetails.gigTitle}</h4>
               <p className="package-subtitle1">Basic Package - One page design</p>
               </div>
               
@@ -76,6 +139,15 @@ const OrderDetails = () => {
                 textAlign: "left"
               }}>Requirements</h3>
             <div className="requirements1">
+               {Array.isArray(orderDetails.requirements) && orderDetails.requirements.length > 0 ? (
+               orderDetails.requirements.map((req, index) => (
+                  <div key={index} className="requirement-item">
+                    <ul>
+                      <li>{req.description}</li>
+                    </ul>
+                  </div>
+                ))
+              ): (<p>No requirements found.</p>)}
               {!isRequirements ? (
                 
               <div>
@@ -86,7 +158,12 @@ const OrderDetails = () => {
               </div>
               ): (<div className='requirements-input1' >
                 
-                <textarea placeholder='Add your requirements here'></textarea>
+                <textarea
+                  value={description}
+                  onChange={(e) => setDescription(e.target.value)}
+                  placeholder="Enter requirement description"
+                  rows="3"
+                />
                 <button style={{
                   backgroundColor: "#1a237e",
                   color: "white",
@@ -95,8 +172,9 @@ const OrderDetails = () => {
                   border: "none",
                   cursor: "pointer",
                 }}
-                onClick={()=> {setIsRequirements(false)}}
+                onClick={handleAddRequirement}
                 >Submit</button>
+                {error && <div className="error">{error}</div>}
               </div>)}
               
             </div>
@@ -123,15 +201,15 @@ const OrderDetails = () => {
             <h3 className="section-title1">Order Summary</h3>
             <div className="summary-row1">
               <span>Subtotal</span>
-              <span>$99.00</span>
+              <span>₹{orderDetails.amount}</span>
             </div>
             <div className="summary-row1">
               <span>Service Fee</span>
-              <span>$9.90</span>
+              <span>₹{orderDetails.amount/10}</span>
             </div>
             <div className="summary-row1 summary-total1">
               <span>Total</span>
-              <span>$108.90</span>
+              <span>₹{orderDetails.amount + orderDetails.amount/10}</span>
             </div>
           </div>
 
@@ -141,23 +219,65 @@ const OrderDetails = () => {
               <Clock className="timeline-icon1" size={20} />
               <div className="timeline-content1">
                 <div className="timeline-label1">Delivery Time</div>
-                <div className="timeline-value1">3 days remaining</div>
+                <div className="timeline-value1">{orderDetails?.gigId?.deliveryTime 
+          ? `${orderDetails.gigId.deliveryTime} days remaining` 
+          : 'Loading...'}</div>
               </div>
             </div>
             <div className="timeline-item1">
               <Calendar className="timeline-icon1" size={20} />
               <div className="timeline-content1">
                 <div className="timeline-label1">Start Date</div>
-                <div className="timeline-value1">{formatDate('2025-01-15')}</div>
+                <div className="timeline-value1">{formatDate (orderDetails.createdAt)}</div>
               </div>
             </div>
             <div className="timeline-item1">
               <Calendar className="timeline-icon1" size={20} />
               <div className="timeline-content1">
                 <div className="timeline-label1">Due Date</div>
-                <div className="timeline-value1">{formatDate('2025-01-18')}</div>
+                <div className="timeline-value1">{orderDetails?.gigId?.deliveryTime && orderDetails?.createdAt ? formatDate(addDays   (orderDetails.createdAt, orderDetails.gigId.deliveryTime))
+                 : 'Loading...'}</div>
               </div>
             </div>
+          </div>
+          <div className="summary-box1">
+            <h3 className="section-title1">Message</h3>
+            <p>Want to Discuss click the button below to chat</p>
+            {/* <button className="add-button1">Message me</button> */}
+            {!showChat ? (
+          <button className="add-button1" onClick={() => setShowChat(true)}>Chat Now</button>
+        ):(
+          <div className="chat-window">
+          <div className="chat-header">
+            <div className="chat-header-info">
+              <img
+                src={account}
+                alt={orderDetails.freelancerId.name}
+                className="chat-header-avatar"
+              />
+              <div className="chat-header-text">
+                <span className="chat-header-name">{orderDetails.freelancerId.name}</span>
+                <span className="chat-header-status">Away</span>
+              </div>
+            </div>
+            <button 
+              className="close-button"
+              onClick={() => setShowChat(false)}
+              aria-label="Close chat"
+            >
+              <img src={close} alt="close" className="close-icon" />
+            </button>
+          </div>
+          <div className="chat-body">
+            <MiniMessaging
+              isMiniChat={true}
+              receiverId={orderDetails.freelancerId._id}
+              senderId={orderDetails.buyerId._id}
+            />
+          </div>
+        </div>
+
+        )}
           </div>
 
           <div className="summary-box1">

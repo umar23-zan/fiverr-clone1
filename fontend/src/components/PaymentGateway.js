@@ -19,9 +19,9 @@ const formatCardNumber = (number) => {
 const PaymentGateway = () => {
  const location = useLocation()
  const navigate = useNavigate()
- const {buyerId, freelancerId, gigId, amount } =location.state || {}
+ const {buyerId, freelancerId, gigId ,gigTitle, amount, deliveryTime } =location.state || {}
  const [paymentStatus, setPaymentStatus] = useState('pending');
- 
+ console.log(buyerId, freelancerId, gigId, gigTitle, amount)
 
   const [formData, setFormData] = useState({
     cardNumber: '',
@@ -101,11 +101,18 @@ const PaymentGateway = () => {
       validateForm();
       const paymentResult = await processPayment(formData);
       setResponse(paymentResult);
+      console.log("Incoming orderResponse", buyerId,
+        freelancerId,
+        gigId,
+        gigTitle,
+        amount )
       const orderResponse = await axios.post('/api/orders', {
         buyerId,
         freelancerId,
         gigId,
+        gigTitle,
         amount,
+        deliveryTime,
         status: 'Pending'
       });
       
