@@ -28,7 +28,7 @@ router.get('/', async (req, res) => {
 router.get('/user/:freelancerId', async (req, res) => {
   const { freelancerId } = req.params;
   try {
-    const gigs = await Gig.find({ freelancerId });
+    const gigs = await Gig.find({ freelancerId }).populate('freelancerId', 'name email');
     res.status(200).json(gigs);
   } catch (error) {
     res.status(500).json({ error: 'Failed to fetch user gigs' });

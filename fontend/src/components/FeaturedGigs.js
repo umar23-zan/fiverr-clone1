@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './GigSlider.css';
 import { useWindowSize } from 'react-use';
+import { LazyLoadImage } from 'react-lazy-load-image-component';
+import 'react-lazy-load-image-component/src/effects/blur.css';
 
 const FeaturedSection = ({ categoryGigs }) => {
   const navigate=useNavigate();
@@ -58,10 +60,12 @@ const FeaturedSection = ({ categoryGigs }) => {
         >
           {allGigs.map((gig) => (
             <div key={gig._id} className="gig-card1" onClick={() => {navigate('/login')}}>
-              <img
+              <LazyLoadImage
                 src={gig.images?.[0] || '/api/placeholder/200/150'}
                 alt={gig.title}
+                effect="blur"
                 className="gig-image1"
+                placeholderSrc="/api/placeholder/50/50" // Optional placeholder
               />
               <div className="gig-details">
                 <span className="gig-category">{gig.category}</span>

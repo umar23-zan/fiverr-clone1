@@ -4,10 +4,17 @@ import './GigCard.css'; // Create a simple CSS file for styling
 
 const GigCard = ({ gig }) => {
   const navigate = useNavigate();
+  const userId =localStorage.getItem('userId')
 
   const handleCardClick = () => {
-    // navigate(`/gigdetail/${gig._id}`);
+    console.log(gig)
+    if(userId !== gig.freelancerId._id){
+            // navigate(`/gigdetail/${gig._id}`);
     navigate(`/gigdetail/${gig._id}?freelancerId=${gig.freelancerId._id}`);
+    }
+
+    
+    
   };
 
   return (
