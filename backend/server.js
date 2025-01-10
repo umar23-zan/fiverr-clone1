@@ -7,6 +7,7 @@ const multer = require('multer');
 const fs = require('fs');
 require('dotenv').config();
 const { uploadMessageFileToS3 } = require('./config/s3config');
+const { initializeSocket } = require('./server/socket');
 
 const userRoutes = require('./routes/auth');
 const gigRoutes = require('./routes/gig');
@@ -63,6 +64,8 @@ const { Server } = require('socket.io');
 
 const server = http.createServer(app);
 const io = new Server(server, { cors: { origin: '*' } });
+
+const IO = initializeSocket(server);
 
 io.on('connection', (socket) => {
   console.log('User connected:', socket.id);

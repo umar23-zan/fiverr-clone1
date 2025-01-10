@@ -5,7 +5,7 @@ const orderSchema = new mongoose.Schema({
   freelancerId: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
   gigId: { type: mongoose.Schema.Types.ObjectId, ref: 'Gig' },
   gigTitle: String,
-  status: { type: String, enum: ['Pending', 'Completed'], default: 'Pending' },
+  status: { type: String, enum: ['Pending', 'Completed', 'Active', 'inProgress', 'review Requested'], default: 'Pending' },
   amount: Number,
   deliveryTime: Number,
   requirements: [{
@@ -18,6 +18,25 @@ const orderSchema = new mongoose.Schema({
       default: Date.now 
     }
   }],
+  deliveries: [{
+    description: String,
+    files: [String],
+    createdAt: { type: Date, default: Date.now }
+  }],
+  review: {
+    ratings: {
+      communication: { type: Number, min: 1, max: 5 },
+      service: { type: Number, min: 1, max: 5 },
+      recommend: { type: Number, min: 1, max: 5 },
+    },
+    reviewText: String,
+  },
+  revisionRequests: [
+    {
+      remarks: String,
+      requestedAt: { type: Date, default: Date.now },
+    },
+  ],
   createdAt: { type: Date, default: Date.now },
 });
 

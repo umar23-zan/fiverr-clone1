@@ -3,15 +3,30 @@ import React, { useState } from 'react';
 import { Clock, MessageSquare, Award, ThumbsUp, FileText } from 'lucide-react';
 import './OrderReview.css';
 import HeaderBuy from './HeaderBuy';
+import axios from 'axios';
+import { useNavigate, useParams, useLocation } from 'react-router-dom';
 
 const OrderReview = () => {
+  const location = useLocation();
+  const { orderDetails } = location.state;
+  const {orderId} = useParams();
   const [acceptDelivery, setAcceptDelivery] = useState(false)
   const [ratings, setRatings] = useState({
-    communication: 5,
-    service: 5,
-    recommend: 5
+    communication: 0,
+    service: 0,
+    recommend: 0
   });
   const [review, setReview] = useState('');
+  const [remarks, setRemarks] = useState('');
+  const [successMessage, setSuccessMessage] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
+  const clearMessages = () => {
+    setTimeout(() => {
+      setSuccessMessage('');
+      setErrorMessage('');
+    }, 2000); // Clears messages after 3 seconds
+  };
+  
 
   const renderStars = (count) => {
     return '★'.repeat(count) + '☆'.repeat(5 - count);
@@ -24,32 +39,70 @@ const OrderReview = () => {
     }));
   };
 
+  const handleSubmitReview = async () => {
+    try {
+     
+      const response = await axios.post(`/api/orders/${orderId}/review`, {
+        ratings,
+        review,
+      });
+      setSuccessMessage('Review submitted successfully!');
+      setErrorMessage('');
+      console.log(response.data); 
+      setRatings({ communication: 5, service: 5, recommend: 5 });
+    setReview('');
+      clearMessages();
+    } catch (error) {
+      setErrorMessage('Error submitting review. Please try again.');
+      setSuccessMessage('');
+      console.error('Error submitting review:', error);
+      clearMessages();
+    }
+  };
+
+  const handleRequestRevision = async () => {
+    try {
+      
+      const response = await axios.post(`/api/orders/${orderId}/revision`, { remarks });
+      setSuccessMessage('Revision requested successfully!');
+      setErrorMessage('');
+      console.log(response.data); 
+      setRemarks('');
+      clearMessages();
+    } catch (error) {
+      setErrorMessage('Error requesting revision. Please try again.');
+      setSuccessMessage('');
+      console.error('Error requesting revision:', error);
+      clearMessages();
+    }
+  };
+
   return (
     <div>
       <HeaderBuy />
 <div className="review-container">
       <div className="review-header">
-        <h1 className="review-title">Order #GIG84752 - Review</h1>
+        <h1 className="review-title">Order {orderId} - Review</h1>
         <span className="status-badge-review">Pending Review</span>
       </div>
 
       <div className="review-content">
         <div className="delivery-section">
-          <h2 className="section-title">Delivery Preview</h2>
-          <div className="preview-image">
-            
+          <h2 className="section-title">Delivery Description</h2>
+          <div className="delivery-info">
+            {orderDetails.deliveries[0].description}
           </div>
 
           <div className="delivered-files">
             <h3 className="section-title">Delivered Files:</h3>
-            <div className="file-item">
-              <FileText size={20} className="file-icon" />
-              <span>final_design_v1.fig</span>
-            </div>
-            <div className="file-item">
-              <FileText size={20} className="file-icon" />
-              <span>assets.zip</span>
-            </div>
+            {orderDetails.deliveries[0].files.map((fileUrl, index) => (
+                <div className="file-item" key={index}>
+                  <FileText size={20} className="file-icon" />
+                  <a href={fileUrl} download target="_blank" rel="noopener noreferrer">
+                    <span>{fileUrl.split('/').pop()}</span>
+                  </a>
+                </div>
+              ))}
           </div>
         </div>
         {acceptDelivery? (
@@ -88,8 +141,9 @@ const OrderReview = () => {
           </div>
 
           <div className="review-actions">
-            <button className="submit-review">Submit Review</button>
-            
+            <button className="submit-review" onClick={handleSubmitReview}>Submit Review</button>
+            {successMessage && <p className="success-message">{successMessage}</p>}
+                {errorMessage && <p className="error-message">{errorMessage}</p>}
           </div>
         </div>
         ):(
@@ -103,12 +157,13 @@ const OrderReview = () => {
             <textarea
               className="review-textarea"
               placeholder="Write your remarks on this Revision"
-              value={review}
-              onChange={(e) => setReview(e.target.value)}
+              value={remarks}
+              onChange={(e) => setRemarks(e.target.value)}
             />
             <div className="review-actions">
-            <button className="submit-review" onClick={()=>{setAcceptDelivery(false)}}>Submit Revision</button>
-            
+            <button className="submit-review" onClick={handleRequestRevision}>Submit Revision</button>
+            {successMessage && <p className="success-message">{successMessage}</p>}
+            {errorMessage && <p className="error-message">{errorMessage}</p>}
           </div>
           </div>
 

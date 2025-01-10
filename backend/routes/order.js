@@ -1,6 +1,19 @@
 const express = require('express');
 const Order = require('../models/Order');
 const router = express.Router();
+const multer = require('multer');
+const AWS = require('aws-sdk');
+const { notifyUser } = require('../server/socket');
+
+const s3 = new AWS.S3({
+  accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+  secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+  region: process.env.AWS_REGION
+});
+
+const storage = multer.memoryStorage();
+const upload = multer({ storage });
+
 
 // Create Order
 router.post('/', async (req, res) => {
@@ -67,6 +80,89 @@ router.get('/:orderId', async (req, res) => {
     res.json(order);
   } catch (error) {
     res.status(500).json({ error: error.message });
+  }
+});
+
+router.post('/:orderId/revision', async (req, res) => {
+  const { orderId } = req.params;
+  const { remarks } = req.body;
+
+  try {
+    const order = await Order.findById(orderId);
+
+    if (!order) {
+      return res.status(404).json({ message: 'Order not found' });
+    }
+
+    order.revisionRequests.push({ remarks });
+    order.status = 'review Requested';
+
+    await order.save();
+
+    res.status(200).json({ message: 'Revision requested successfully', order });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+router.post('/:orderId/review', async (req, res) => {
+  const { orderId } = req.params;
+  const { ratings, reviewText } = req.body;
+
+  try {
+    const order = await Order.findById(orderId);
+
+    if (!order) {
+      return res.status(404).json({ message: 'Order not found' });
+    }
+
+    order.review = {
+      ratings: {
+        communication: ratings.communication,
+        service: ratings.service,
+        recommend: ratings.recommend,
+      },
+      reviewText,
+    };
+    order.status = 'Completed';
+
+    await order.save();
+
+    res.status(200).json({ message: 'Review submitted successfully', order });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+router.post('/:orderId/deliver', upload.array('files'), async (req, res) => {
+  const { orderId } = req.params;
+  const { deliveryMessage } = req.body;
+  const files = req.files;
+
+  try {
+    const uploadedFiles = await Promise.all(
+      files.map((file) => {
+        const params = {
+          Bucket: process.env.AWS_S3_BUCKET_NAME,
+          Key: `deliveries/${orderId}/${Date.now()}_${file.originalname}`,
+          Body: file.buffer,
+          ContentType: file.mimetype,
+        };
+        return s3.upload(params).promise();
+      })
+    );
+
+    const fileUrls = uploadedFiles.map((file) => file.Location);
+
+    await Order.findByIdAndUpdate(orderId, {
+      $push: { deliveries: { files: fileUrls, description: deliveryMessage, createdAt: new Date() } },
+      status: 'Delivered'
+    });
+
+    res.status(200).json({ message: 'Order delivered successfully!', files: fileUrls });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Error delivering order' });
   }
 });
 

@@ -2,8 +2,11 @@ import React, { useState } from 'react';
 import { Clock, MessageSquare, Award, ThumbsUp, FileText, Upload, XCircle, Menu, Bell } from 'lucide-react';
 import './DeliveryPage.css';
 import Header from './Header'
+import axios from 'axios';
+import { useParams } from 'react-router-dom';
 
 const DeliveryPage = () => {
+  const {orderId} = useParams();
   const [files, setFiles] = useState([]);
   const [deliveryMessage, setDeliveryMessage] = useState('');
   const [isRevisionRequested, setIsRevisionRequested] = useState(false);
@@ -19,6 +22,22 @@ const DeliveryPage = () => {
 
   const removeFile = (index) => {
     setFiles(files.filter((_, i) => i !== index));
+  };
+
+  const handleDeliverySubmit = async () => {
+    const formData = new FormData();
+    files.forEach((file) => formData.append('files', file));
+    formData.append('deliveryMessage', deliveryMessage);
+  
+    try {
+      const response = await axios.post(`/api/orders/${orderId}/deliver`, formData, {
+        headers: { 'Content-Type': 'multipart/form-data' },
+      });
+      alert(response.data.message);
+    } catch (error) {
+      console.error('Delivery Error:', error);
+      alert('Failed to deliver the order.');
+    }
   };
 
   return (
@@ -107,7 +126,7 @@ const DeliveryPage = () => {
             </div>
 
             <div className="button-container">
-              <button className="primary-button">
+              <button className="primary-button" onClick={handleDeliverySubmit}>
                 Send Delivery
               </button>
               <button className="secondary-button">
@@ -120,7 +139,7 @@ const DeliveryPage = () => {
         <div className="stats-grid">
           <div className="stat-card">
             <Clock className="stat-icon" size={24} />
-            <div className="stat-value">1 day early</div>
+            <div className="stat-value">2 day early</div>
             <div className="stat-label">Delivery Time</div>
           </div>
           <div className="stat-card">

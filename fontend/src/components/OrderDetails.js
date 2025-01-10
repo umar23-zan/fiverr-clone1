@@ -183,15 +183,24 @@ const OrderDetails = () => {
             <h3 className='section-title1' style={{
                 textAlign: "left"
               }}>Review</h3>
-            <button className='add-button1'  style={{
-                  backgroundColor: "#1a237e",
-                  color: "white",
-                  padding: "8px 16px",
-                  borderRadius: "8px",
-                  border: "none",
-                  cursor: "pointer",
-                }}
-                onClick={()=>{navigate('/orderreview')}}>Visit Review Page</button>
+            {orderDetails.deliveries && orderDetails.deliveries.length > 0 ? (
+            <button 
+              className='add-button1'  
+              style={{
+                backgroundColor: "#1a237e",
+                color: "white",
+                padding: "8px 16px",
+                borderRadius: "8px",
+                border: "none",
+                cursor: "pointer",
+              }}
+              onClick={() => { navigate(`/orderreview/${orderId}`, { state: { orderDetails } }) }}
+            >
+              Visit Review Page
+            </button>
+          ) : (
+            <p style={{ color: "gray", fontStyle: "italic" }}>Order Not Delivered for Review</p>
+          )}
         </div>
         </div>
         

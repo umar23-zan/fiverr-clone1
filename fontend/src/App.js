@@ -133,7 +133,7 @@ function App() {
             } 
           />
           <Route 
-            path="/orderreview"
+            path="/orderreview/:orderId"
             element={
               <ProtectedRoute>
                 <OrderReview />
@@ -141,7 +141,7 @@ function App() {
             } 
           />
           <Route 
-            path="/deliverypage"
+            path="/deliverypage/:orderId"
             element={
               <ProtectedRoute>
                 <DeliveryPage />
