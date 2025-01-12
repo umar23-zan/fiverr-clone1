@@ -7,7 +7,8 @@ const multer = require('multer');
 const fs = require('fs');
 require('dotenv').config();
 const { uploadMessageFileToS3 } = require('./config/s3config');
-const { initializeSocket } = require('./server/socket');
+
+
 
 const userRoutes = require('./routes/auth');
 const gigRoutes = require('./routes/gig');
@@ -61,14 +62,20 @@ app.use('/api/users', usersRoutes);
 
 const http = require('http');
 const { Server } = require('socket.io');
+const { initSocket } = require('./services/notificationService');
 
 const server = http.createServer(app);
 const io = new Server(server, { cors: { origin: '*' } });
 
-const IO = initializeSocket(server);
+
 
 io.on('connection', (socket) => {
   console.log('User connected:', socket.id);
+
+  socket.on('join', (userId) => {
+    socket.join(userId);
+    console.log(`User ${userId} joined their notification room`);
+  });
 
   // Handle message sending
   // socket.on('sendMessage', async (message) => {
@@ -121,6 +128,7 @@ socket.on("sendMessage", async (message) => {
     console.log('A user disconnected:', socket.id);
   });
 });
+initSocket(io);
 
 // File upload route
 app.post('/api/messages/upload', upload.single('file'), async(req, res) => {
@@ -148,6 +156,8 @@ app.use(express.static(path.join(__dirname, '../fontend/build')));
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, '../fontend/build', 'index.html'));
 });
-// Start the server
+
+
 const PORT = 5000;
 server.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+

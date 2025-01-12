@@ -1,76 +1,33 @@
-const Notification = require('../models/Notification');
-const mongoose = require('mongoose');
+const Notification = require('../models/notification');
 
-class NotificationService {
-  constructor(webSocketService) {
-    this.wss = webSocketService;
-  }
+let io;  // Initialize io variable
 
-  async createNotification(data) {
-    try {
-      const notification = new Notification({
-        recipientId: mongoose.Types.ObjectId(data.recipientId),
-        senderId: mongoose.Types.ObjectId(data.senderId),
-        type: data.type,
-        content: data.content,
-        orderId: data.orderId ? mongoose.Types.ObjectId(data.orderId) : undefined,
-        read: false
-      });
+// Function to initialize io
+const initSocket = (socketIO) => {
+  io = socketIO;
+};
 
-      const savedNotification = await notification.save();
-      
-      // Send real-time notification
-      this.wss.sendNotification(data.recipientId, {
-        type: 'new_notification',
-        notification: savedNotification
-      });
-      
-      return savedNotification;
-    } catch (error) {
-      console.error('Error creating notification:', error);
-      throw error;
+const notifyUser = async (userId, type, message, orderId) => {
+  try {
+    const notification = new Notification({
+      userId,
+      type,
+      message,
+      orderId,
+      isRead: false,
+      createdAt: new Date(),
+    });
+    await notification.save();
+
+    if (io) {
+      io.to(userId.toString()).emit('notification', notification);
+      console.log(`Notification sent to user ${userId}: ${message}`);
+    } else {
+      console.error('Socket.io is not initialized');
     }
+  } catch (error) {
+    console.error('Error sending notification:', error.message);
   }
+};
 
-  async getUnreadCount(userId) {
-    try {
-      return await Notification.countDocuments({
-        recipientId: mongoose.Types.ObjectId(userId),
-        read: false
-      });
-    } catch (error) {
-      console.error('Error getting unread count:', error);
-      throw error;
-    }
-  }
-
-  async markAsRead(notificationId) {
-    try {
-      return await Notification.findByIdAndUpdate(
-        notificationId,
-        { read: true },
-        { new: true }
-      );
-    } catch (error) {
-      console.error('Error marking notification as read:', error);
-      throw error;
-    }
-  }
-
-  async markAllAsRead(userId) {
-    try {
-      return await Notification.updateMany(
-        { 
-          recipientId: mongoose.Types.ObjectId(userId),
-          read: false
-        },
-        { read: true }
-      );
-    } catch (error) {
-      console.error('Error marking all notifications as read:', error);
-      throw error;
-    }
-  }
-}
-
-module.exports = NotificationService;
+module.exports = { notifyUser, initSocket };

@@ -3,7 +3,8 @@ const Order = require('../models/Order');
 const router = express.Router();
 const multer = require('multer');
 const AWS = require('aws-sdk');
-const { notifyUser } = require('../server/socket');
+const { notifyUser } = require('../services/notificationService');
+const Notification = require('../models/notification');
 
 const s3 = new AWS.S3({
   accessKeyId: process.env.AWS_ACCESS_KEY_ID,
@@ -99,6 +100,18 @@ router.post('/:orderId/revision', async (req, res) => {
 
     await order.save();
 
+    try{
+      await notifyUser(
+        order.freelancerId,
+        'REVISION_REQUESTED',
+        `Buyer requested a revision for the order "${order.gigTitle}".`,
+        orderId
+      );
+    }catch (error){
+      console.error('Failed to send notification:', error);
+    }
+    
+
     res.status(200).json({ message: 'Revision requested successfully', order });
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -158,6 +171,13 @@ router.post('/:orderId/deliver', upload.array('files'), async (req, res) => {
       $push: { deliveries: { files: fileUrls, description: deliveryMessage, createdAt: new Date() } },
       status: 'Delivered'
     });
+
+    await notifyUser(
+      order.buyerId,
+      'ORDER_DELIVERED',
+      `Your order "${order.gigTitle}" has been delivered.`,
+      orderId
+    );
 
     res.status(200).json({ message: 'Order delivered successfully!', files: fileUrls });
   } catch (error) {
