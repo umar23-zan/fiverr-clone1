@@ -76,8 +76,11 @@ function Messaging({ socket, conversationId, receiverId }) {
     setFile(null);
   };
 
+ 
+
   const sendSocketMessage = (message) => {
     socket.emit("sendMessage", message);
+
     axios
       .post("/api/messages", message)
       .then(() => {

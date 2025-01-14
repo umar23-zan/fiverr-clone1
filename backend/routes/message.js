@@ -2,6 +2,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const Message = require('../models/Message');
 const Conversation = require('../models/Conversation');
+const { notifyMessage } = require('../services/notificationService');
 const router = express.Router();
 
 // Send a message (updated to include file details)
@@ -18,17 +19,25 @@ router.post('/', async (req, res) => {
       fileSize 
     } = req.body;
 
+    console.log(receiverId)
     // Create and save the message
     const message = new Message({
-      conversationId,
-      senderId: mongoose.Types.ObjectId(senderId),
-      receiverId: mongoose.Types.ObjectId(receiverId),
+      conversationId: new mongoose.Types.ObjectId(conversationId),
+      senderId: new mongoose.Types.ObjectId(senderId),
+      receiverId: new mongoose.Types.ObjectId(receiverId),
       content,
       fileUrl,
       originalFileName,
       fileSize
     });
     const savedMessage = await message.save();
+
+    try {
+      await notifyMessage(receiverId, conversationId, content);
+      console.log('Message notification sent successfully')
+    } catch (error) {
+      console.error('Failed to send message notification:', error);
+    }
 
     res.status(201).json(savedMessage);
   } catch (error) {

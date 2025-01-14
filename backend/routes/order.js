@@ -22,11 +22,21 @@ router.post('/', async (req, res) => {
   try {
     const order = new Order(req.body);
     const savedOrder = await order.save();
+
+    await notifyUser(
+      order.freelancerId,
+      'NEW_ORDER',
+      `You have received a new order for the gig "${order.gigTitle}".`,
+      order._id
+    );
+    
     res.status(201).json(savedOrder);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 });
+
+
 router.post('/:orderId/requirements', async (req, res) => {
   try {
     const order = await Order.findById(req.params.orderId);
@@ -41,6 +51,17 @@ router.post('/:orderId/requirements', async (req, res) => {
 
     order.requirements.push(newRequirement);
     await order.save();
+
+    try {
+      await notifyUser(
+        order.freelancerId,
+        'NEW_REQUIREMENT',
+        `New requirement submitted for order "${order.gigTitle}".`,
+        order._id
+      );
+    } catch (error) {
+      console.error('Failed to send requirement notification:', error);
+    }
 
     res.status(201).json(newRequirement);
   } catch (error) {

@@ -17,6 +17,7 @@ const messageRoutes = require('./routes/message');
 const Message = require('./models/Message');
 const conversationRoutes = require('./routes/conversation');
 const usersRoutes = require('./routes/user');
+const notificationRoutes = require('./routes/notification')
 
 const app = express();
 
@@ -59,6 +60,7 @@ app.use('/api/orders', orderRoutes);
 app.use('/api/messages', messageRoutes);
 app.use('/api/conversations', conversationRoutes);
 app.use('/api/users', usersRoutes);
+app.use('/api/notifications', notificationRoutes);
 
 const http = require('http');
 const { Server } = require('socket.io');

@@ -10,6 +10,7 @@ import { Menu, X } from 'lucide-react'; // Adding icons for mobile menu
 const socket = io(process.env.REACT_APP_SOCKET_URL);
 
 
+
 function ChatApp() {
   const [users, setUsers] = useState([]);
   const [selectedUser, setSelectedUser] = useState(null);
@@ -17,6 +18,9 @@ function ChatApp() {
   const [selectedConversation, setSelectedConversation] = useState(null);
   const [userId, setUserId] = useState("");
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+
+
+  
 
   useEffect(() => {
     const loggedInUser = localStorage.getItem("userId");
