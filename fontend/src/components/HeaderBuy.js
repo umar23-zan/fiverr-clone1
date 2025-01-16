@@ -37,6 +37,7 @@ const HeaderBuy = () => {
   const [loading, setLoading] = useState(true);
   const dropdownRef = useRef(null);
   const [isNotificationOpen, setNotificationOpen] = useState(false);
+  const [isFocused, setIsFocused] = useState(false);
 
   const fetchNotifications = async () => {
     try {
@@ -343,21 +344,38 @@ const HeaderBuy = () => {
     </div>
   );
 
+  const handleClear = () => {
+    setSearchTerm('');
+  };
+
 
   return (
     <div className='header-section-main'>
     <div className='header-section'>
       <img src={logo} alt="Fiverr" className='fiverr-logo'  onClick={() => {navigate('/dashboard')}}/>
-      <div className='input-section'>
+      <div className='search-container2' >
+      <div className="search-icon-start">
+        <svg width="16" height="16" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+          <path d="m15.89 14.653-3.793-3.794a.37.37 0 0 0-.266-.109h-.412A6.499 6.499 0 0 0 6.5 0C2.91 0 0 2.91 0 6.5a6.499 6.499 0 0 0 10.75 4.919v.412c0 .1.04.194.11.266l3.793 3.794a.375.375 0 0 0 .531 0l.707-.707a.375.375 0 0 0 0-.53ZM6.5 11.5c-2.763 0-5-2.238-5-5 0-2.763 2.237-5 5-5 2.762 0 5 2.237 5 5 0 2.762-2.238 5-5 5Z" />
+        </svg>
+      </div>
         <input 
         type="text" 
         placeholder='What Services are you looking today' 
         value={searchTerm}
         onChange={handleInputChange}
+        onFocus={() => setIsFocused(true)}
+        onBlur={() => setIsFocused(false)}
+        className='search-input2'
         />
-        <div className='search-icon' onClick={handleSearch}>
-        <svg width="16" height="16" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" fill="white"><path d="m15.89 14.653-3.793-3.794a.37.37 0 0 0-.266-.109h-.412A6.499 6.499 0 0 0 6.5 0C2.91 0 0 2.91 0 6.5a6.499 6.499 0 0 0 10.75 4.919v.412c0 .1.04.194.11.266l3.793 3.794a.375.375 0 0 0 .531 0l.707-.707a.375.375 0 0 0 0-.53ZM6.5 11.5c-2.763 0-5-2.238-5-5 0-2.763 2.237-5 5-5 2.762 0 5 2.237 5 5 0 2.762-2.238 5-5 5Z"></path></svg>
-        </div>
+        <button className="clear-button" onClick={handleClear}>
+          <svg width="14" height="14" viewBox="0 0 24 24">
+            <path d="M18 6L6 18M6 6l12 12" stroke="currentColor" strokeWidth="2"/>
+          </svg>
+        </button>
+        <button className='search-button2' onClick={handleSearch}>
+        <svg width="17" height="17" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" fill="white"><path d="m15.89 14.653-3.793-3.794a.37.37 0 0 0-.266-.109h-.412A6.499 6.499 0 0 0 6.5 0C2.91 0 0 2.91 0 6.5a6.499 6.499 0 0 0 10.75 4.919v.412c0 .1.04.194.11.266l3.793 3.794a.375.375 0 0 0 .531 0l.707-.707a.375.375 0 0 0 0-.53ZM6.5 11.5c-2.763 0-5-2.238-5-5 0-2.763 2.237-5 5-5 2.762 0 5 2.237 5 5 0 2.762-2.238 5-5 5Z"></path></svg>
+        </button>
         {filteredSuggestions.length > 0 && (
             <div className="suggestions-dropdown">
               {filteredSuggestions.map((suggestion) => (

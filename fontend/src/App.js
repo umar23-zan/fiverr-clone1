@@ -33,7 +33,7 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
           <Route path="/forgetpassword" element={<ForgotPassword />} />
-          <Route path="/resetPassword" element={<ResetPassword />} />
+          <Route path="/resetPassword/:token" element={<ResetPassword />} />
           
           {/* Protected Routes */}
           <Route 

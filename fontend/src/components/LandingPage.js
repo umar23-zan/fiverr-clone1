@@ -85,7 +85,10 @@ const LandingPage = () => {
   return (
     <div className="landing-page">
        <header className="header">
+        <div>
         <img src={logo} alt="logo" className='logo'/>
+        </div>
+        
         <nav className="nav-menu">
           {/* <button className="nav-link">Browse</button>
           <button className="nav-link">Become a Seller</button> */}

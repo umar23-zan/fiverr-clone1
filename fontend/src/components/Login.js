@@ -122,7 +122,7 @@ const Login = () => {
               <Link
                 component="button"
                 variant="body2"
-                onClick={() => navigate('/forgot-password')}
+                onClick={() => navigate('/forgetpassword')}
                 sx={{
                   color: '#00A86B',
                   '&:hover': {
