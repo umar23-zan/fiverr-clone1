@@ -241,8 +241,10 @@
 .timeline-item1 {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 20px;
   margin-bottom: 16px;
+  
+
 }
 
 .timeline-icon1 {
@@ -251,6 +253,8 @@
 
 .timeline-content1 {
   flex: 1;
+  text-align: left;
+  margin-left: 15px;
 }
 
 .timeline-label1 {
@@ -297,103 +301,193 @@
     grid-template-columns: repeat(2, 1fr);
   }
 }
+/* Update these styles in OrderDetails.css */
 
-/* Mobile breakpoint */
+/* Update progress tracker for better mobile view */
 @media screen and (max-width: 768px) {
-  .order-progress1 {
-    padding: 16px;
-  }
-
-  .order-header1 {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 8px;
-  }
-
   .progress-tracker1 {
-    padding: 0 10px;
+    padding: 0 5px;
+    margin: 0 -10px;  /* Compensate for smaller padding */
   }
 
-  .step-label1 {
-    font-size: 12px;
+  .progress-line1 {
+    top: 16px;  /* Adjust line position */
+    height: 3px;
   }
 
   .step-circle1 {
-    width: 28px;
-    height: 28px;
-    font-size: 12px;
+    width: 24px;
+    height: 24px;
+    font-size: 11px;
+    margin-bottom: 4px;
   }
 
-  .section-details1 {
-    flex-direction: column;
-    align-items: flex-start;
-    text-align: left;
-    gap: 10px;
+  .step-label1 {
+    font-size: 11px;
+    max-width: 60px;  /* Prevent text wrapping */
+    text-align: center;
+    word-wrap: break-word;
   }
 
+  /* Fix image sizing in mobile */
   .placeholder-image1 {
-    width: 100%;
-    height: 160px;
+    width: 80%;
+    max-width: 300px;  /* Limit maximum width */
+    margin: 0 auto;
   }
 
+  .placeholder-image1 img {
+    width: 100%;
+    height: auto;
+    max-height: 200px;
+    object-fit: cover;
+    margin-bottom: 12px;
+  }
+
+  /* Improve section details layout */
+  .section-details1 {
+    padding-bottom: 16px;
+    margin-bottom: 16px;
+    border-bottom: 1px solid #dedede;
+  }
+
+  /* Adjust feature grid for better spacing */
   .features-grid1 {
     grid-template-columns: 1fr;
     gap: 12px;
+    padding: 0 8px;
   }
 
-  .summary-box1 {
-    padding: 16px;
+  .feature-item1 {
+    padding: 4px 0;
   }
 
-  .timeline-item1 {
-    gap: 8px;
-  }
-}
-
-/* Small mobile breakpoint */
-@media screen and (max-width: 480px) {
-  .order-container1 {
-    padding: 12px;
-  }
-
-  .progress-tracker1 {
-    padding: 0 5px;
-  }
-
-  .order-number1 {
-    font-size: 16px;
-  }
-
-  .status-badge1 {
-    font-size: 12px;
-    padding: 4px 8px;
-  }
-
-  .section-title1 {
-    font-size: 16px;
-  }
-
-  .package-title1 {
-    font-size: 14px;
-  }
-
-  .package-subtitle1 {
-    font-size: 12px;
-  }
-
-  .timeline-label1 {
-    font-size: 14px;
-  }
-
-  .timeline-value1 {
-    font-size: 12px;
-  }
-
+  /* Improve requirements section */
   .requirements1 {
     padding: 12px;
+    margin: 0 -8px;  /* Compensate for parent padding */
   }
 
   .requirements-input1 textarea {
-    padding: 8px;
+    padding: 10px;
+    min-height: 80px;
+  }
+
+  /* Adjust summary boxes */
+  .summary-box1 {
+    padding: 16px;
+    margin: 0 -8px;
+  }
+
+  .timeline-item1 {
+    padding: 8px 0;
+  }
+
+  /* Fix button alignment and sizing */
+  .add-button1 {
+    width: 100%;
+    padding: 10px 16px;
+    margin: 8px 0;
+  }
+
+  .support-button1 {
+    padding: 10px 16px;
+  }
+
+  /* Improve order header */
+  .order-header1 {
+    padding: 0 8px;
+  }
+
+  .status-badge1 {
+    align-self: flex-start;
+    margin-top: 4px;
+  }
+}
+
+/* Additional small mobile improvements */
+@media screen and (max-width: 480px) {
+  .order-container1 {
+    padding: 12px 8px;
+  }
+
+  .order-progress1 {
+    padding: 16px 12px;
+  }
+
+  .main-content1 {
+    gap: 16px;
+  }
+
+  .placeholder-image1{
+    width: 120px;
+  }
+
+  .order-details1, 
+  .order-requirements1, 
+  .order-review1, 
+  .order-delivery1 {
+    padding: 16px 12px;
+    margin-bottom: 16px;
+  }
+
+  /* Improve timeline readability */
+  .timeline-content1 {
+    margin-left: 8px;
+  }
+
+  .timeline-item1 {
+    gap: 12px;
+  }
+
+  /* Fix chat window for mobile */
+  .chat-window {
+    width: 100%;
+    max-height: 80vh;
+  }
+
+  .chat-body {
+    max-height: calc(80vh - 60px);
+  }
+}
+
+/* Fix for very small screens */
+@media screen and (max-width: 360px) {
+  .progress-tracker1 {
+    padding: 0;
+  }
+
+  .step-label1 {
+    font-size: 10px;
+    max-width: 50px;
+  }
+
+  .step-circle1 {
+    width: 20px;
+    height: 20px;
+  }
+
+  .order-number1 {
+    font-size: 14px;
+  }
+
+  .status-badge1 {
+    font-size: 11px;
+    padding: 4px 8px;
+  }
+}
+
+/* Add smooth transitions for better UX */
+.step-circle1,
+.add-button1,
+.support-button1 {
+  transition: all 0.2s ease-in-out;
+}
+
+/* Fix for devices with notches */
+@supports (padding: max(0px)) {
+  .order-container1 {
+    padding-left: max(12px, env(safe-area-inset-left));
+    padding-right: max(12px, env(safe-area-inset-right));
   }
 }

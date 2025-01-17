@@ -3,10 +3,12 @@ import { Clock, MessageSquare, Award, ThumbsUp, FileText, Upload, XCircle, Menu,
 import './DeliveryPage.css';
 import Header from './Header'
 import axios from 'axios';
-import { useParams } from 'react-router-dom';
+import { useParams, useLocation } from 'react-router-dom';
 
 const DeliveryPage = () => {
   const {orderId} = useParams();
+  const location = useLocation();
+  const { requirements } = location.state;
   const [files, setFiles] = useState([]);
   const [deliveryMessage, setDeliveryMessage] = useState('');
   const [isRevisionRequested, setIsRevisionRequested] = useState(false);
@@ -45,10 +47,10 @@ const DeliveryPage = () => {
       <Header />
       <div className="main-container2">
         <div className="page-header">
-          <h1 className="page-title">Order #GIG84752 - Delivery</h1>
-          <span className="status-badge">
+          <h1 className="page-title">Order #{orderId} - Delivery</h1>
+          {/* <span className="status-badge1">
             {isRevisionRequested ? 'Revision Requested' : 'In Progress'}
-          </span>
+          </span> */}
         </div>
 
         {isRevisionRequested && (
@@ -111,17 +113,18 @@ const DeliveryPage = () => {
           <div>
             <div className="section">
               <h2 className="section-title">Order Requirements</h2>
-              <div className="requirements-section">
-                <h3 className="section-title">Project Brief</h3>
-                <p>Website redesign for a local restaurant with modern aesthetic and mobile-first approach.</p>
-                
-                <h3 className="section-title">Specific Requirements</h3>
-                <ul className="requirements-list">
-                  <li>Responsive design for all devices</li>
-                  <li>Brand color scheme implementation</li>
-                  <li>Interactive menu section</li>
-                  <li>Contact form integration</li>
-                </ul>
+              <div className="requirements-section">     
+                <div className="requirements-list">
+               {Array.isArray(requirements) && requirements.length > 0 ? (
+               requirements.map((req, index) => (
+                  <div key={index} className="requirement-item">
+                    <ul>
+                      <li>{req.description}</li>
+                    </ul>
+                  </div>
+                ))
+              ): (<p>No requirements added.</p>)}
+              </div>
               </div>
             </div>
 

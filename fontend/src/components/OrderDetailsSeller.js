@@ -140,7 +140,10 @@ const OrderDetailsSeller = () => {
                   border: "none",
                   cursor: "pointer",
                 }}
-                onClick={()=>{navigate(`/deliverypage/${orderId}`)}}>Deliver Order Now</button>
+                onClick={()=>{navigate(`/deliverypage/${orderId}`, {
+                    state: { requirements: orderDetails.requirements }
+                  }
+                )}}>Deliver Order Now</button>
         </div>
         </div>
         

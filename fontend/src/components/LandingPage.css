@@ -69,6 +69,7 @@
   /* align-items: center; */
   justify-content: left;
   height: 300px;
+  padding-left: 25px;
 }
 
 .hero-title {
