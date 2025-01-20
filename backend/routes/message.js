@@ -82,5 +82,61 @@ router.get("/:conversationId", async (req, res) => {
   }
 });
 
+router.get("/unread/:userId", async (req, res) => {
+  try {
+    const { userId } = req.params;
+    
+    // Get all conversations where user is a participant
+    const conversations = await Conversation.find({
+      participants: userId
+    });
+    
+    const conversationIds = conversations.map(conv => conv._id);
+    
+    // Get unread message counts for each conversation
+    const unreadCounts = await Message.aggregate([
+      {
+        $match: {
+          conversationId: { $in: conversationIds },
+          receiverId: new mongoose.Types.ObjectId(userId),
+          read: false
+        }
+      },
+      {
+        $group: {
+          _id: "$senderId",
+          count: { $sum: 1 }
+        }
+      }
+    ]);
+    
+    res.json(unreadCounts);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// Mark messages as read when user opens a conversation
+router.put("/read/:conversationId/:userId", async (req, res) => {
+  try {
+    const { conversationId, userId } = req.params;
+    
+    await Message.updateMany(
+      {
+        conversationId,
+        receiverId: userId,
+        read: false
+      },
+      {
+        $set: { read: true }
+      }
+    );
+    
+    res.json({ success: true });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
 
 module.exports = { router, setupSocketHandlers };

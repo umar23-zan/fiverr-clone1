@@ -20,9 +20,6 @@ function ChatApp() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [unreadCounts, setUnreadCounts] = useState({});
 
-
-  
-
   useEffect(() => {
     const loggedInUser = localStorage.getItem("userId");
     if (loggedInUser) {
@@ -68,6 +65,25 @@ function ChatApp() {
     }
   }, [selectedConversation, userId]);
 
+  useEffect(() => {
+    if (userId) {
+      fetchUnreadCounts();
+    }
+  }, [userId]);
+
+  const fetchUnreadCounts = async () => {
+    try {
+      const response = await axios.get(`/api/messages/unread/${userId}`);
+      const counts = {};
+      response.data.forEach(item => {
+        counts[item._id] = item.count;
+      });
+      setUnreadCounts(counts);
+    } catch (error) {
+      console.error("Error fetching unread counts:", error);
+    }
+  };
+
   
 
 
@@ -81,7 +97,14 @@ function ChatApp() {
       .then((res) => {
         if (res.data) {
           setSelectedConversation(res.data);
+          console.log(res.data)
           socket.emit("joinConversation", res.data._id);
+
+         axios.put(`/api/messages/read/${res.data._id}/${userId}`);
+        setUnreadCounts(prev => ({
+          ...prev,
+          [receiverId]: 0
+        }));
         }
       })
       .catch(() => {
@@ -138,6 +161,9 @@ function ChatApp() {
               />
               <div className="contact-info">
                 <span className="contact-name">{user.name}</span>
+                {unreadCounts[user._id] > 0 && (
+                <span className="unread-count">{unreadCounts[user._id]}</span>
+              )}
               </div>
             </div>
           ))}
@@ -255,7 +281,24 @@ function ChatApp() {
         }
 
         .contact-info {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
           flex: 1;
+        }
+
+         .unread-count {
+          background-color: #1a73e8;
+          color: white;
+          border-radius: 50%;
+          min-width: 20px;
+          height: 20px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-size: 12px;
+          padding: 0 6px;
+          font-weight: 500;
         }
 
         .contact-name {
