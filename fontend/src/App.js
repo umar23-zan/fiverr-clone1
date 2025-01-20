@@ -22,6 +22,7 @@ import OrderDetails from "./components/OrderDetails"
 import OrderReview from "./components/OrderReview";
 import DeliveryPage from "./components/DeliveryPage";
 import OrderDetailsSeller from "./components/OrderDetailsSeller";
+import OrderSummary from "./components/OrderSummary";
 
 function App() {
   return (
@@ -129,6 +130,14 @@ function App() {
             element={
               <ProtectedRoute>
                 <OrderDetailsSeller />
+              </ProtectedRoute>
+            } 
+          />
+          <Route 
+            path="/orderSummary"
+            element={
+              <ProtectedRoute>
+                <OrderSummary />
               </ProtectedRoute>
             } 
           />

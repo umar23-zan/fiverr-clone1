@@ -5,6 +5,25 @@ const Conversation = require('../models/Conversation');
 const { notifyMessage } = require('../services/notificationService');
 const router = express.Router();
 
+const isUserActiveInConversation = (io, userId, conversationId) => {
+  const room = io.sockets.adapter.rooms.get(`active:${conversationId}`);
+  if (!room) return false;
+  
+  // Check if any socket in the room belongs to the user
+  for (const socketId of room) {
+    const socket = io.sockets.sockets.get(socketId);
+    if (socket && socket.userId === userId) {
+      return true;
+    }
+  }
+  return false;
+};
+
+let ioInstance;
+const setupSocketHandlers = (io) => {
+  ioInstance = io;
+};
+
 // Send a message (updated to include file details)
 router.post('/', async (req, res) => {
   console.log("Incoming request body:", req.body); 
@@ -28,17 +47,23 @@ router.post('/', async (req, res) => {
       content,
       fileUrl,
       originalFileName,
-      fileSize
+      fileSize,
+      read: false
     });
     const savedMessage = await message.save();
 
-    try {
-      await notifyMessage(receiverId, conversationId, content);
-      console.log('Message notification sent successfully')
-    } catch (error) {
-      console.error('Failed to send message notification:', error);
+    const isReceiverActive = isUserActiveInConversation(ioInstance, receiverId, conversationId);
+
+    if (!isReceiverActive) {
+      try {
+        await notifyMessage(receiverId, conversationId, content);
+        console.log('Message notification sent successfully');
+      } catch (error) {
+        console.error('Failed to send message notification:', error);
+      }
     }
 
+    
     res.status(201).json(savedMessage);
   } catch (error) {
     console.error("Error details:", error);
@@ -57,4 +82,5 @@ router.get("/:conversationId", async (req, res) => {
   }
 });
 
-module.exports = router;
+
+module.exports = { router, setupSocketHandlers };

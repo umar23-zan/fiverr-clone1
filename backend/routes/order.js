@@ -117,7 +117,7 @@ router.post('/:orderId/revision', async (req, res) => {
     }
 
     order.revisionRequests.push({ remarks });
-    order.status = 'review Requested';
+    order.status = 'Revision Requested';
 
     await order.save();
 

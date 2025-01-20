@@ -214,11 +214,11 @@ const OrderDetails = () => {
             </div>
             <div className="summary-row1">
               <span>Service Fee</span>
-              <span>₹{orderDetails.amount/10}</span>
+              <span>₹{(orderDetails.amount/10).toFixed(2)}</span>
             </div>
             <div className="summary-row1 summary-total1">
               <span>Total</span>
-              <span>₹{orderDetails.amount + orderDetails.amount/10}</span>
+              <span>₹{(orderDetails.amount +parseFloat((orderDetails.amount/10).toFixed(2))).toFixed(2)}</span>
             </div>
           </div>
 

@@ -18,6 +18,7 @@ function ChatApp() {
   const [selectedConversation, setSelectedConversation] = useState(null);
   const [userId, setUserId] = useState("");
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [unreadCounts, setUnreadCounts] = useState({});
 
 
   
@@ -49,6 +50,27 @@ function ChatApp() {
     }
   }, []);
 
+  useEffect(() => {
+    if (selectedConversation) {
+      // Emit that user is active in this conversation
+      socket.emit("userActive", {
+        userId,
+        conversationId: selectedConversation._id
+      });
+
+      // Cleanup: emit inactive status when leaving conversation
+      return () => {
+        socket.emit("userInactive", {
+          userId,
+          conversationId: selectedConversation._id
+        });
+      };
+    }
+  }, [selectedConversation, userId]);
+
+  
+
+
   const handleUserSelect = (receiverId) => {
     const userName = users.find((user) => user._id === receiverId)?.name || "Unknown User";
     setSelectedUser(userName);
@@ -74,7 +96,10 @@ function ChatApp() {
           })
           .catch((err) => console.error("Error creating new conversation:", err));
       });
+      
   };
+
+  
 
   return (
     <div className="chat-container">

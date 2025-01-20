@@ -5,7 +5,7 @@ const orderSchema = new mongoose.Schema({
   freelancerId: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
   gigId: { type: mongoose.Schema.Types.ObjectId, ref: 'Gig' },
   gigTitle: String,
-  status: { type: String, enum: ['Pending', 'Completed', 'Active', 'inProgress', 'review Requested'], default: 'Pending' },
+  status: { type: String, enum: ['Pending', 'Completed', 'Active', 'inProgress', 'Revision Requested'], default: 'Active' },
   amount: Number,
   deliveryTime: Number,
   requirements: [{

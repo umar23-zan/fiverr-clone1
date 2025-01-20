@@ -57,7 +57,7 @@ const GidDetail = () => {
 
   if (!gig || !owner) return <p>Loading...</p>;
   const handleOrderNow =() => {
-    navigate('/paymentGateway', {
+    navigate('/orderSummary', {
       state: {
         buyerId: senderId,
         freelancerId: freelancerId,

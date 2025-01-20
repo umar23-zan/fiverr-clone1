@@ -1,0 +1,113 @@
+/* OrderSummary.css */
+.order-summary-container {
+  max-width: 1200px;
+  margin: 40px auto;
+  padding: 0 20px;
+  text-align: left;
+}
+
+.order-summary-container h1 {
+  color: #333;
+  margin-bottom: 30px;
+  text-align: center;
+}
+
+.summary-content {
+  display: flex;
+  gap: 30px;
+  flex-wrap: wrap;
+}
+
+.order-info {
+  flex: 1;
+  min-width: 300px;
+  background: #fff;
+  padding: 25px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.info-group {
+  margin-bottom: 25px;
+}
+
+.info-group h3 {
+  color: #333;
+  margin-bottom: 10px;
+}
+
+.delivery-time {
+  color: #666;
+  font-size: 0.9rem;
+  text-align: left;
+}
+
+.requirements-section1 {
+  margin-top: 20px;
+}
+
+.requirements-section1 textarea {
+  width: 100%;
+  min-height: 150px;
+  padding: 15px 5px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  margin-top: 10px;
+  font-size: 0.9rem;
+  resize: vertical;
+}
+
+.price-summary {
+  width: 350px;
+  background: #fff;
+  padding: 25px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  height: fit-content;
+}
+
+.price-breakdown {
+  margin: 20px 0;
+}
+
+.price-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 0;
+  border-bottom: 1px solid #eee;
+}
+
+.price-row.total {
+  border-top: 2px solid #eee;
+  border-bottom: none;
+  margin-top: 10px;
+  padding-top: 15px;
+  font-weight: bold;
+  font-size: 1.1rem;
+}
+
+.proceed-button {
+  width: 100%;
+  padding: 15px;
+  background-color: #1a237e;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.proceed-button:hover {
+  background-color: #0e1642;
+}
+
+@media (max-width: 768px) {
+  .summary-content {
+    flex-direction: column;
+  }
+  
+  .price-summary {
+    width: 100%;
+  }
+}

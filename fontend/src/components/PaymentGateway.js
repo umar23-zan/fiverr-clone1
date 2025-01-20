@@ -8,8 +8,8 @@ import Header from './Header';
 
 // Mock card database
 const VALID_CARDS = {
-  "4111111111111111": { valid: true, balance: 10000 },
-  "4242424242424242": { valid: true, balance: 5000 },
+  "4111111111111111": { valid: true, balance: 15000 },
+  "4242424242424242": { valid: true, balance: 10000 },
   "4000000000000002": { valid: false, balance: 0 },
 };
 const formatCardNumber = (number) => {
@@ -19,7 +19,7 @@ const formatCardNumber = (number) => {
 const PaymentGateway = () => {
  const location = useLocation()
  const navigate = useNavigate()
- const {buyerId, freelancerId, gigId ,gigTitle, amount, deliveryTime } =location.state || {}
+ const {buyerId, freelancerId, gigId ,gigTitle, amount, deliveryTime, requirements } =location.state || {}
  const [paymentStatus, setPaymentStatus] = useState('pending');
  console.log(buyerId, freelancerId, gigId, gigTitle, amount)
 
@@ -33,6 +33,7 @@ const PaymentGateway = () => {
   const [loading, setLoading] = useState(false);
   const [response, setResponse] = useState(null);
   const [error, setError] = useState(null);
+
   const validateForm = () => {
     if (!formData.cardNumber || formData.cardNumber.length !== 16) {
       throw new Error('Invalid card number length');
@@ -43,7 +44,7 @@ const PaymentGateway = () => {
     if (!formData.cvv || formData.cvv.length !== 3) {
       throw new Error('Invalid CVV');
     }
-    if (!formData.amount || parseFloat(formData.amount) <= 0) {
+    if (!amount || parseFloat(amount) <= 0) {
       throw new Error('Invalid amount');
     }
   };
@@ -105,24 +106,51 @@ const PaymentGateway = () => {
         freelancerId,
         gigId,
         gigTitle,
-        amount )
-      const orderResponse = await axios.post('/api/orders', {
-        buyerId,
-        freelancerId,
-        gigId,
-        gigTitle,
         amount,
-        deliveryTime,
-        status: 'Pending'
-      });
+      requirements )
+        if (requirements) {
+          const orderResponse = await axios.post('/api/orders', {
+            buyerId,
+            freelancerId,
+            gigId,
+            gigTitle,
+            amount,
+            deliveryTime,
+            status: 'Active',
+            requirements: [{
+              description: requirements,
+              createdAt: new Date()
+            }]
+          });
+
+          if (orderResponse.data) {
+            setPaymentStatus('success');
+            setTimeout(() => {
+              navigate(`/orders/buyer/${buyerId}`);
+            }, 2000)
+           
+          }
+        } else {
+          const orderResponse = await axios.post('/api/orders', {
+            buyerId,
+            freelancerId,
+            gigId,
+            gigTitle,
+            amount,
+            deliveryTime,
+            status: 'Active'
+          });
+
+          if (orderResponse.data) {
+            setPaymentStatus('success');
+            setTimeout(() => {
+              navigate(`/orders/buyer/${buyerId}`);
+            }, 2000)
+           
+          }
+        }
       
-      if (orderResponse.data) {
-        setPaymentStatus('success');
-        setTimeout(() => {
-          navigate(`/orders/buyer/${buyerId}`);
-        }, 2000)
-       
-      }
+
       
     } catch (err) {
       setError(err.message);
@@ -251,9 +279,10 @@ const PaymentGateway = () => {
           <input
             type="number"
             name="amount"
-            value={formData.amount}
-            onChange={handleInputChange}
-            placeholder="5999"
+            value={amount}
+            disabled
+            // onChange={handleInputChange}
+            // placeholder="5999"
           />
         </div>
 

@@ -13,11 +13,13 @@ const { uploadMessageFileToS3 } = require('./config/s3config');
 const userRoutes = require('./routes/auth');
 const gigRoutes = require('./routes/gig');
 const orderRoutes = require('./routes/order');
-const messageRoutes = require('./routes/message');
+const { router: messageRoutes, setupSocketHandlers } = require('./routes/message');
 const Message = require('./models/Message');
 const conversationRoutes = require('./routes/conversation');
 const usersRoutes = require('./routes/user');
 const notificationRoutes = require('./routes/notification')
+// const { setupSocketHandlers } = require('./routes/message');
+
 
 const app = express();
 
@@ -69,7 +71,7 @@ const { initSocket } = require('./services/notificationService');
 const server = http.createServer(app);
 const io = new Server(server, { cors: { origin: '*' } });
 
-
+setupSocketHandlers(io);
 
 io.on('connection', (socket) => {
   console.log('User connected:', socket.id);
@@ -126,8 +128,24 @@ socket.on("sendMessage", async (message) => {
     console.log(`User joined conversation room: ${conversationId}`);
   });
 
+  // Add these new handlers for active status
+  socket.on('userActive', ({ userId, conversationId }) => {
+    socket.userId = userId; // Store for cleanup on disconnect
+    socket.activeConversation = conversationId; // Store for cleanup
+    socket.join(`active:${conversationId}`);
+    console.log(`User ${userId} active in conversation: ${conversationId}`);
+  });
+
+  socket.on('userInactive', ({ userId, conversationId }) => {
+    socket.leave(`active:${conversationId}`);
+    console.log(`User ${userId} inactive in conversation: ${conversationId}`);
+  });
+
   socket.on('disconnect', () => {
     console.log('A user disconnected:', socket.id);
+    if (socket.activeConversation) {
+      socket.leave(`active:${socket.activeConversation}`);
+    }
   });
 });
 initSocket(io);
