@@ -122,12 +122,12 @@ const Header = () => {
       const response = await axios.delete(`http://localhost:5000/api/notifications/${notificationId}`);
   
       if (response.status === 200) {
-        // Update local state only after successful API call
+        
         const deletedNotification = notifications.find(n => n._id === notificationId);
         
         setNotifications(prev => prev.filter(n => n._id !== notificationId));
         
-        // Update unread count if the deleted notification was unread
+       
         if (deletedNotification && !deletedNotification.isRead) {
           setUnreadCount(prev => Math.max(0, prev - 1));
         }

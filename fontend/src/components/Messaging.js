@@ -81,14 +81,10 @@ function Messaging({ socket, conversationId, receiverId }) {
   const sendSocketMessage = (message) => {
     socket.emit("sendMessage", message);
 
-    axios
-      .post("/api/messages", message)
-      .then(() => {
-        setMessages((prevMessages) => [...prevMessages, message]);
+
         setNewMessage("");
         setFile(null);
-      })
-      .catch((err) => console.error("Error sending message:", err));
+
   };
 
   const renderFilePreview = (message) => {

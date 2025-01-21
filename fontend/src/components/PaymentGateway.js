@@ -6,6 +6,37 @@ import { Loader2 } from "lucide-react"
 import './PaymentGateway.css'
 import Header from './Header';
 
+
+const SuccessModal = ({ isOpen, onClose }) => {
+  if (!isOpen) return null;
+
+  return (
+    <div className="modal-overlay">
+      <div className="modal-content">
+        <div className="success-icon-circle">
+          <svg 
+            className="success-icon"
+            fill="none" 
+            stroke="currentColor" 
+            viewBox="0 0 24 24"
+          >
+            <path 
+              strokeLinecap="round" 
+              strokeLinejoin="round" 
+              strokeWidth={2} 
+              d="M5 13l4 4L19 7" 
+            />
+          </svg>
+        </div>
+        <h2 className="modal-title">Payment Success</h2>
+        <p className="modal-message">You're now redirected to the Orders Page</p>
+        <button className="modal-button" onClick={onClose}>
+          Okay
+        </button>
+      </div>
+    </div>
+  );
+};
 // Mock card database
 const VALID_CARDS = {
   "4111111111111111": { valid: true, balance: 15000 },
@@ -20,6 +51,8 @@ const PaymentGateway = () => {
  const location = useLocation()
  const navigate = useNavigate()
  const {buyerId, freelancerId, gigId ,gigTitle, amount, deliveryTime, requirements } =location.state || {}
+
+ const [showSuccess, setShowSuccess] = useState(false);
  const [paymentStatus, setPaymentStatus] = useState('pending');
  console.log(buyerId, freelancerId, gigId, gigTitle, amount)
 
@@ -125,7 +158,9 @@ const PaymentGateway = () => {
 
           if (orderResponse.data) {
             setPaymentStatus('success');
+            setShowSuccess(true);
             setTimeout(() => {
+              setShowSuccess(false);
               navigate(`/orders/buyer/${buyerId}`);
             }, 2000)
            
@@ -143,7 +178,9 @@ const PaymentGateway = () => {
 
           if (orderResponse.data) {
             setPaymentStatus('success');
+            setShowSuccess(true);
             setTimeout(() => {
+              setShowSuccess(false);
               navigate(`/orders/buyer/${buyerId}`);
             }, 2000)
            
@@ -241,7 +278,7 @@ const PaymentGateway = () => {
             <AlertDescription>{error}</AlertDescription>
           </Alert>
         )}
-          {response && (
+          {/* {response && (
             <Alert className="alert-success">
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                 <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
@@ -253,7 +290,7 @@ const PaymentGateway = () => {
                 Amount: ${response.amount}
               </AlertDescription>
             </Alert>
-          )}
+          )} */}
                 <form onSubmit={handleSubmit} className="payment-form">
         <div className="form-group">
           <label>Card Number</label>
@@ -328,6 +365,10 @@ const PaymentGateway = () => {
           ) : 'Pay'}
         </button>
       </form>
+      <SuccessModal 
+        isOpen={showSuccess}
+        onClose={() => setShowSuccess(false)}
+      />
     </div>
   );
 };

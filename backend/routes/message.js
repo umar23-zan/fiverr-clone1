@@ -22,54 +22,90 @@ const isUserActiveInConversation = (io, userId, conversationId) => {
 let ioInstance;
 const setupSocketHandlers = (io) => {
   ioInstance = io;
+
+  io.on('connection', (socket) => {
+    socket.on("sendMessage", async (message) => {
+      try {
+        const newMessage = new Message({
+          conversationId: new mongoose.Types.ObjectId(message.conversationId),
+          senderId: new mongoose.Types.ObjectId(message.senderId),
+          receiverId: new mongoose.Types.ObjectId(message.receiverId),
+          content: message.content,
+          fileUrl: message.fileUrl,
+          originalFileName: message.originalFileName,
+          fileSize: message.fileSize,
+          timestamp: new Date(),
+          read: false
+        });
+
+        const savedMessage = await newMessage.save();
+
+        // Check if receiver is active in conversation
+        const isReceiverActive = io.sockets.adapter.rooms.get(`active:${message.conversationId}`)?.has(message.receiverId);
+
+        if (!isReceiverActive) {
+          try {
+            await notifyMessage(message.receiverId, message.conversationId, message.content);
+          } catch (error) {
+            console.error('Failed to send message notification:', error);
+          }
+        }
+
+        io.to(message.conversationId).emit("receiveMessage", savedMessage);
+      } catch (error) {
+        console.error("Error sending message:", error);
+        socket.emit("messageError", { error: "Failed to send message" });
+      }
+    });
+  });
 };
 
 // Send a message (updated to include file details)
-router.post('/', async (req, res) => {
-  console.log("Incoming request body:", req.body); 
-  try {
-    const { 
-      conversationId, 
-      senderId, 
-      receiverId, 
-      content, 
-      fileUrl, 
-      originalFileName,
-      fileSize 
-    } = req.body;
+// router.post('/', async (req, res) => {
+//   console.log("Incoming request body:", req.body); 
+//   try {
+//     const { 
+//       conversationId, 
+//       senderId, 
+//       receiverId, 
+//       content, 
+//       fileUrl, 
+//       originalFileName,
+//       fileSize 
+//     } = req.body;
 
-    console.log(receiverId)
-    // Create and save the message
-    const message = new Message({
-      conversationId: new mongoose.Types.ObjectId(conversationId),
-      senderId: new mongoose.Types.ObjectId(senderId),
-      receiverId: new mongoose.Types.ObjectId(receiverId),
-      content,
-      fileUrl,
-      originalFileName,
-      fileSize,
-      read: false
-    });
-    const savedMessage = await message.save();
+//     console.log(receiverId)
+//     // Create and save the message
+//     const message = new Message({
+//       conversationId: new mongoose.Types.ObjectId(conversationId),
+//       senderId: new mongoose.Types.ObjectId(senderId),
+//       receiverId: new mongoose.Types.ObjectId(receiverId),
+//       content,
+//       fileUrl,
+//       originalFileName,
+//       fileSize,
+//       read: false
+//     });
+//     const savedMessage = await message.save();
 
-    const isReceiverActive = isUserActiveInConversation(ioInstance, receiverId, conversationId);
+//     const isReceiverActive = isUserActiveInConversation(ioInstance, receiverId, conversationId);
 
-    if (!isReceiverActive) {
-      try {
-        await notifyMessage(receiverId, conversationId, content);
-        console.log('Message notification sent successfully');
-      } catch (error) {
-        console.error('Failed to send message notification:', error);
-      }
-    }
+//     if (!isReceiverActive) {
+//       try {
+//         await notifyMessage(receiverId, conversationId, content);
+//         console.log('Message notification sent successfully');
+//       } catch (error) {
+//         console.error('Failed to send message notification:', error);
+//       }
+//     }
 
     
-    res.status(201).json(savedMessage);
-  } catch (error) {
-    console.error("Error details:", error);
-    res.status(500).json({ error: error.message });
-  }
-});
+//     res.status(201).json(savedMessage);
+//   } catch (error) {
+//     console.error("Error details:", error);
+//     res.status(500).json({ error: error.message });
+//   }
+// });
 
 // Get all messages for a conversation
 router.get("/:conversationId", async (req, res) => {

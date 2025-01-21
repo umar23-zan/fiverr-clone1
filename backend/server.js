@@ -93,33 +93,34 @@ io.on('connection', (socket) => {
   //   }
   // });
 
-  // Handle message sending
-socket.on("sendMessage", async (message) => {
-  try {
-    // Ensure sender and receiver IDs are correctly assigned
-    const { conversationId, senderId, receiverId, content } = message;
+//   // Handle message sending
+// socket.on("sendMessage", async (message) => {
+//   try {
+//     console.log(message)
+//     // Ensure sender and receiver IDs are correctly assigned
+//     const { conversationId, senderId, receiverId, content } = message;
 
-    // Create and save the message
-    const newMessage = new Message({
-      conversationId,
-      senderId: new mongoose.Types.ObjectId(senderId),
-      receiverId: new mongoose.Types.ObjectId(receiverId),
-      content,
-      fileUrl: message.fileUrl, // Include file URL
-      originalFileName: message.originalFileName, // Include original file name
-      fileSize: message.fileSize, // Include file size
-      timestamp: message.timestamp,
-    });
+//     // Create and save the message
+//     const newMessage = new Message({
+//       conversationId,
+//       senderId: new mongoose.Types.ObjectId(senderId),
+//       receiverId: new mongoose.Types.ObjectId(receiverId),
+//       content,
+//       fileUrl: message.fileUrl, // Include file URL
+//       originalFileName: message.originalFileName, // Include original file name
+//       fileSize: message.fileSize, // Include file size
+//       timestamp: message.timestamp,
+//     });
 
-    const savedMessage = await newMessage.save();
+//     const savedMessage = await newMessage.save();
 
-    // Emit message to the conversation room
-    io.to(conversationId).emit("receiveMessage", savedMessage);
-    console.log("Message sent:", savedMessage);
-  } catch (error) {
-    console.error("Error sending message:", error.message);
-  }
-});
+//     // Emit message to the conversation room
+//     io.to(conversationId).emit("receiveMessage", savedMessage);
+//     console.log("Message sent:", savedMessage);
+//   } catch (error) {
+//     console.error("Error sending message:", error.message);
+//   }
+// });
 
 
   // Join a conversation room
